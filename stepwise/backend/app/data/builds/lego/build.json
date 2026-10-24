@@ -1,0 +1,644 @@
+{
+  "build_id": "lego",
+  "title": "LEGO set name",
+  "aliases": [
+    "lego"
+  ],
+  "source": {
+    "title": "LEGO set name",
+    "url": ""
+  },
+  "steps": [
+    {
+      "step": 1,
+      "page": 3,
+      "parts": [
+        {
+          "name": "plate 6x8",
+          "color": "dark bluish gray",
+          "qty": 1
+        }
+      ],
+      "action": "Place the 6x8 plate flat on the table as the base, with the long side running left to right.",
+      "expected_image": "steps/01.png",
+      "watch_for": [
+        "Use the 6x8 plate, not a smaller plate of similar size."
+      ],
+      "crop": {
+        "x0": 242,
+        "y0": 596,
+        "x1": 453,
+        "y1": 764
+      },
+      "approved": false
+    },
+    {
+      "step": 2,
+      "page": 4,
+      "parts": [
+        {
+          "name": "slope 75° 2x2x3",
+          "color": "light gray",
+          "qty": 2
+        }
+      ],
+      "action": "Place the two tall slopes side by side along the back-right edge of the dark gray plate, sloped faces pointing toward the front-left.",
+      "expected_image": "steps/02.png",
+      "watch_for": [
+        "Slopes must face forward (sloped side toward the open plate area), not backward",
+        "Position them flush against the back edge, toward the right side of the plate"
+      ],
+      "crop": {
+        "x0": 245,
+        "y0": 240,
+        "x1": 452,
+        "y1": 470
+      },
+      "approved": false
+    },
+    {
+      "step": 3,
+      "page": 4,
+      "parts": [
+        {
+          "name": "brick 1x4",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Attach one blue 1x4 brick along the back edge to the left of the slopes, and the other along the right edge in front of the slopes.",
+      "expected_image": "steps/03.png",
+      "watch_for": [
+        "The two bricks go in different places: one at the back-left beside the slopes, one at the right side in front of them",
+        "Keep each brick pressed against the slopes with no gap"
+      ],
+      "crop": {
+        "x0": 245,
+        "y0": 712,
+        "x1": 452,
+        "y1": 942
+      },
+      "approved": false
+    },
+    {
+      "step": 4,
+      "page": 5,
+      "parts": [
+        {
+          "name": "plate 2x2",
+          "color": "red",
+          "qty": 1
+        },
+        {
+          "name": "tile 1x4",
+          "color": "lime green",
+          "qty": 2
+        }
+      ],
+      "action": "Place the red 2x2 plate in the center between the blue bricks and lay the two lime tiles on either side of it, running front to back.",
+      "expected_image": "steps/04.png",
+      "watch_for": [
+        "Tiles go on both sides of the red plate, parallel to each other",
+        "Red plate must be centered between the two green tiles, not offset"
+      ],
+      "crop": {
+        "x0": 240,
+        "y0": 220,
+        "x1": 452,
+        "y1": 455
+      },
+      "approved": false
+    },
+    {
+      "step": 5,
+      "page": 5,
+      "parts": [
+        {
+          "name": "brick 1x4",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Add one blue 1x4 brick along the left back edge and one along the front edge of the baseplate to close in the seat.",
+      "expected_image": "steps/05.png",
+      "watch_for": [
+        "Front brick sits at the front edge, beside the existing right-front blue brick",
+        "Left brick continues the back row, lined up with the existing blue brick"
+      ],
+      "crop": {
+        "x0": 240,
+        "y0": 710,
+        "x1": 452,
+        "y1": 945
+      },
+      "approved": false
+    },
+    {
+      "step": 6,
+      "page": 6,
+      "parts": [
+        {
+          "name": "round brick 2x2",
+          "color": "red",
+          "qty": 2
+        }
+      ],
+      "action": "Stack the two red 2x2 round bricks on the center of the base, on top of the green plates in front of the gray slopes, forming a column.",
+      "expected_image": "steps/06.png",
+      "watch_for": [
+        "Place both round bricks on top of each other to make a two-high column, not side by side",
+        "Center the column between the green plates in front of the gray slope"
+      ],
+      "crop": {
+        "x0": 402,
+        "y0": 232,
+        "x1": 746,
+        "y1": 558
+      },
+      "approved": false
+    },
+    {
+      "step": 7,
+      "page": 6,
+      "parts": [
+        {
+          "name": "brick 1x1 with side stud",
+          "color": "blue",
+          "qty": 2
+        }
+      ],
+      "action": "Attach the two blue 1x1 bricks with side studs at the back corners on either side of the gray slope, with the side studs facing outward.",
+      "expected_image": "steps/07.png",
+      "watch_for": [
+        "Side stud must face outward (left and right), not forward",
+        "One brick goes on each side of the gray slope, behind it at the back corners"
+      ],
+      "crop": {
+        "x0": 402,
+        "y0": 737,
+        "x1": 746,
+        "y1": 1212
+      },
+      "approved": false
+    },
+    {
+      "step": 8,
+      "page": 7,
+      "parts": [
+        {
+          "name": "brick 1x2",
+          "color": "blue",
+          "qty": 6
+        }
+      ],
+      "action": "Stack the six blue 1x2 bricks along the top of the back and front walls, staggering joints, leaving the left front corner open and keeping clear of the grey slopes.",
+      "expected_image": "steps/08.png",
+      "watch_for": [
+        "Place bricks to overlap the seams of the layer below for strength",
+        "Do not cover the front-left corner where the 1x1 brick goes next"
+      ],
+      "crop": {
+        "x0": 650,
+        "y0": 278,
+        "x1": 1000,
+        "y1": 563
+      },
+      "approved": false
+    },
+    {
+      "step": 9,
+      "page": 7,
+      "parts": [
+        {
+          "name": "brick 1x1 with side stud",
+          "color": "blue",
+          "qty": 2
+        },
+        {
+          "name": "brick 1x1 with side stud",
+          "color": "blue",
+          "qty": 2
+        }
+      ],
+      "action": "Place the two 1x1 bricks with side studs at the left end of the back wall and the left end of the front wall, side studs pointing outward to the left.",
+      "expected_image": "steps/09.png",
+      "watch_for": [
+        "Side studs must face outward (left), not into the boat",
+        "One goes on the back wall corner and one on the front wall corner"
+      ],
+      "crop": {
+        "x0": 650,
+        "y0": 888,
+        "x1": 1000,
+        "y1": 1172
+      },
+      "approved": false
+    },
+    {
+      "step": 10,
+      "page": 8,
+      "parts": [
+        {
+          "name": "sub-assembly from steps 1-6",
+          "color": "",
+          "qty": 1
+        }
+      ],
+      "action": "Press the finished sub-assembly into the middle of the blue body with the dark gray brick facing the front-left.",
+      "expected_image": "steps/10.png",
+      "watch_for": [
+        "Orient the gray brick end toward the front open side, not the gray slopes at the back."
+      ],
+      "crop": {
+        "x0": 379,
+        "y0": 724,
+        "x1": 588,
+        "y1": 955
+      },
+      "approved": false
+    },
+    {
+      "step": 11,
+      "page": 9,
+      "parts": [
+        {
+          "name": "round brick 2x2",
+          "color": "red",
+          "qty": 1
+        }
+      ],
+      "action": "Place the red round 2x2 brick on the center of the red plate, toward the back between the grey slopes and the front wall.",
+      "expected_image": "steps/11.png",
+      "watch_for": [
+        "Center it on the red plate, not on the grey grille piece at the left",
+        "Press it fully down onto the studs"
+      ],
+      "crop": {
+        "x0": 240,
+        "y0": 222,
+        "x1": 450,
+        "y1": 452
+      },
+      "approved": false
+    },
+    {
+      "step": 12,
+      "page": 9,
+      "parts": [
+        {
+          "name": "slope 1x2x3",
+          "color": "light grey",
+          "qty": 2
+        }
+      ],
+      "action": "Attach the two grey tall slopes on the left end, one at each back and front corner, with the sloped faces pointing inward toward the center.",
+      "expected_image": "steps/12.png",
+      "watch_for": [
+        "Slopes must face inward toward the red plate, not outward",
+        "Place them on the left end, matching the grey slopes already on the right end",
+        "Do not cover the grey grille piece between them"
+      ],
+      "crop": {
+        "x0": 240,
+        "y0": 720,
+        "x1": 450,
+        "y1": 952
+      },
+      "approved": false
+    },
+    {
+      "step": 13,
+      "page": 10,
+      "parts": [
+        {
+          "name": "brick 1x4",
+          "color": "medium azure",
+          "qty": 4
+        }
+      ],
+      "action": "Stack the four 1x4 bricks on top of the outer walls to raise the wall by one layer all around the box.",
+      "expected_image": "steps/13.png",
+      "watch_for": [
+        "Stagger the new bricks over the joints below so the wall stays locked together",
+        "Leave the gray sloped pieces and the side studs uncovered"
+      ],
+      "crop": {
+        "x0": 240,
+        "y0": 160,
+        "x1": 450,
+        "y1": 460
+      },
+      "approved": false
+    },
+    {
+      "step": 14,
+      "page": 10,
+      "parts": [
+        {
+          "name": "round plate 1x1",
+          "color": "trans red",
+          "qty": 1
+        },
+        {
+          "name": "cone 1x1",
+          "color": "dark bluish gray",
+          "qty": 1
+        }
+      ],
+      "action": "Attach the red round plate to the side stud on the left end and the gray cone to the side stud on the front face, both pointing outward.",
+      "expected_image": "steps/14.png",
+      "watch_for": [
+        "Use the side studs on the correct faces: red on the left end, cone on the front",
+        "Cone must point outward with its wide end against the wall"
+      ],
+      "crop": {
+        "x0": 230,
+        "y0": 700,
+        "x1": 450,
+        "y1": 950
+      },
+      "approved": false
+    },
+    {
+      "step": 15,
+      "page": 11,
+      "parts": [
+        {
+          "name": "plate 1x6",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Lay the two 1x6 plates on top of the walls, one along the back long edge and one along the front long edge, framing the open centre.",
+      "expected_image": "steps/15.png",
+      "watch_for": [
+        "Keep the plates flush with the outer edges of the wall so the inner opening above the red part stays clear",
+        "Align both plates on the long sides, not the short ends"
+      ],
+      "crop": {
+        "x0": 233,
+        "y0": 214,
+        "x1": 451,
+        "y1": 464
+      },
+      "approved": false
+    },
+    {
+      "step": 16,
+      "page": 11,
+      "parts": [
+        {
+          "name": "plate 2x4",
+          "color": "light gray",
+          "qty": 2
+        }
+      ],
+      "action": "Place the two 2x4 gray plates end to end across the top, bridging the opening behind the red part to form a 2x8 strip along the long side.",
+      "expected_image": "steps/16.png",
+      "watch_for": [
+        "Leave the front opening over the red part uncovered",
+        "Make sure the plates span both side walls and press down on the studs at each end"
+      ],
+      "crop": {
+        "x0": 233,
+        "y0": 701,
+        "x1": 451,
+        "y1": 952
+      },
+      "approved": false
+    },
+    {
+      "step": 17,
+      "page": 12,
+      "parts": [
+        {
+          "name": "brick 1x6",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Place the two 1x6 bricks lengthwise along the back and front long edges of the top, flanking the gray plates in the middle.",
+      "expected_image": "steps/17.png",
+      "watch_for": [
+        "Keep the bricks on the outer long edges so the center gray plate studs stay exposed",
+        "Align ends flush with the wall below"
+      ],
+      "crop": {
+        "x0": 235,
+        "y0": 213,
+        "x1": 450,
+        "y1": 475
+      },
+      "approved": false
+    },
+    {
+      "step": 18,
+      "page": 12,
+      "parts": [
+        {
+          "name": "brick 2x2",
+          "color": "light bluish gray",
+          "qty": 1
+        }
+      ],
+      "action": "Attach the gray 2x2 brick onto the center gray plate, toward the back, overlapping the rear 1x6 brick edge.",
+      "expected_image": "steps/18.png",
+      "watch_for": [
+        "Position the brick on the correct studs at the back-left of the gray plate, not centered"
+      ],
+      "crop": {
+        "x0": 235,
+        "y0": 693,
+        "x1": 450,
+        "y1": 955
+      },
+      "approved": false
+    },
+    {
+      "step": 19,
+      "page": 13,
+      "parts": [
+        {
+          "name": "curved slope 1x4",
+          "color": "light gray",
+          "qty": 4
+        }
+      ],
+      "action": "Place the four curved slopes on top in two rows of two, flanking the central gray plate, with the curves sloping down toward the front and back edges.",
+      "expected_image": "steps/19.png",
+      "watch_for": [
+        "Curve direction: each slope must slope away from the center toward the outer edge",
+        "Leave the central 2x2 studs exposed between the slopes"
+      ],
+      "crop": {
+        "x0": 235,
+        "y0": 140,
+        "x1": 450,
+        "y1": 455
+      },
+      "approved": false
+    },
+    {
+      "step": 20,
+      "page": 13,
+      "parts": [
+        {
+          "name": "brick curved 1x2x1 1/3 with curved top",
+          "color": "medium azure",
+          "qty": 4
+        }
+      ],
+      "action": "Attach the four curved bricks at the four top corners, with the curved sides facing outward to round off the ends.",
+      "expected_image": "steps/20.png",
+      "watch_for": [
+        "Curves must face outward at each corner, not inward",
+        "Place them on the corner studs, not in the middle of the edge"
+      ],
+      "crop": {
+        "x0": 235,
+        "y0": 695,
+        "x1": 450,
+        "y1": 980
+      },
+      "approved": false
+    },
+    {
+      "step": 21,
+      "page": 14,
+      "parts": [
+        {
+          "name": "tile 1x4",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Place one tile along the top of each long side wall, centered between the two end studs.",
+      "expected_image": "steps/21.png",
+      "watch_for": [
+        "Leave the single end studs exposed at both ends of each wall",
+        "Put one tile on the front wall and one on the back wall, not both on one side"
+      ],
+      "crop": {
+        "x0": 236,
+        "y0": 182,
+        "x1": 450,
+        "y1": 460
+      },
+      "approved": false
+    },
+    {
+      "step": 22,
+      "page": 14,
+      "parts": [
+        {
+          "name": "plate 1x6",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Press one plate along the top of each long side wall, covering the tiles and the end studs.",
+      "expected_image": "steps/22.png",
+      "watch_for": [
+        "Align each plate flush over the full wall length so it locks onto both end studs"
+      ],
+      "crop": {
+        "x0": 236,
+        "y0": 657,
+        "x1": 450,
+        "y1": 936
+      },
+      "approved": false
+    },
+    {
+      "step": 23,
+      "page": 15,
+      "parts": [
+        {
+          "name": "inverted slope 2x1",
+          "color": "dark gray",
+          "qty": 4
+        }
+      ],
+      "action": "Turn the model around, then place one inverted slope on each corner of the dark gray plate, with the sloped faces pointing diagonally outward.",
+      "expected_image": "steps/23.png",
+      "watch_for": [
+        "Rotate the model first, as the yellow turn-around icon shows",
+        "These are inverted slopes, so the slope goes underneath and faces outward, away from the plate",
+        "Each slope must sit on a corner stud and be angled diagonally outward"
+      ],
+      "crop": {
+        "x0": 220,
+        "y0": 425,
+        "x1": 452,
+        "y1": 740
+      },
+      "approved": false
+    },
+    {
+      "step": 24,
+      "page": 16,
+      "parts": [
+        {
+          "name": "brick 1x2",
+          "color": "reddish brown",
+          "qty": 8
+        },
+        {
+          "name": "slope 45 2x1",
+          "color": "reddish brown",
+          "qty": 4
+        },
+        {
+          "name": "plate 1x4",
+          "color": "reddish brown",
+          "qty": 4
+        }
+      ],
+      "action": "Build two toast slices (1x4 plate, two staggered layers of 1x2 bricks, 1x4 plate, two slopes on top) and push them down into the toaster's two slots with the slopes facing the same side.",
+      "expected_image": "steps/24.png",
+      "watch_for": [
+        "Build the toast sub-assembly twice (2x)",
+        "Offset the second layer of 1x2 bricks so they overlap the joint below",
+        "Both slopes on each slice point the same way, toward the left as drawn",
+        "Rotate the model as shown by the turn-around icon before inserting"
+      ],
+      "crop": {
+        "x0": 383,
+        "y0": 635,
+        "x1": 602,
+        "y1": 942
+      },
+      "approved": false
+    },
+    {
+      "step": 25,
+      "page": 17,
+      "parts": [
+        {
+          "name": "brick 1x4",
+          "color": "tan",
+          "qty": 4
+        },
+        {
+          "name": "slope 2x2 (1x2 slope 45)",
+          "color": "tan",
+          "qty": 4
+        }
+      ],
+      "action": "Build two toast slices by stacking two tan 1x4 bricks and adding two tan slopes on top facing outward from each end, then set them beside the toaster and press the lever to pop up the brown toast.",
+      "expected_image": "steps/25.png",
+      "watch_for": [
+        "Build the sub-assembly twice (2x)",
+        "Slopes must face outward at opposite ends so the top forms a peaked bread-slice shape",
+        "Stack the 1x4 bricks directly aligned, not offset"
+      ],
+      "crop": {
+        "x0": 0,
+        "y0": 640,
+        "x1": 750,
+        "y1": 1190
+      },
+      "approved": false
+    }
+  ]
+}
