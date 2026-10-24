@@ -72,8 +72,11 @@ az containerapp show -n buildsight -g buildsight --query properties.configuratio
 Push to `AkhilKarthik143/stepwise`. On the fork's GitHub page click **Sync fork**, wait for the fork's "Build image" action to finish (about 4 minutes), then in Cloud Shell:
 
 ```bash
-az containerapp update -n buildsight -g buildsight --image ghcr.io/citricice/buildsight:latest --revision-suffix v$(date +%H%M)
+az containerapp update -n buildsight -g buildsight \
+  --image ghcr.io/citricice/buildsight:$(git ls-remote https://github.com/citricice/stepwise refs/heads/stepwise | cut -f1)
 ```
+
+This deploys the image tagged with the fork's latest commit. Don't use `:latest` here: the name wouldn't change, so Azure wouldn't pull the new image, and express environments refuse `--revision-suffix`. If it says the image isn't found, the build hasn't finished yet.
 
 Secrets and settings are kept. A redeploy restarts the app, which resets the dashboard: don't redeploy right before presenting.
 
