@@ -1,11 +1,12 @@
 {
   "build_id": "toaster",
-  "title": "Toaster",
+  "title": "LEGO Toaster",
   "aliases": [
-    "toaster"
+    "toaster",
+    "lego"
   ],
   "source": {
-    "title": "Toaster",
+    "title": "LEGO Toaster",
     "url": ""
   },
   "steps": [
@@ -143,17 +144,17 @@
           "qty": 2
         }
       ],
-      "action": "Stack the two red 2x2 round bricks on the center of the base, on top of the green plates in front of the gray slopes, forming a column.",
+      "action": "Stack the two red round 2x2 bricks in the center of the base, in front of the gray slopes.",
       "expected_image": "steps/06.png",
       "watch_for": [
-        "Place both round bricks on top of each other to make a two-high column, not side by side",
-        "Center the column between the green plates in front of the gray slope"
+        "Center the round bricks over the green plate between the side walls",
+        "Push the second round brick firmly onto the first"
       ],
       "crop": {
-        "x0": 402,
-        "y0": 232,
-        "x1": 746,
-        "y1": 558
+        "x0": 244,
+        "y0": 189,
+        "x1": 449,
+        "y1": 447
       },
       "approved": false
     },
@@ -167,17 +168,17 @@
           "qty": 2
         }
       ],
-      "action": "Attach the two blue 1x1 bricks with side studs at the back corners on either side of the gray slope, with the side studs facing outward.",
+      "action": "Place one blue 1x1 side-stud brick on top of each back corner of the side walls, next to the gray slopes, with the side studs facing outward.",
       "expected_image": "steps/07.png",
       "watch_for": [
-        "Side stud must face outward (left and right), not forward",
-        "One brick goes on each side of the gray slope, behind it at the back corners"
+        "Side studs must face outward to the sides, not forward or inward",
+        "One brick goes at each back corner, left and right"
       ],
       "crop": {
-        "x0": 402,
-        "y0": 737,
-        "x1": 746,
-        "y1": 1212
+        "x0": 244,
+        "y0": 595,
+        "x1": 450,
+        "y1": 975
       },
       "approved": false
     },
@@ -191,17 +192,17 @@
           "qty": 6
         }
       ],
-      "action": "Stack the six blue 1x2 bricks along the top of the back and front walls, staggering joints, leaving the left front corner open and keeping clear of the grey slopes.",
+      "action": "Stack the 1x2 bricks on top of the blue side walls, building up the back and front walls one layer higher around the red cylinder and gray slope.",
       "expected_image": "steps/08.png",
       "watch_for": [
-        "Place bricks to overlap the seams of the layer below for strength",
-        "Do not cover the front-left corner where the 1x1 brick goes next"
+        "Stagger the bricks over the seams of the layer below so the wall stays strong",
+        "Leave the gap at the left front open as shown"
       ],
       "crop": {
-        "x0": 650,
-        "y0": 278,
-        "x1": 1000,
-        "y1": 563
+        "x0": 396,
+        "y0": 226,
+        "x1": 603,
+        "y1": 453
       },
       "approved": false
     },
@@ -210,27 +211,22 @@
       "page": 7,
       "parts": [
         {
-          "name": "brick 1x1 with side stud",
-          "color": "blue",
-          "qty": 2
-        },
-        {
-          "name": "brick 1x1 with side stud",
+          "name": "brick 1x1 with stud on side",
           "color": "blue",
           "qty": 2
         }
       ],
-      "action": "Place the two 1x1 bricks with side studs at the left end of the back wall and the left end of the front wall, side studs pointing outward to the left.",
+      "action": "Place the two 1x1 side-stud bricks on the left ends of the back and front walls, with the side studs facing outward to the left.",
       "expected_image": "steps/09.png",
       "watch_for": [
-        "Side studs must face outward (left), not into the boat",
-        "One goes on the back wall corner and one on the front wall corner"
+        "Side studs must point out to the left, not inward or forward",
+        "Place them at the left ends of the walls, not the right"
       ],
       "crop": {
-        "x0": 650,
-        "y0": 888,
-        "x1": 1000,
-        "y1": 1172
+        "x0": 396,
+        "y0": 717,
+        "x1": 603,
+        "y1": 943
       },
       "approved": false
     },
@@ -620,23 +616,23 @@
           "qty": 4
         },
         {
-          "name": "slope 2x2 (1x2 slope 45)",
+          "name": "slope 45 2x1",
           "color": "tan",
           "qty": 4
         }
       ],
-      "action": "Build two toast slices by stacking two tan 1x4 bricks and adding two tan slopes on top facing outward from each end, then set them beside the toaster and press the lever to pop up the brown toast.",
+      "action": "Build two bread slices by stacking two 1x4 tan bricks and topping each with two slopes facing outward at the ends, then push the toaster lever so the brown toast pops up and set the new slices beside the toaster.",
       "expected_image": "steps/25.png",
       "watch_for": [
-        "Build the sub-assembly twice (2x)",
-        "Slopes must face outward at opposite ends so the top forms a peaked bread-slice shape",
-        "Stack the 1x4 bricks directly aligned, not offset"
+        "Place the two slopes on the end studs with their sloped sides facing away from each other, leaving the middle studs exposed",
+        "Build two identical slices (2x)",
+        "Align the two stacked 1x4 bricks evenly with no overhang"
       ],
       "crop": {
         "x0": 0,
-        "y0": 640,
-        "x1": 750,
-        "y1": 1190
+        "y0": 518,
+        "x1": 451,
+        "y1": 958
       },
       "approved": false
     }
