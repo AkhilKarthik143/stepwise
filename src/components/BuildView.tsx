@@ -72,7 +72,8 @@ function limiter(n: number) {
 type PageJob = { image: Promise<string>; steps: Promise<ExtractedStep[]> };
 
 // Renders and reads pages, each at most once: shared by the current page and the read-ahead.
-function pageReader(manualId: string, doc: PDFDocumentProxy) {
+// shareKey (catalog manuals only) lets the server reuse a page another device already read.
+function pageReader(manualId: string, doc: PDFDocumentProxy, shareKey?: string) {
   const jobs = new Map<number, PageJob>();
   const limit = limiter(MAX_PARALLEL);
   return (page: number): PageJob => {
@@ -84,7 +85,7 @@ function pageReader(manualId: string, doc: PDFDocumentProxy) {
       if (cached) return cached;
       const pageImage = await image;
       const data = await limit(async () => {
-        const res = await fetch("/api/extract", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ page: pageImage }) });
+        const res = await fetch("/api/extract", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ page: pageImage, key: shareKey && `${shareKey}#${page}` }) });
         const body = await res.json();
         if (!res.ok) throw new Error(body.error ?? "Couldn't read that page.");
         return body;
@@ -159,7 +160,7 @@ export default function BuildView() {
     };
   }, [id, turnTo]);
 
-  const reader = useMemo(() => (doc && manual ? pageReader(manual.id, doc) : null), [doc, manual?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  const reader = useMemo(() => (doc && manual ? pageReader(manual.id, doc, manual.source === "upload" ? undefined : manual.pdfPath) : null), [doc, manual?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 2. read the current page (and the next few in the background); skip pages with no steps
   useEffect(() => {
