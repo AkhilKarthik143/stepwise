@@ -164,11 +164,11 @@ For every numbered step on the page:
 - parts: every part added in this step, from the parts callout (name with size, e.g. "brick 2x4", "slope 2x2", "long bolt"; color; qty).
 - action: one short imperative sentence saying where it goes and which way it faces.
 - watch_for: the mistakes a builder is likely to make here (orientation, left vs right, which hole). Empty if none stand out.
-- crop: the box around this step's main assembly picture (not the parts callout, not other steps), in 0-1000 coordinates of the page (x0, y0 top-left; x1, y1 bottom-right).
+- crop: the box around this step's main assembly picture (not the parts callout, not other steps). Coordinates are 0-1000 on EACH axis: x runs 0 (left edge) to 1000 (right edge) and y runs 0 (top edge) to 1000 (bottom edge), whatever the page's shape, so a landscape page still ends at 1000 both ways. x0, y0 is the top-left corner; x1, y1 the bottom-right. Make the box tight around the drawing.
 Pages with no numbered steps (covers, parts lists, ads) return an empty list. Never invent a step that isn't drawn."""
 
 
-def extract_page(settings, *, page_png: bytes, page_number: int, title: str) -> PageExtraction:
+def extract_page(settings, *, page_png: bytes, page_number: int, title: str, page_size: tuple[int, int]) -> PageExtraction:
     """Synchronous: ingestion runs as a script, one page at a time."""
     if not settings.anthropic_api_key:
         raise VisionUnavailable("ANTHROPIC_API_KEY is not set")
@@ -181,7 +181,7 @@ def extract_page(settings, *, page_png: bytes, page_number: int, title: str) -> 
         system=INGEST_SYSTEM,
         messages=[{"role": "user", "content": [
             _image_block(page_png, "image/png"),
-            {"type": "text", "text": f"Manual: {title}. This is page {page_number}."},
+            {"type": "text", "text": f"Manual: {title}. This is page {page_number}. The page image is {page_size[0]}x{page_size[1]} pixels; give crops on the 0-1000 scale described above."},
         ]}],
         output_format=PageExtraction,
         output_config={"effort": "high"},
