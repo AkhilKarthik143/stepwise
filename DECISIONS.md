@@ -75,6 +75,7 @@ Format: **Decision** — why. *(date, PT)*
 - **The mic ignores what it hears while the app is speaking** (sends silence to Ink), so the app never answers itself through the speaker.
 - **Hosting: Azure Container Apps,** one container (`Dockerfile`, Next.js standalone server on port 8000). GitHub Actions builds the image to GHCR on every push to `stepwise`, since ACR Tasks is blocked on student subscriptions. `GET /api/health` reports which providers are live (never keys). Steps in `DEPLOY.md`.
 - **Application Insights** via `@azure/monitor-opentelemetry` in `src/instrumentation.ts`, on when `APPLICATIONINSIGHTS_CONNECTION_STRING` is set.
+- **Manual PDFs are cached on the server's disk** (`src/app/manual-pdf/[...path]/route.ts`, `src/lib/pdfCache.ts`), replacing the Vercel-era rewrites. The server downloads each LEGO / IKEA PDF once and serves byte ranges from disk, so phones fetch only the pages they render instead of waiting on a ~20 MB file proxied from lego.com. The cache lasts until the container restarts.
 - **Passcode lock is back as an option:** on only when `APP_PASSCODE` is set (it is on Azure, so the public URL can't spend the keys). Unset it to remove the lock.
 
 ## Prizes
