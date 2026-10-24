@@ -52,6 +52,12 @@ export function useVoice({ serverUrl, voiceIn, voiceOut, sendPcm }: Options) {
 
   const canListen = voiceIn === "cartesia" || voiceIn === "qwen";
 
+  // Play replies even with the iPhone's silent switch on. Without this, iOS mutes STEPWISE
+  // until the mic is first turned on.
+  useEffect(() => {
+    void setAudioModeAsync({ playsInSilentMode: true }).catch(() => {});
+  }, []);
+
   const startListening = useCallback(async () => {
     if (!canListen) throw new Error("Voice input needs a Cartesia key on the server. Use the buttons or type for now.");
     const perm = await requestRecordingPermissionsAsync();
