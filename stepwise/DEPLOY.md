@@ -14,16 +14,20 @@ git commit -m "Add <build> manual" && git push
 
 ## 1. Create the app (Azure Cloud Shell, once)
 
-Open portal.azure.com, click the `>_` icon at the top, choose **Bash**. It has `az` and `git` already.
+The image is built by GitHub Actions (`.github/workflows/image.yml`) on every push to `stepwise` and published to `ghcr.io/akhilkarthik143/buildsight`. Azure only pulls it: its own builder (ACR Tasks) is blocked on new and student subscriptions.
+
+Once: the repo owner makes the package public (GitHub, Packages, buildsight, Package settings, Change visibility, Public). The image holds code and manuals, never keys.
+
+Open portal.azure.com, click the `>_` icon at the top, choose **Bash**:
 
 ```bash
-git clone -b stepwise https://github.com/AkhilKarthik143/stepwise.git
-cd stepwise/stepwise
+az extension add --name containerapp --upgrade
+for ns in Microsoft.App Microsoft.OperationalInsights Microsoft.Insights; do az provider register --namespace $ns; done
 az containerapp up --name buildsight --resource-group buildsight --location westus2 \
-  --source . --ingress external --target-port 8000
+  --image ghcr.io/akhilkarthik143/buildsight:latest --ingress external --target-port 8000
 ```
 
-This builds the `Dockerfile` in Azure and prints the app URL. The first run takes several minutes. If the repo is private, clone with a GitHub token: `https://<token>@github.com/...`.
+New subscriptions take a minute or two to register those services; if `up` says a namespace isn't registered, wait and run it again. It prints the app URL when done.
 
 ## 2. Application Insights (once)
 
@@ -65,7 +69,13 @@ az containerapp show -n buildsight -g buildsight --query properties.configuratio
 
 ## 5. Redeploy after a change
 
-In Cloud Shell: `cd ~/stepwise && git pull && cd stepwise`, then the same `az containerapp up ...` line from step 1. Secrets and settings are kept. A redeploy restarts the app, which resets the dashboard: don't redeploy right before presenting.
+Push to GitHub, wait for the "Build image" action to finish (about 4 minutes), then in Cloud Shell:
+
+```bash
+az containerapp update -n buildsight -g buildsight --image ghcr.io/akhilkarthik143/buildsight:latest --revision-suffix v$(date +%H%M)
+```
+
+Secrets and settings are kept. A redeploy restarts the app, which resets the dashboard: don't redeploy right before presenting.
 
 ## At the demo table
 
