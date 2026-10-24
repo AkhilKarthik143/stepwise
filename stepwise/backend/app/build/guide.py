@@ -63,6 +63,11 @@ def is_repeat(t: str) -> bool:
     return _has(t, r"repeat", r"again", r"say (that|it) again", r"come again", r"pardon")
 
 
+def is_question(t: str) -> bool:
+    """A real question ("what was the color again?") beats the repeat/next/back keywords in it."""
+    return t.endswith("?") or bool(re.match(r"(what|which|where|why|how|who|when|is|are|does|do|did|can|should|was|were)\b", t))
+
+
 def is_back(t: str) -> bool:
     return _has(t, r"back", r"previous( step)?", r"undo", r"go back")
 
@@ -91,6 +96,7 @@ class BuildGuide:
         self.build: Build | None = catalog.first()
         self.progress: dict[str, Progress] = {}
         self._told_no_key = False
+        self.history: list[tuple[str, str]] = []  # recent (builder said, BuildSight said), for follow-ups
         self._sync_metrics()
 
     # ── state ────────────────────────────────────────────────────────────────
@@ -146,6 +152,12 @@ class BuildGuide:
 
     # ── entry points ─────────────────────────────────────────────────────────
     async def handle(self, text: str, frame_b64: str | None) -> GuideTurn | None:
+        turn = await self._handle(text, frame_b64)
+        if turn is not None:
+            self.history = (self.history + [(text.strip(), turn.text)])[-6:]
+        return turn
+
+    async def _handle(self, text: str, frame_b64: str | None) -> GuideTurn | None:
         t = (text or "").lower().strip()
         if not t:
             return None
@@ -171,6 +183,8 @@ class BuildGuide:
         if is_check(t):
             turn = await self.check(frame_b64, trigger="voice")
             return turn or GuideTurn("Not finished yet. Keep going and say done when it's built.", "check")
+        if is_question(t):
+            return await self._question(text, frame_b64)
         if is_next(t):
             return self._advance()
         if is_repeat(t):
@@ -271,7 +285,8 @@ class BuildGuide:
         if not self.settings.anthropic_api_key:
             return GuideTurn("I can answer questions once the Claude key is set. Say next, repeat, or back.", "question")
         try:
-            reply = await self.vision.answer(self.settings, build=self.build, step=self.step, question=question, frame_b64=frame_b64)
+            reply = await self.vision.answer(self.settings, build=self.build, step=self.step, question=question, frame_b64=frame_b64,
+                                             step_image=self.catalog.step_image(self.build, self.step), history=self.history)
         except Exception as exc:  # noqa: BLE001
             logger.warning("question failed: %r", exc)
             return GuideTurn("I couldn't answer that right now. Try again.", "question")

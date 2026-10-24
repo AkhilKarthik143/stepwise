@@ -51,8 +51,9 @@ class FakeVision:
     async def match_part(self, settings, *, frame_b64, step, question):
         return PartMatch(is_right_part=False, confidence=0.9, held_part="short bolt", say="That's the short one. You need the long one.")
 
-    async def answer(self, settings, *, build, step, question, frame_b64):
-        return f"Step {step.step + 2} attaches to that slope."
+    async def answer(self, settings, *, build, step, question, frame_b64, step_image=None, history=None):
+        self.calls.append(f"answer:{question}:{step_image.name if step_image else None}:{len(history or [])}")
+        return "It's gray." if "color" in question else f"Step {step.step + 2} attaches to that slope."
 
 
 def settings(key: str = "sk-test") -> SimpleNamespace:
@@ -200,3 +201,15 @@ def test_websocket_check_flow_reports_mistake(catalog, monkeypatch):
             assert next(m for m in seen if m.get("action") == "metrics_update")["mistakes_caught"] == 1
     finally:
         get_settings.cache_clear()
+
+
+def test_follow_up_question_gets_a_direct_answer_not_the_whole_step(catalog):
+    g, vision = guide_for(catalog)
+    say(g, "what's next?")
+    assert say(g, "what was the color again?").text == "It's gray."
+    # the question saw the manual picture for this step and the earlier exchange
+    assert vision.calls[-1] == "answer:what was the color again?:01.png:1"
+    # plain "again" / "repeat" still re-reads the step instantly, no model call
+    assert say(g, "again").text.startswith("Step 1.")
+    assert say(g, "repeat that").text.startswith("Step 1.")
+    assert say(g, "next").text.startswith("Step 2.")

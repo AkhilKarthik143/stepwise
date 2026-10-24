@@ -121,17 +121,26 @@ def _answer_system(build: Build) -> str:
     steps = "\n".join(f"Step {s.step} (page {s.page}): {s.action} Parts: {', '.join(p.spoken() for p in s.parts) or 'none'}." for s in build.steps)
     return (
         f"You are BuildSight, a hands-free build assistant. The builder is following the manual for {build.title}.\n"
-        "Answer in one or two short spoken sentences, 25 words at most. Name parts by color and size.\n"
+        "Answer exactly what was asked, as briefly as a person standing next to them would: often a few words "
+        "(\"It's gray.\", \"The left side.\", \"Two of them.\"), never more than two sentences. Don't read the whole step back.\n"
+        "Follow-ups like \"what was the color again?\" refer to the recent conversation and the current step.\n"
+        "Use the manual's picture for the current step to read colors, sides and orientation. Name parts by color and size.\n"
         "Answer only from the manual steps below. If they don't cover it, say so. Never invent sizes, part numbers or torques.\n"
         "Cite the step number when it helps.\n\nMANUAL STEPS:\n" + steps
     )
 
 
-async def answer(settings, *, build: Build, step: BuildStep, question: str, frame_b64: str | None) -> str:
+async def answer(settings, *, build: Build, step: BuildStep, question: str, frame_b64: str | None,
+                 step_image: Path | None = None, history: list[tuple[str, str]] | None = None) -> str:
     client = _async_client(settings)
     content: list[dict] = []
+    if step_image is not None:
+        content += [{"type": "text", "text": f"Manual picture for step {step.step}:"}, _png(step_image)]
     if frame_b64:
-        content.append(_jpeg_b64(frame_b64))
+        content += [{"type": "text", "text": "Camera, the real build now:"}, _jpeg_b64(frame_b64)]
+    recent = "\n".join(f"Builder: {q}\nBuildSight: {a}" for q, a in (history or []))
+    if recent:
+        content.append({"type": "text", "text": f"Recent conversation:\n{recent}"})
     content.append({"type": "text", "text": f"I'm on step {step.step}. {question}"})
     response = await client.beta.messages.create(
         model=settings.check_model,
