@@ -28,7 +28,7 @@ Format: **Decision** — why. *(date, PT)*
 - **Demo setup: phone as overhead camera, laptop as the big screen,** paired with a room code or QR. *(Sat Oct 24, ~1:15 AM)*
 - **Stack:** Next.js 16 + React 19 + TypeScript + Tailwind on Vercel; three.js via react-three-fiber for 3D; Motion for animation. *(Sat Oct 24, ~1:30 AM)*
 - **Phone ↔ laptop real-time link: Azure Web PubSub** (Vercel functions can't hold a live socket; also keeps Microsoft in the build). *Not built yet.* *(Sat Oct 24, ~1:15 AM)*
-- **Speech to text: Azure AI Speech; voice out: Cartesia; telemetry: Azure Application Insights.** *Not built yet; keys pending.* *(Sat Oct 24, ~1:15 AM)*
+- ~~Speech to text: Azure AI Speech~~ **Voice in and out: Cartesia. Telemetry: Azure Application Insights.** Built Sat evening, see Voice below. *(Sat Oct 24, ~1:15 AM; updated ~8 PM)*
 
 ## AI
 
@@ -65,7 +65,17 @@ Format: **Decision** — why. *(date, PT)*
 - **Library lives in the browser (IndexedDB) for now:** manual list, uploaded PDFs, reading progress, and extracted steps per page. Each device has its own library until we add shared storage (Azure Blob is the candidate). *(Sat Oct 24, ~3 AM)*
 - **Steps are extracted one page at a time, when you reach it** (`POST /api/extract`, ~3.5 s/page, cached), instead of reading the whole book upfront. Pages with no steps are skipped automatically. Unnumbered steps (common in IKEA) get reading-order numbers. *(Sat Oct 24, ~3 AM)*
 - **Build screen starts at the first page with steps** (or where you left off), shows the step's manual picture as a glowing "target" panel, the next part as a hologram, and a **Check build** button (also Space/Enter). A verified step auto-advances. *(Sat Oct 24, ~3 AM)*
-- **Voice out uses the browser's built-in speech for now** (prefers a British male voice), with a mute toggle. Cartesia replaces it later. *(Sat Oct 24, ~3 AM)*
+- ~~Voice out uses the browser's built-in speech for now~~ Replaced by Cartesia, with the browser voice kept as the fallback. *(Sat Oct 24, ~3 AM; updated ~8 PM)*
+
+## Voice and hosting (Sat Oct 24, ~8 PM)
+
+- **Voice out: Cartesia Sonic** through `POST /api/tts` (MP3, plays on iPhone Safari). Without a Cartesia key, or if a call fails, the browser's own voice speaks instead.
+- **Voice in: Cartesia Ink** (`ink-2`, realtime speech-to-text with turn detection). The browser opens Ink's websocket directly with a 10-minute, STT-only token from `POST /api/voice-token`, so audio doesn't pass through our server and the API key never reaches the browser. Without a key it falls back to the browser's speech recognition.
+- **Mic button on the build screen.** "next", "back", "repeat", "check" / "is this right?" / "done", "stop" are matched in code (instant, no model call). Anything else is a question: `POST /api/ask` answers from the step's manual picture, step text, the camera and the last few exchanges, in a sentence or less. Captions show what was heard and the reply.
+- **The mic ignores what it hears while the app is speaking** (sends silence to Ink), so the app never answers itself through the speaker.
+- **Hosting: Azure Container Apps,** one container (`Dockerfile`, Next.js standalone server on port 8000). GitHub Actions builds the image to GHCR on every push to `stepwise`, since ACR Tasks is blocked on student subscriptions. `GET /api/health` reports which providers are live (never keys). Steps in `DEPLOY.md`.
+- **Application Insights** via `@azure/monitor-opentelemetry` in `src/instrumentation.ts`, on when `APPLICATIONINSIGHTS_CONNECTION_STRING` is set.
+- **Passcode lock is back as an option:** on only when `APP_PASSCODE` is set (it is on Azure, so the public URL can't spend the keys). Unset it to remove the lock.
 
 ## Prizes
 
@@ -78,7 +88,7 @@ Format: **Decision** — why. *(date, PT)*
   - [FORGE](https://github.com/kaushikchaturvedula/FORGE) — ideas: grounding tool arguments against a known catalog; verbal confirmation for safety steps; auto-written work order.
   - [AR Technician Assistant](https://github.com/omer-izhaki/-ar-technician-assistant) — ideas: AI-placed highlight markers (box / point / arrow, with severity); captions for both sides; typed input fallback for loud rooms; mic level meter; end-of-session summary.
 - ~~Passcode lock on the whole site~~ **Removed** (Sat Oct 24, ~12 PM): not worth the friction for the demo. The API key still never reaches the browser; a spending limit on the Anthropic key is the safeguard. *(added ~9:30 AM)*
-- **Secrets live in `.env.local`** (git-ignored) and in Vercel's environment settings. Never committed. *(Sat Oct 24, ~1:30 AM)*
+- **Secrets live in `.env.local`** (git-ignored) and in Azure Container Apps secrets (Vercel's environment settings if hosted there). Never committed. *(Sat Oct 24, ~1:30 AM)*
 
 ## Open questions
 

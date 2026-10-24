@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // One self-contained Node server for the Docker image (Azure Container Apps).
+  output: "standalone",
+  serverExternalPackages: ["@azure/monitor-opentelemetry"],
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

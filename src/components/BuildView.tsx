@@ -12,7 +12,8 @@ import type { ExtractedStep } from "@/app/api/extract/route";
 import CameraFeed, { type CameraHandle } from "@/components/CameraFeed";
 import { getManual, getPageSteps, saveManual, savePageSteps, type Manual } from "@/lib/manuals";
 import { openManualPdf, renderPage } from "@/lib/pdf";
-import { speak, stopSpeaking } from "@/lib/speech";
+import { startListening, type Listener } from "@/lib/listen";
+import { primeAudio, speak, stopSpeaking } from "@/lib/speech";
 
 const Hologram = dynamic(() => import("@/components/Hologram"), { ssr: false });
 
@@ -34,6 +35,18 @@ async function crop(pageImage: string, box: ExtractedStep["box"]): Promise<strin
   canvas.height = Math.min(h, img.height - y);
   canvas.getContext("2d")?.drawImage(img, x, y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
   return canvas.toDataURL("image/jpeg", 0.85);
+}
+
+// Spoken commands, matched in code so they're instant. Anything else is a question for Claude.
+type Command = "next" | "back" | "repeat" | "check" | "stop" | "question";
+function command(heard: string): Command {
+  const t = heard.toLowerCase().replace(/[^a-z' ]/g, " ").replace(/\s+/g, " ").trim();
+  if (/^(ok |okay |alright |and )?(next|next step|next one|continue|go on|go ahead|move on|skip)( please)?$/.test(t)) return "next";
+  if (/^(go )?(back|previous|previous step|last step|go back one|back one)( please)?$/.test(t)) return "back";
+  if (/^(repeat|repeat that|say that again|again|what was that|come again|one more time|what do i do)( please)?$/.test(t)) return "repeat";
+  if (/^(check|check it|check this|check my build|check the build|is this right|did i do it right|does this look right|how does this look|i'm done|im done|done|finished|all done)( please)?$/.test(t)) return "check";
+  if (/^(stop|quiet|be quiet|shut up|stop talking|pause)$/.test(t)) return "stop";
+  return "question";
 }
 
 // How many pages ahead to read in the background, and how many Claude calls may run at once.
@@ -106,6 +119,11 @@ export default function BuildView() {
   const [showManual, setShowManual] = useState(true);
   const [attempt, setAttempt] = useState(0); // bumped by Retry to re-read the page
   const [preview, setPreview] = useState<string | null>(null); // page image shown while Claude reads it
+  const [listener, setListener] = useState<Listener | null>(null);
+  const [heard, setHeard] = useState<string | null>(null); // what the mic is hearing right now
+  const [reply, setReply] = useState<string | null>(null); // the last spoken answer, as text
+  const [voiceError, setVoiceError] = useState<string | null>(null);
+  const history = useRef<{ q: string; a: string }[]>([]);
 
   // Every page change shows the loading card first.
   const turnTo = useCallback((p: number) => {
@@ -192,6 +210,15 @@ export default function BuildView() {
   }, [phase.kind, step, muted]);
   useEffect(() => stopSpeaking, []);
 
+  // Says a reply out loud (unless muted) and shows it as a caption.
+  const say = useCallback(
+    (text: string) => {
+      setReply(text);
+      if (!muted) speak(text);
+    },
+    [muted],
+  );
+
   const go = useCallback(
     (delta: 1 | -1) => {
       if (phase.kind !== "ready" || !doc) return;
@@ -222,12 +249,84 @@ export default function BuildView() {
       if (!res.ok) throw new Error(data.error);
       const result = data as CheckResult;
       setCheck({ state: "result", result, frame });
-      if (!muted && result.say) speak(result.say);
+      if (result.say) say(result.say);
       if (result.step_complete && result.confidence >= 0.7) setTimeout(() => go(1), 1800);
     } catch (e) {
       setCheck({ state: "error", message: e instanceof Error && e.message ? e.message : "Check failed." });
     }
-  }, [step, target, previous, check?.state, muted, go]);
+  }, [step, target, previous, check?.state, say, go]);
+
+  // A question that isn't a command: Claude answers from this step's manual picture and the camera.
+  const ask = useCallback(
+    async (question: string) => {
+      if (!step) return say("Open a manual first.");
+      setReply("Thinking…");
+      try {
+        const res = await fetch("/api/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            question,
+            frame: camera.current?.capture() ?? undefined,
+            expected: target ?? undefined,
+            step: { number: step.number, instruction: step.instruction, parts: step.parts.map((p) => ({ name: p.name, qty: p.qty })), watchFor: step.watchFor },
+            history: history.current,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        history.current = [...history.current, { q: question, a: data.text }].slice(-4);
+        say(data.text);
+      } catch (e) {
+        say(e instanceof Error && e.message ? e.message : "I couldn't answer that.");
+      }
+    },
+    [step, target, say],
+  );
+
+  // Latest handlers for the mic callback, which is set up once per listening session.
+  const onHeard = useRef<(text: string) => void>(() => {});
+  useEffect(() => {
+    onHeard.current = (text: string) => {
+      setHeard(text);
+      switch (command(text)) {
+        case "next":
+          return go(1);
+        case "back":
+          return go(-1);
+        case "repeat":
+          return step && say(`Step ${step.number}. ${step.instruction}`);
+        case "check":
+          return runCheck();
+        case "stop":
+          return stopSpeaking();
+        default:
+          return ask(text);
+      }
+    };
+  }, [go, step, say, runCheck, ask]);
+
+  const toggleMic = useCallback(async () => {
+    primeAudio();
+    setVoiceError(null);
+    if (listener) {
+      listener.stop();
+      setListener(null);
+      setHeard(null);
+      return;
+    }
+    try {
+      const l = await startListening({
+        onPartial: (t) => setHeard(t),
+        onFinal: (t) => onHeard.current(t),
+        onError: (m) => setVoiceError(m),
+      });
+      setListener(l);
+    } catch (e) {
+      setVoiceError(e instanceof Error ? e.message : "Couldn't start the mic.");
+    }
+  }, [listener]);
+  useEffect(() => () => listener?.stop(), [listener]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -267,16 +366,34 @@ export default function BuildView() {
             {doc && page > 0 ? ` · Page ${page}/${doc.numPages}` : ""}
           </p>
         </div>
-        <button
-          onClick={() => {
-            setMuted((m) => !m);
-            stopSpeaking();
-          }}
-          className="hud-panel rounded-xl px-3 py-2 text-xs font-medium text-white/85"
-          aria-pressed={muted}
-        >
-          {muted ? "Voice off" : "Voice on"}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={toggleMic}
+            className={`hud-panel rounded-xl px-3 py-2 text-xs font-medium ${listener ? "text-sky-200 ring-1 ring-sky-300/60" : "text-white/85"}`}
+            aria-pressed={Boolean(listener)}
+            title={listener ? `Listening (${listener.mode === "cartesia" ? "Cartesia Ink" : "browser"})` : "Talk to BuildSight"}
+          >
+            {listener ? (
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-sky-300" />
+                {listener.mode === "cartesia" ? "Listening" : "Listening (browser)"}
+              </span>
+            ) : (
+              "Mic"
+            )}
+          </button>
+          <button
+            onClick={() => {
+              primeAudio();
+              setMuted((m) => !m);
+              stopSpeaking();
+            }}
+            className="hud-panel rounded-xl px-3 py-2 text-xs font-medium text-white/85"
+            aria-pressed={muted}
+          >
+            {muted ? "Voice off" : "Voice on"}
+          </button>
+        </div>
       </header>
 
       {/* reticle: shows while a check is running */}
@@ -322,6 +439,14 @@ export default function BuildView() {
 
       {/* bottom: hologram + step card */}
       <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-3 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 sm:left-6 sm:right-auto sm:w-[440px] sm:p-0">
+        {(heard || reply || voiceError) && (
+          <div className="hud-panel rounded-2xl px-4 py-3 text-sm" aria-live="polite">
+            {heard && <p className="text-white/55">You: {heard}</p>}
+            {reply && <p className="mt-0.5 text-sky-100">BuildSight: {reply}</p>}
+            {voiceError && <p className="mt-0.5 text-rose-300">{voiceError}</p>}
+          </div>
+        )}
+
         {phase.kind === "ready" && part && (
           <div className="relative mx-auto h-36 w-36 sm:mx-0 sm:h-48 sm:w-48">
             <Hologram part={part} />
@@ -453,17 +578,17 @@ export default function BuildView() {
                 </AnimatePresence>
 
                 <div className="mt-5 grid grid-cols-[1fr_1.4fr_1fr] gap-2">
-                  <button onClick={() => go(-1)} className="rounded-xl border border-white/15 bg-white/[0.06] py-3 text-sm font-medium text-white/80 transition hover:bg-white/10 active:scale-95">
+                  <button onClick={() => (primeAudio(), go(-1))} className="rounded-xl border border-white/15 bg-white/[0.06] py-3 text-sm font-medium text-white/80 transition hover:bg-white/10 active:scale-95">
                     Back
                   </button>
                   <button
-                    onClick={runCheck}
+                    onClick={() => (primeAudio(), runCheck())}
                     disabled={check?.state === "checking"}
                     className="rounded-xl bg-gradient-to-b from-sky-300 to-sky-500 py-3 text-sm font-semibold text-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_6px_20px_-6px_rgba(92,200,255,0.7)] transition hover:brightness-110 active:scale-95 disabled:opacity-60"
                   >
                     {check?.state === "checking" ? "Checking…" : "Check build"}
                   </button>
-                  <button onClick={() => go(1)} className="rounded-xl border border-white/15 bg-white/[0.06] py-3 text-sm font-medium text-white transition hover:bg-white/10 active:scale-95">
+                  <button onClick={() => (primeAudio(), go(1))} className="rounded-xl border border-white/15 bg-white/[0.06] py-3 text-sm font-medium text-white transition hover:bg-white/10 active:scale-95">
                     Next
                   </button>
                 </div>
