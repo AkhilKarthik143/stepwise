@@ -17,10 +17,12 @@ def test_mock_text_turn_emits_grounded_transcript_and_provider_status(monkeypatc
     monkeypatch.setenv("STEPWISE_PROVIDER", "mock")
     with TestClient(app) as client:
         with client.websocket_connect("/ws") as ws:
-            hello, state, error = _messages(ws, 3)
+            hello, state, voice, guide = _messages(ws, 4)
             assert hello["type"] == "hello"
             assert state["type"] == "state"
-            assert error["type"] == "error"  # no live DashScope key is intentionally present
+            # no live Cartesia/DashScope key is intentionally present -> browser speech fallback
+            assert voice["action"] == "voice" and voice["voice_in"] == "browser" and voice["voice_out"] == "browser"
+            assert guide["action"] == "guide" and guide["phase"] == "idle"
 
             ws.send_text(json.dumps({"type": "control", "action": "text", "text": "What am I looking at?"}))
             seen: list[dict] = []
@@ -46,7 +48,7 @@ def test_pending_anchor_requires_known_component_and_explicit_confirmation(monke
     monkeypatch.setenv("STEPWISE_PROVIDER", "mock")
     with TestClient(app) as client:
         with client.websocket_connect("/ws") as ws:
-            _messages(ws, 3)
+            _messages(ws, 4)
             ws.send_text(json.dumps({"type": "control", "action": "confirm_anchor", "component_id": "unknown", "coordinates": [100, 100, 300, 300]}))
             rejected = json.loads(ws.receive_text())
             assert rejected["type"] == "error"

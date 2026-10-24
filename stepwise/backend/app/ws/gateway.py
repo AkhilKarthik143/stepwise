@@ -34,6 +34,7 @@ import time
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from app.agents import intent, workflows
+from app.agents.guide import RepairGuide
 from app.agents.orchestrator import Orchestrator
 from app.agents.runtime import build_agent
 from app.ar.annotations import confirmed_anchor
@@ -44,6 +45,7 @@ from app.agents.session_state import SessionState
 from app.config import Settings, get_settings
 from app.data.catalog import catalog
 from app.realtime import events
+from app.realtime.cartesia import CartesiaSTT, CartesiaTTS, available as cartesia_available
 from app.realtime.session import QwenRealtimeSession
 from app.ws import protocol
 
@@ -263,6 +265,15 @@ class _DedupCache:
         return False
 
 
+def voice_modes(settings: Settings) -> tuple[str, str]:
+    """(voice_in, voice_out): "cartesia" | "qwen" | "browser"."""
+    if cartesia_available(settings.cartesia_api_key):
+        return "cartesia", "cartesia"
+    if settings.realtime_configured:
+        return "qwen", "qwen"
+    return "browser", "browser"
+
+
 class RealtimeBridge:
     def __init__(self, websocket: WebSocket, settings: Settings | None = None) -> None:
         self.ws = websocket
@@ -298,6 +309,14 @@ class RealtimeBridge:
         self._latest_image_b64: str | None = None
         local_knowledge = LocalDocumentProvider(catalog)
         self.knowledge_provider = MossProvider(self.settings.moss_project_id, self.settings.moss_project_key, self.settings.moss_index_name, local_knowledge) if self.settings.moss_configured else local_knowledge
+        # Voice transport: Cartesia when configured, else the legacy Qwen realtime session, else
+        # the browser's own speech APIs (the frontend reads voice_in/voice_out from /api/config).
+        self.voice_in, self.voice_out = voice_modes(self.settings)
+        self.tts = CartesiaTTS(self.settings.cartesia_api_key, self.settings.cartesia_voice_id, self.settings.cartesia_tts_model) if self.voice_out == "cartesia" else None
+        self.stt = CartesiaSTT(self.settings.cartesia_api_key, self.settings.cartesia_stt_model, self.settings.input_sample_rate,
+                               on_partial=self._on_stt_partial, on_final=self._handle_text_input) if self.voice_in == "cartesia" else None
+        self._speak_task: asyncio.Task | None = None
+        self.guide = RepairGuide(self.settings, self.orch.state, self._apply_tool, self._switch_asset)
         self._workflow: dict | None = None  # active autonomous workflow {name, steps, index, paused}
         self._stepwise_recent_text = ""  # STEPWISE's current/last spoken text (to detect echo)
         self._spoke_over_stepwise = False  # the in-progress user turn began while STEPWISE was speaking
@@ -318,10 +337,8 @@ class RealtimeBridge:
             protocol.hello(agent, AGENTS[agent].display, self.orch.state.asset_id, self.settings.session_resume_after_seconds)
         )
         await self._safe_send_json(protocol.state("listening", self.settings.session_resume_after_seconds))
-        if not self.settings.realtime_configured:
-            await self._safe_send_json(
-                protocol.error("DASHSCOPE_API_KEY is not set — add it to backend/.env to enable the voice loop.")
-            )
+        await self._safe_send_json(protocol.control("voice", voice_in=self.voice_in, voice_out=self.voice_out))
+        await self._safe_send_json(protocol.control("guide", **self.guide.status()))
 
         up = asyncio.create_task(self._upstream(), name="stepwise-upstream")
         down = asyncio.create_task(self._downstream(), name="stepwise-downstream")
@@ -336,6 +353,10 @@ class RealtimeBridge:
             exc = task.exception()
             if exc and not isinstance(exc, (WebSocketDisconnect, asyncio.CancelledError)):
                 logger.info("bridge task ended: %r", exc)
+        if self._speak_task:
+            self._speak_task.cancel()
+        if self.stt:
+            await self.stt.close()
         await self.session.close()
         await self._safe_close()
 
@@ -399,6 +420,17 @@ class RealtimeBridge:
             raise
 
     async def _send_audio(self, pcm: bytes) -> None:
+        if self.stt is not None:
+            # Cartesia Ink owns turn detection; each turn.end arrives as a text turn.
+            self._last_audio_at = time.monotonic()
+            try:
+                await self.stt.send(pcm)
+            except Exception as exc:  # noqa: BLE001 — the next chunk reopens the socket
+                logger.warning("cartesia stt send failed: %r", exc)
+                await self.stt.close()
+            return
+        if self.voice_in != "qwen":
+            return  # browser speech recognition sends text instead
         # Stream the mic continuously so the user can BARGE IN over STEPWISE (server VAD then
         # cancels the active response). Echo is handled by browser AEC + the empty-turn /
         # STEPWISE-word echo guards in _on_user_transcript — we do NOT mute the user here.
@@ -425,6 +457,8 @@ class RealtimeBridge:
             # (for the log line below); frame gating is client-side.
             if payload.get("jpeg_b64"):
                 self._latest_image_b64 = str(payload["jpeg_b64"])[:6_000_000]
+                if self.voice_in != "qwen":
+                    return  # frames are kept for the Claude/identify turn, not streamed
                 try:
                     jpeg = base64.b64decode(payload["jpeg_b64"])
                 except (ValueError, TypeError):
@@ -437,6 +471,9 @@ class RealtimeBridge:
                         logger.debug("append_image dropped: %r", exc)
         elif kind == protocol.CONTROL:
             action = payload.get("action")
+            if action == "barge_in" and self._speak_task and not self._speak_task.done():
+                self._speak_task.cancel()
+                await self._safe_send_json(protocol.interrupted())
             if action == "barge_in" and self.session.connected:
                 try:
                     await self.session.cancel_response()
@@ -483,16 +520,56 @@ class RealtimeBridge:
         await self._safe_send_json(protocol.transcript("user", text=text, final=True))
         await self._safe_send_json(protocol.state("thinking"))
         try:
-            turn = await self.agent.respond(text, self._apply_tool, image_b64=self._latest_image_b64)
-            for chunk in [turn.text[i : i + 72] for i in range(0, len(turn.text), 72)]:
+            # The guide owns fixed-meaning turns (problem, machine confirm, next/repeat/yes);
+            # anything else is a question for the agent while the procedure holds its step.
+            guided = await self.guide.handle(text, self._latest_image_b64)
+            if guided is not None:
+                reply, provider, mock, sources = guided.text, "guide", False, guided.source_refs
+            else:
+                turn = await self.agent.respond(text, self._apply_tool, image_b64=self._latest_image_b64)
+                reply, provider, mock, sources = turn.text, turn.provider, turn.mock, turn.source_refs
+            for chunk in [reply[i : i + 72] for i in range(0, len(reply), 72)]:
                 await self._safe_send_json(protocol.transcript("assistant", delta=chunk))
-            await self._safe_send_json(protocol.transcript("assistant", text=turn.text, final=True))
-            await self._safe_send_json(protocol.control("provider_status", provider=turn.provider, mock=turn.mock, sources=turn.source_refs))
+            await self._safe_send_json(protocol.transcript("assistant", text=reply, final=True))
+            await self._safe_send_json(protocol.control("provider_status", provider=provider, mock=mock, sources=sources))
+            await self._safe_send_json(protocol.control("guide", **self.guide.status()))
+            self._speak(reply)
             await self._safe_send_json(protocol.state("listening", self._remaining()))
         except Exception as exc:  # noqa: BLE001 — text fallback must never crash the socket
             logger.exception("text agent failed")
             await self._safe_send_json(protocol.error(f"Agent unavailable: {exc}"))
             await self._safe_send_json(protocol.state("listening", self._remaining()))
+
+    async def _on_stt_partial(self, text: str) -> None:
+        await self._safe_send_json(protocol.transcript("user", delta=text))
+
+    def _speak(self, text: str) -> None:
+        """Voice a reply with Cartesia Sonic. A new reply cuts off the previous one."""
+        if self.tts is None or not text.strip():
+            return
+        if self._speak_task and not self._speak_task.done():
+            self._speak_task.cancel()
+
+        async def run() -> None:
+            await self._safe_send_json(protocol.state("speaking"))
+            try:
+                async for pcm in self.tts.stream(text):
+                    await self._safe_send_bytes(pcm)
+            except asyncio.CancelledError:
+                raise
+            except Exception as exc:  # noqa: BLE001 — the transcript is already on screen
+                logger.warning("cartesia tts failed: %r", exc)
+                await self._safe_send_json(protocol.control("tts_failed"))
+            await self._safe_send_json(protocol.state("listening", self._remaining()))
+
+        self._speak_task = asyncio.create_task(run(), name="stepwise-tts")
+
+    async def _switch_asset(self, asset_id: str) -> None:
+        state = self.orch.state
+        state.asset_id = asset_id
+        state.telemetry = {}
+        state._seed_telemetry()
+        await self._set_asset_label(asset_id)
 
     async def _handle_anchor_confirmation(self, payload: dict) -> None:
         component_id = str(payload.get("component_id", ""))
@@ -564,6 +641,8 @@ class RealtimeBridge:
 
     # ── downstream: Qwen -> browser (lazy connect + resume) ──────────────────
     async def _downstream(self) -> None:
+        if self.voice_in != "qwen":
+            await asyncio.Event().wait()  # no realtime session; upstream ends the connection
         try:
             while not self._closing:
                 await self._want_session.wait()

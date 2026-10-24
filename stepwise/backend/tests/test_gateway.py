@@ -99,6 +99,8 @@ def bridge():
     b._outcome_cache = {}
     b._ui_state_hash = ""
     b._asset_label = b.orch.state.asset_id
+    b.voice_in, b.voice_out = "qwen", "qwen"  # these tests exercise the legacy realtime path
+    b.stt = b.tts = b._speak_task = None
     b._response_active = False
     b._pending_response = False
     b._turn_nonce = 0

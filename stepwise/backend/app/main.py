@@ -24,7 +24,7 @@ from app.config import get_settings
 from app.data.catalog import catalog
 from app.data.catalog import SCHEMATICS_DIR
 from app.realtime.connectors import connector_status
-from app.ws.gateway import RealtimeBridge
+from app.ws.gateway import RealtimeBridge, voice_modes
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
 logger = logging.getLogger("stepwise")
@@ -113,6 +113,9 @@ def api_config() -> dict[str, object]:
             "claude_configured": settings.claude_configured,
             "cartesia_configured": settings.cartesia_configured,
             "moss_configured": settings.moss_configured,
+            "vision": "claude" if settings.claude_configured else "local",
+            "voice_in": voice_modes(settings)[0],
+            "voice_out": voice_modes(settings)[1],
         },
     }
 
