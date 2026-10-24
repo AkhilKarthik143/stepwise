@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { importManual, listImports, searchManuals, uploadManual, type BuildStatus, type ImportJob, type ManualResult } from "../lib/api";
+import { CATALOG, categoriesOf, matches, metaLine, toResult, type CatalogItem, type Source } from "../lib/catalog";
 
 interface Props {
   status: BuildStatus | null;
@@ -7,8 +8,8 @@ interface Props {
   onClose: () => void;
 }
 
-// The manual library: search LEGO by set number or IKEA by product name, upload any PDF, and
-// open a manual. The server reads new manuals page by page; they open as soon as the first
+// The manual library: browse the LEGO / IKEA catalog, search lego.com and ikea.com live, upload
+// any PDF, and open a manual. The server reads new manuals page by page; they open as soon as the first
 // steps are ready.
 export function Library({ status, onOpen, onClose }: Props) {
   const [query, setQuery] = useState("");
@@ -16,6 +17,9 @@ export function Library({ status, onOpen, onClose }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [jobs, setJobs] = useState<ImportJob[]>([]);
+  const [tab, setTab] = useState<Source>("lego");
+  const [category, setCategory] = useState<string | null>(null);
+  const [picking, setPicking] = useState<CatalogItem | null>(null);
   const file = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -38,12 +42,21 @@ export function Library({ status, onOpen, onClose }: Props) {
     }
   }
 
+  // Typing filters the catalog instantly; Search asks lego.com / ikea.com for anything else.
   async function search(e: React.FormEvent) {
     e.preventDefault();
     if (query.trim().length < 2) return;
     const found = await run(() => searchManuals(query.trim()));
     if (found) setResults(found);
   }
+
+  function choose(item: CatalogItem) {
+    if (item.manuals.length > 1) setPicking(item);
+    else void run(() => importManual(toResult(item, item.manuals[0]))).then(use);
+  }
+
+  const items = CATALOG[tab];
+  const shown = items.filter((i) => (!category || i.category === category) && matches(i, query));
 
   async function use(job: ImportJob | undefined) {
     if (!job) return;
@@ -67,7 +80,7 @@ export function Library({ status, onOpen, onClose }: Props) {
         </header>
 
         <form className="bs-row" onSubmit={search}>
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="LEGO set number or IKEA product" aria-label="Search manuals" />
+          <input value={query} onChange={(e) => { setQuery(e.target.value); setResults(null); }} placeholder="Filter, or search any LEGO set / IKEA product" aria-label="Search manuals" />
           <button className="bs-btn is-primary" type="submit" disabled={busy}>{busy ? "…" : "Search"}</button>
         </form>
         <small className="bs-hint">e.g. 31163 for a LEGO set, or MARIUS for an IKEA stool. Or upload any picture-based PDF.</small>
@@ -79,7 +92,55 @@ export function Library({ status, onOpen, onClose }: Props) {
         }} />
         {error && <p className="bs-sheet-error">{error}</p>}
 
-        {results && (
+        {picking && (
+          <section>
+            <h3 className="bs-sheet-title">{picking.name}: which book?</h3>
+            <ul className="bs-results">
+              {picking.manuals.map((m) => (
+                <li key={m.pdf_url}>
+                  <img src={m.cover ?? picking.image} alt="" loading="lazy" />
+                  <div><b>{m.label}</b><small>{m.size ?? ""}</small></div>
+                  <button className="bs-btn is-primary" disabled={busy} onClick={() => void run(() => importManual(toResult(picking, m))).then(use)}>Use</button>
+                </li>
+              ))}
+            </ul>
+            <button className="bs-link" onClick={() => setPicking(null)}>Back to the catalog</button>
+          </section>
+        )}
+
+        {!picking && !results && (
+          <section>
+            <div className="bs-tabs" role="tablist">
+              {(["lego", "ikea"] as const).map((t) => (
+                <button key={t} role="tab" aria-selected={tab === t} className={tab === t ? "is-on" : ""} onClick={() => { setTab(t); setCategory(null); }}>
+                  {t === "lego" ? "LEGO" : "IKEA"}
+                </button>
+              ))}
+            </div>
+            <div className="bs-chips">
+              {[null, ...categoriesOf(items)].map((c) => (
+                <button key={c ?? "all"} className={category === c ? "is-on" : ""} onClick={() => setCategory(c)}>{c ?? "All"}</button>
+              ))}
+            </div>
+            {shown.length ? (
+              <ul className="bs-catalog">
+                {shown.map((item) => (
+                  <li key={item.id}>
+                    <button onClick={() => choose(item)} disabled={busy}>
+                      <span className="bs-catalog-img"><img src={item.image} alt="" loading="lazy" /></span>
+                      <b>{item.name}</b>
+                      <small>{metaLine(item)}{item.manuals.length > 1 ? ` · ${item.manuals.length} books` : ""}</small>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <small className="bs-hint">Not in the catalog. Press Search to look it up on lego.com or ikea.com.</small>
+            )}
+          </section>
+        )}
+
+        {results && !picking && (
           <section>
             <h3 className="bs-sheet-title">{results.length ? "Results" : "No manuals found"}</h3>
             <ul className="bs-results">
