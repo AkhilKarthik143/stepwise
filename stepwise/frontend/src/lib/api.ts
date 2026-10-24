@@ -9,6 +9,25 @@ export interface Identification { asset_id: string | null; machine_model: string
 export interface GuideStatus { phase: GuidePhase; problem: string; identification: Identification | null; pending_machine: string | null }
 export interface SourceRef { kind: string; label: string; url?: string }
 
+// BuildSight (mirrors backend/app/build/guide.py BuildGuide.status and metrics.snapshot)
+export interface BuildPart { name: string; color: string; qty: number }
+export interface BuildIssue { part: string; problem: string; fix: string }
+export interface BuildStatus {
+  builds: { id: string; title: string }[];
+  build: { id: string; title: string; total: number; source: { title: string; url: string } | null } | null;
+  index?: number;
+  complete?: boolean;
+  step?: { step: number; page: number; parts: BuildPart[]; action: string; watch_for: string[]; image_url: string; approved: boolean };
+  previous_image_url?: string | null;
+  check?: { state: "unchecked" | "building" | "passed" | "failed"; confidence: number | null; issues: BuildIssue[] };
+}
+export interface BuildMetrics {
+  build_id: string; build_title: string; step: number; total_steps: number;
+  steps_done: number; mistakes_caught: number; overrides: number; checks: number; closer_looks: number;
+  step_seconds: number[]; avg_step_seconds: number | null;
+  turn_ms: { kind: string; ms: number }[]; median_ms: Record<string, number>;
+}
+
 export interface RuntimeConfig {
   asset_id: string;
   input_sample_rate: number;

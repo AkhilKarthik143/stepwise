@@ -167,3 +167,36 @@ def test_routes_serve_step_pictures_only_from_the_build_folder(catalog, monkeypa
     assert client.get("/api/builds/lego-kart/build.json").status_code == 404
     assert catalog.image_path("lego-kart", "steps/../../ikea-stool/steps/01.png") is None  # no escaping the folder
     assert "steps_done" in client.get("/api/metrics").json()
+
+
+def test_websocket_check_flow_reports_mistake(catalog, monkeypatch):
+    """The browser's stillness trigger sends {action: check}; the reply, build status and metrics come back."""
+    from fastapi.testclient import TestClient
+
+    import app.main as main
+    import app.ws.gateway as gateway
+    from app.build import vision
+    from app.config import get_settings
+
+    async def failing_check(settings, **kw):
+        return CheckResult(step_complete=False, confidence=0.9, issues=[CheckIssue(part="slope 2x2", problem="rotated 180°", fix="Turn it so the slope faces the front.")])
+
+    monkeypatch.setattr(gateway, "get_catalog", lambda: catalog)
+    monkeypatch.setattr(vision, "check_step", failing_check)
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    get_settings.cache_clear()
+    try:
+        with TestClient(main.app) as client, client.websocket_connect("/ws") as ws:
+            for _ in range(5):
+                ws.receive_text()
+            ws.send_text(json.dumps({"type": "control", "action": "check", "jpeg_b64": "QUJD", "trigger": "stillness"}))
+            seen: list[dict] = []
+            while not (len(seen) > 1 and seen[-1].get("type") == "state" and seen[-1].get("status") == "listening"):
+                seen.append(json.loads(ws.receive_text()))
+            reply = next(m for m in seen if m.get("type") == "transcript")
+            assert reply["text"].startswith("Hold on. The slope 2x2 is rotated 180°.")
+            status = next(m for m in seen if m.get("action") == "build")
+            assert status["check"]["state"] == "failed" and status["step"]["image_url"].endswith("steps/01.png")
+            assert next(m for m in seen if m.get("action") == "metrics_update")["mistakes_caught"] == 1
+    finally:
+        get_settings.cache_clear()

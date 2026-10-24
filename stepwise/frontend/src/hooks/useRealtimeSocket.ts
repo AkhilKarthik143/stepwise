@@ -5,6 +5,8 @@ import { MicRecorder } from "../audio/recorder";
 import {
   type AlertMsg,
   type ARAnnotationMsg,
+  type BuildMetrics,
+  type BuildStatus,
   type ARAnnotationRemoveMsg,
   type ConnState,
   type ConvState,
@@ -41,11 +43,13 @@ interface State {
   highlight: { component: string; svg_id: string; label: string; seq: number } | null;
   annotate: { label: string; region: string; seq: number } | null;
   assetLabel: string | null;
-  provider: "claude" | "mock" | "guide";
+  provider: "claude" | "mock" | "guide" | "buildsight";
   sources: SourceRef[];
   annotations: ARAnnotationMsg[];
   guide: GuideStatus;
   voice: { voice_in: VoiceMode; voice_out: VoiceMode } | null;
+  build: BuildStatus | null;
+  buildMetrics: BuildMetrics | null;
 }
 
 const initial: State = {
@@ -73,6 +77,8 @@ const initial: State = {
   annotations: [],
   guide: { phase: "idle", problem: "", identification: null, pending_machine: null },
   voice: null,
+  build: null,
+  buildMetrics: null,
 };
 
 type Action =
@@ -161,13 +167,21 @@ function applyControl(s: State, action: string, payload: Record<string, unknown>
     case "provider_status":
       return {
         ...s,
-        provider: payload.mock === true ? "mock" : payload.provider === "claude" || payload.provider === "guide" ? payload.provider : s.provider,
+        provider: payload.mock === true ? "mock" : payload.provider === "claude" || payload.provider === "guide" || payload.provider === "buildsight" ? payload.provider : s.provider,
         sources: Array.isArray(payload.sources) ? payload.sources as SourceRef[] : s.sources,
       };
     case "guide":
       return { ...s, guide: payload as unknown as GuideStatus };
     case "voice":
       return { ...s, voice: { voice_in: payload.voice_in as VoiceMode, voice_out: payload.voice_out as VoiceMode } };
+    case "build": {
+      const { type: _t, action: _a, ...rest } = payload;
+      return { ...s, build: rest as unknown as BuildStatus };
+    }
+    case "metrics_update": {
+      const { type: _t, action: _a, ...rest } = payload;
+      return { ...s, buildMetrics: rest as unknown as BuildMetrics };
+    }
     case "activate_vision":
       return { ...s, visionActive: true, visible: { ...s.visible, vision: true } };
     case "deactivate_vision":
@@ -407,6 +421,11 @@ export function useRealtimeSocket(config: RuntimeConfig | null) {
     speak(last.text, listener.current);
   }, [state.lines, voiceOut]);
 
+  // BuildSight: ask the server to compare this frame with the manual's picture.
+  const requestCheck = useCallback((jpegB64: string, trigger: "stillness" | "button") => {
+    send({ type: "control", action: "check", jpeg_b64: jpegB64, trigger });
+  }, [send]);
+
   const clearError = useCallback(() => dispatch({ k: "error", v: null }), []);
   const dismissAlert = useCallback((i: number) => dispatch({ k: "dismissAlert", i }), []);
 
@@ -482,7 +501,7 @@ export function useRealtimeSocket(config: RuntimeConfig | null) {
   useEffect(() => () => disconnect(), [disconnect]);
 
   return useMemo(
-    () => ({ state, connect, disconnect, toggleMic, registerFrameProvider, registerScreenProvider, bargeIn, micActive, manualVision, setManualVision, visionStreaming, clearError, dismissAlert, sendText, confirmAnchor }),
-    [state, connect, disconnect, toggleMic, registerFrameProvider, registerScreenProvider, bargeIn, micActive, manualVision, visionStreaming, clearError, dismissAlert, sendText, confirmAnchor],
+    () => ({ state, connect, disconnect, toggleMic, registerFrameProvider, registerScreenProvider, bargeIn, micActive, manualVision, setManualVision, visionStreaming, clearError, dismissAlert, sendText, confirmAnchor, requestCheck }),
+    [state, connect, disconnect, toggleMic, registerFrameProvider, registerScreenProvider, bargeIn, micActive, manualVision, visionStreaming, clearError, dismissAlert, sendText, confirmAnchor, requestCheck],
   );
 }

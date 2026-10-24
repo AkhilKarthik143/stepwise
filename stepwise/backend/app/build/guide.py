@@ -149,6 +149,9 @@ class BuildGuide:
         t = (text or "").lower().strip()
         if not t:
             return None
+        if self.build is None:
+            self.build = self.catalog.first()  # a build ingested after this session started
+            self._sync_metrics()
         if is_switch(t):
             target = self.catalog.resolve(t)
             if target:
