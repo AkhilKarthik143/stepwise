@@ -1,4 +1,8 @@
+import { lazy, Suspense } from "react";
 import { apiUrl, type BuildStatus } from "../lib/api";
+import { firstHoloPart } from "../lib/partShape";
+
+const PartHologram = lazy(() => import("./PartHologram"));
 
 interface Props {
   status: BuildStatus;
@@ -17,6 +21,7 @@ export function StepPanel({ status, lastCheckFrame }: Props) {
     return <section className="bs-step bs-step--done"><span className="bs-kicker">BUILD COMPLETE</span><b>The {build.title} is done.</b></section>;
   }
   const failed = check?.state === "failed" && (check.issues?.length ?? 0) > 0;
+  const holo = firstHoloPart(step.parts);
   const parts = step.parts.map((p) => `${p.qty > 1 ? `${p.qty}× ` : ""}${[p.color, p.name].filter(Boolean).join(" ")}`);
 
   return (
@@ -38,10 +43,19 @@ export function StepPanel({ status, lastCheckFrame }: Props) {
         </>
       ) : (
         <div className="bs-step-body">
-          <img className="bs-step-img" src={apiUrl(step.image_url)} alt={`Manual picture for step ${step.step}`} />
+          {/* the manual's own picture, framed as the glowing target; the image itself is untouched */}
+          <span className="bs-target" key={step.step}>
+            <img className="bs-step-img" src={apiUrl(step.image_url)} alt={`Manual picture for step ${step.step}`} />
+          </span>
           <div>
             <b className="bs-action">{step.action}</b>
             {parts.length > 0 && <ul className="bs-parts">{parts.map((p) => <li key={p}>{p}</li>)}</ul>}
+            {holo && (
+              <figure className="bs-holo">
+                <Suspense fallback={<div className="bs-holo-canvas" />}><PartHologram part={holo} /></Suspense>
+                <figcaption>Grab: {holo.label}</figcaption>
+              </figure>
+            )}
             {step.watch_for.length > 0 && <small className="bs-watch">Watch for: {step.watch_for.join(", ")}</small>}
           </div>
         </div>
