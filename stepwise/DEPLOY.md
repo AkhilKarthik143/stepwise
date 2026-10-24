@@ -14,9 +14,9 @@ git commit -m "Add <build> manual" && git push
 
 ## 1. Create the app (Azure Cloud Shell, once)
 
-The image is built by GitHub Actions (`.github/workflows/image.yml`) on every push to `stepwise` and published to `ghcr.io/akhilkarthik143/buildsight`. Azure only pulls it: its own builder (ACR Tasks) is blocked on new and student subscriptions.
+The image is built by GitHub Actions (`.github/workflows/image.yml`) on every push to `stepwise` and published to `ghcr.io/<owner>/buildsight`. Azure only pulls it: its own builder (ACR Tasks) is blocked on new and student subscriptions.
 
-Once: the repo owner makes the package public (GitHub, Packages, buildsight, Package settings, Change visibility, Public). The image holds code and manuals, never keys.
+We deploy from the fork `citricice/stepwise`, so the image is `ghcr.io/citricice/buildsight`. Once: make that package public (GitHub, Packages, buildsight, Package settings, Change visibility, Public). The image holds code and manuals, never keys.
 
 Open portal.azure.com, click the `>_` icon at the top, choose **Bash**:
 
@@ -24,7 +24,7 @@ Open portal.azure.com, click the `>_` icon at the top, choose **Bash**:
 az extension add --name containerapp --upgrade
 for ns in Microsoft.App Microsoft.OperationalInsights Microsoft.Insights; do az provider register --namespace $ns; done
 az containerapp up --name buildsight --resource-group buildsight --location westus2 \
-  --image ghcr.io/akhilkarthik143/buildsight:latest --ingress external --target-port 8000
+  --image ghcr.io/citricice/buildsight:latest --ingress external --target-port 8000
 ```
 
 New subscriptions take a minute or two to register those services; if `up` says a namespace isn't registered, wait and run it again. It prints the app URL when done.
@@ -69,10 +69,10 @@ az containerapp show -n buildsight -g buildsight --query properties.configuratio
 
 ## 5. Redeploy after a change
 
-Push to GitHub, wait for the "Build image" action to finish (about 4 minutes), then in Cloud Shell:
+Push to `AkhilKarthik143/stepwise`. On the fork's GitHub page click **Sync fork**, wait for the fork's "Build image" action to finish (about 4 minutes), then in Cloud Shell:
 
 ```bash
-az containerapp update -n buildsight -g buildsight --image ghcr.io/akhilkarthik143/buildsight:latest --revision-suffix v$(date +%H%M)
+az containerapp update -n buildsight -g buildsight --image ghcr.io/citricice/buildsight:latest --revision-suffix v$(date +%H%M)
 ```
 
 Secrets and settings are kept. A redeploy restarts the app, which resets the dashboard: don't redeploy right before presenting.
