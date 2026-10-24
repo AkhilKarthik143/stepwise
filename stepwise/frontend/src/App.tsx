@@ -7,6 +7,7 @@ import { MachineDataPanel } from "./components/panels/MachineDataPanel";
 import { MeasurementPanel } from "./components/panels/MeasurementPanel";
 import { OverviewPanel } from "./components/panels/OverviewPanel";
 import { ProcedurePanel } from "./components/panels/ProcedurePanel";
+import { RepairCard } from "./components/RepairCard";
 import { SchematicPanel } from "./components/panels/SchematicPanel";
 import { useRealtimeSocket } from "./hooks/useRealtimeSocket";
 import { PANEL_TITLES, fetchConfig, type RuntimeConfig } from "./lib/api";
@@ -44,9 +45,18 @@ export default function App() {
   }, [state.lines, state.partialAssistant]);
 
   const visiblePanels = PANEL_ORDER.filter((p) => state.visible[p] || (p === "overview" && state.highlight) || (p === "procedure" && state.panels.procedure));
-  const providerLabel = state.provider === "claude" ? "CLAUDE" : "MOCK / LOCAL";
+  const providerLabel = state.provider === "claude" ? "CLAUDE" : state.provider === "guide" ? "MANUAL-GUIDED" : "MOCK / LOCAL";
   const currentStep = state.panels.procedure;
   const asset = state.assetLabel || config?.asset_id || "PL45LM-01";
+  const report: string | undefined = state.panels.event_log?.report;
+  const p = config?.providers;
+  const voiceOut = state.voice?.voice_out ?? p?.voice_out ?? "browser";
+  const statusPills: [string, string, boolean][] = [
+    ["Brain", p?.agent === "claude" ? "Claude" : "mock", p?.agent === "claude"],
+    ["Vision", p?.vision === "claude" ? "Claude" : "confirm by voice", p?.vision === "claude"],
+    ["Voice", voiceOut === "cartesia" ? "Cartesia Sonic + Ink" : voiceOut === "qwen" ? "Qwen" : "browser", voiceOut === "cartesia"],
+    ["Search", p?.moss_configured ? "Moss" : "local catalog", !!p?.moss_configured],
+  ];
 
   function submitCommand(value = command) {
     const text = value.trim();
@@ -75,24 +85,29 @@ export default function App() {
           </div>
         </section>
 
+        <div className="stepwise-status-row" aria-label="Live services">
+          {statusPills.map(([label, value, live]) => <span key={label} className={`stepwise-pill ${live ? "is-live" : ""}`}><b>{label}</b> {value}</span>)}
+        </div>
+
         <section className="stepwise-guidance" aria-live="polite">
           <div className="stepwise-guidance-label"><span className={`stepwise-state-dot stepwise-state-dot--${state.conv}`} /> {state.conv === "thinking" ? "PROCESSING" : state.conv.toUpperCase()} <span className="stepwise-guidance-label__source">grounded · {state.sources[0]?.label || "STEPWISE catalog"}</span></div>
+          {state.partialUser && <p className="stepwise-heard">“{state.partialUser}”</p>}
           <p>{lastAssistant}</p>
-          {currentStep?.mode && !currentStep.complete && <div className="stepwise-step-card"><span>STEP {((currentStep.current ?? currentStep.index ?? 0) + 1)} / {(currentStep.steps || currentStep.items || []).length}</span><b>{(currentStep.steps || currentStep.items || [])[currentStep.current ?? currentStep.index ?? 0]?.text || "Current approved action"}</b><small>{currentStep.mode === "safety" ? "Say confirmed to advance this safety item." : "Completion is operator-asserted."}</small></div>}
+          <RepairCard guide={state.guide} step={currentStep} report={report} sources={state.sources} onSay={submitCommand} />
         </section>
 
         <div className="stepwise-command-row">
           <form className="stepwise-command" onSubmit={(event) => { event.preventDefault(); submitCommand(); }}>
             <span className="stepwise-command-icon">⌕</span>
-            <input value={command} onChange={(event) => setCommand(event.target.value)} placeholder="Ask STEPWISE anything about this machine…" aria-label="Ask STEPWISE" />
+            <input value={command} onChange={(event) => setCommand(event.target.value)} placeholder="Say or type what's wrong…" aria-label="Ask STEPWISE" />
             <button type="submit">Send</button>
           </form>
           <button className={`stepwise-evidence-toggle ${evidenceOpen ? "is-open" : ""}`} onClick={() => setEvidenceOpen((value) => !value)}>{evidenceOpen ? "Hide evidence" : "Open evidence"} <span>({visiblePanels.length})</span></button>
         </div>
 
-        <div className="stepwise-quick-actions" aria-label="Demo commands">
-          {[["What am I looking at?", "Identify machine"], ["Show me where the spindle is.", "Locate spindle"], ["What should I inspect?", "Inspect"], ["Walk me through it.", "Procedure"], ["Generate the report.", "Report"]].map(([value, label]) => <button key={value} onClick={() => submitCommand(value)}>{label}</button>)}
-        </div>
+        {state.guide.phase === "idle" && <div className="stepwise-quick-actions" aria-label="Demo commands">
+          {[["The nozzle is clogged", "Clogged nozzle (Prusa)"], ["What am I looking at?", "Identify CNC"], ["Walk me through the drawbar inspection.", "CNC procedure"]].map(([value, label]) => <button key={value} onClick={() => submitCommand(value)}>{label}</button>)}
+        </div>}
 
         {configError && <div className="stepwise-inline-error">Backend config unavailable: {configError}. The UI remains available in local mode.</div>}
         {state.error && <div className="stepwise-inline-error">{state.error}<button onClick={clearError}>Dismiss</button></div>}

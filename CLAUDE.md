@@ -20,6 +20,7 @@ stepwise/            the app (this is what ships)
   datasets/          source data (AI4I telemetry CSV, CNC model, demo clip)
   deploy/            Docker Compose + nginx manifests, deployment proof
   docs/              legacy architecture, blog, submission notes
+mobile/              Expo SDK 58 React Native app (the phone app). Same backend, same /ws
 ar-donor/            reference code we port patterns from. Do not run it as part of Stepwise.
 docs/                integrated docs: ARCHITECTURE, IMPLEMENTATION_STATUS, REUSE_AUDIT, DEMO_SCRIPT
 ```
@@ -28,7 +29,8 @@ docs/                integrated docs: ARCHITECTURE, IMPLEMENTATION_STATUS, REUSE
 
 | Piece | Tool | Where |
 |---|---|---|
-| Frontend | React 18 + Vite + Tailwind, TypeScript, three.js for the 3D model | `stepwise/frontend` |
+| Mobile app | Expo SDK 58, React Native 0.88, TypeScript. `expo-camera`, `expo-audio` (`useAudioStream` mic PCM), `expo-speech` fallback. Use `npx expo install` (add `EXPO_OFFLINE=1` here, the Expo API is blocked) | `mobile/` |
+| Web console | React 18 + Vite + Tailwind, TypeScript, three.js for the 3D model | `stepwise/frontend` |
 | Backend | Python 3.12, FastAPI + uvicorn, pydantic-settings | `stepwise/backend/app` |
 | Transport | One WebSocket (`/ws`) for audio, frames, text, captions, tool events | `app/ws/gateway.py`, `app/ws/protocol.py` |
 | Camera | Browser getUserMedia, facingMode "environment", JPEG frames over the WS | `frontend/src` |
@@ -36,7 +38,9 @@ docs/                integrated docs: ARCHITECTURE, IMPLEMENTATION_STATUS, REUSE
 | Brain + vision | Claude via the `anthropic` Python SDK (`ClaudeAgent`), images sent as message inputs | `app/agents/runtime.py` |
 | Fallback brain | `MockAgent`, deterministic, runs with no keys | `app/agents/runtime.py` |
 | Search | Moss Python SDK (`moss`, `MossProvider`), falls back to `LocalDocumentProvider` | `app/knowledge/providers.py` |
-| Voice | Cartesia Python SDK (`cartesia`), `sonic-latest` TTS, PCM s16le 24 kHz | `app/realtime/cartesia.py` |
+| Voice | Cartesia Python SDK (`cartesia`): `sonic-latest` TTS (PCM s16le 24 kHz) and `ink-2` STT with turn detection. Browser speech APIs when no key. | `app/realtime/cartesia.py`, `frontend/src/audio/browserSpeech.ts` |
+| Guided flow | `RepairGuide`: problem, machine confirm, next/repeat/yes, "it didn't work" escalation, report | `app/agents/guide.py` |
+| Vision | Claude identifies machine + part from the latest frame. Local fallback never trusts a guess. | `app/vision/identify.py` |
 | Grounding | Argument whitelists, tool-only facts, LOTO verbal gating | `app/grounding` |
 | Catalogs | JSON machines, parts, procedures, safety, hotspots, SVG schematics | `app/data` |
 | Hosting | Docker image + nginx (or Caddy) TLS on a VM. Public HTTPS is required for phone camera access. | `backend/Dockerfile`, `deploy/ecs` |
@@ -70,7 +74,7 @@ Rules:
 - One camera stream and one WebSocket. Don't add a second media stack (no WebRTC alongside the WS).
 - All API keys stay on the server in `backend/.env`. The frontend only talks to `/ws`, `/api/*`, and `/healthz`.
 
-HTTP routes today: `GET /healthz`, `GET /api/config` (provider status), `GET /api/schematics/{file}`, `WS /ws`.
+HTTP routes today: `GET /healthz`, `GET /api/config` (provider status), `GET /api/schematics/{file}`, `GET /api/tts?text=` (Cartesia WAV for the mobile app), `WS /ws` (`?client=mobile` turns off PCM-over-socket TTS).
 
 ## AR coordinate contract
 
@@ -90,6 +94,8 @@ GUIDING: step n
   other     -> treat as a question, Claude answers, stay on step n
 last step done -> REPORT
 ```
+
+`RepairGuide` (`app/agents/guide.py`) runs this flow on the server. It handles the fixed-meaning phrases before the agent sees them. Steps with `"confirm": true` block `next` and bulk `complete` in `procedure_step` until an explicit `confirm`.
 
 Procedure and LOTO state live on the backend (`app/agents/session_state.py`, `workflows.py`). The frontend renders what the backend says. It never advances a step on its own.
 
@@ -131,7 +137,9 @@ npm ci
 npm run dev -- --host 0.0.0.0
 ```
 
-Before you commit: `cd stepwise/backend && pytest -q` and `cd stepwise/frontend && npm run build`. CI runs both.
+Mobile: see `mobile/README.md` (`EXPO_PUBLIC_STEPWISE_URL=http://<laptop-ip>:8000 npx expo start`, open in Expo Go).
+
+Before you commit: `cd stepwise/backend && pytest -q`, `PYTHONPATH=stepwise/backend pytest -q tests`, `cd stepwise/frontend && npm run build`, and `cd mobile && npx tsc --noEmit`. CI runs the first and third.
 
 ## Build order
 
@@ -149,8 +157,7 @@ Rule: get the dumbest end-to-end version working first (photo in, one step spoke
 
 ## Gaps vs. the original plan
 
-- Gemini is not in the repo. Claude handles vision today. Add a Gemini identify step only if we keep the Gemini track.
-- Cartesia STT (Ink) is not wired yet. The adapter only does TTS.
+- We dropped Gemini. Claude handles vision (`app/vision/identify.py`), with a local fallback that always asks the user to confirm the machine.
 - Deploy manifests target Alibaba ECS. The same Docker Compose + nginx setup runs on a Vultr VM with a GoDaddy domain.
 - Snowflake is not started.
 
@@ -175,7 +182,7 @@ Do not copy their architectures. Several use Gemini Live for everything, which w
 
 ## Sponsor tracks we're targeting
 
-Microsoft (Built for the Real World + Customer Impact), Cartesia, Moss, Gemini (MLH, needs the Gemini step above), Vultr (MLH), GoDaddy Registry (MLH), Commit Fellowship (MLH), Snowflake (MLH, if time).
+Microsoft (Built for the Real World + Customer Impact), Cartesia, Moss, Vultr (MLH), GoDaddy Registry (MLH), Commit Fellowship (MLH), Snowflake (MLH, if time).
 
 Every sponsor integration must visibly work in the demo.
 

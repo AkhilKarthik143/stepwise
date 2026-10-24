@@ -17,12 +17,13 @@ from pathlib import Path
 
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
 from app.config import get_settings
 from app.data.catalog import catalog
 from app.data.catalog import SCHEMATICS_DIR
+from app.realtime.cartesia import CartesiaTTS, CartesiaUnavailable
 from app.realtime.connectors import connector_status
 from app.ws.gateway import RealtimeBridge, voice_modes
 
@@ -129,6 +130,22 @@ def schematic(file: str) -> FileResponse | JSONResponse:
     if not path.is_file():
         return JSONResponse({"error": "not found"}, status_code=404)
     return FileResponse(path, media_type="image/svg+xml")
+
+
+@app.get("/api/tts", response_model=None)
+async def tts(text: str) -> Response | JSONResponse:
+    """Cartesia Sonic as a WAV file, for the mobile app. 503 means use on-device speech."""
+    text = text.strip()[:1200]
+    if not text:
+        return JSONResponse({"error": "empty text"}, status_code=400)
+    try:
+        audio = await CartesiaTTS(settings.cartesia_api_key, settings.cartesia_voice_id, settings.cartesia_tts_model).wav(text)
+    except CartesiaUnavailable:
+        return JSONResponse({"error": "cartesia not configured"}, status_code=503)
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("tts failed: %r", exc)
+        return JSONResponse({"error": "tts failed"}, status_code=502)
+    return Response(audio, media_type="audio/wav")
 
 
 @app.websocket("/ws")

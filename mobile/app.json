@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "STEPWISE",
+    "slug": "stepwise",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.stepwise.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "STEPWISE looks at the machine to identify it and find the right repair steps.",
+        "NSMicrophoneUsageDescription": "STEPWISE listens so you can work hands-free."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#071018",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "dev.stepwise.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "STEPWISE looks at the machine to identify it and find the right repair steps.",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "STEPWISE listens so you can work hands-free."
+        }
+      ]
+    ],
+    "backgroundColor": "#071018"
+  }
+}

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { AudioPlayer } from "../audio/player";
+import { BrowserListener, speak, stopSpeaking } from "../audio/browserSpeech";
 import { MicRecorder } from "../audio/recorder";
 import {
   type AlertMsg,
@@ -7,7 +8,10 @@ import {
   type ARAnnotationRemoveMsg,
   type ConnState,
   type ConvState,
+  type GuideStatus,
   type MetricsMsg,
+  type SourceRef,
+  type VoiceMode,
   type RuntimeConfig,
   type ServerMessage,
   wsUrl,
@@ -37,9 +41,11 @@ interface State {
   highlight: { component: string; svg_id: string; label: string; seq: number } | null;
   annotate: { label: string; region: string; seq: number } | null;
   assetLabel: string | null;
-  provider: "claude" | "mock";
-  sources: { kind: string; label: string }[];
+  provider: "claude" | "mock" | "guide";
+  sources: SourceRef[];
   annotations: ARAnnotationMsg[];
+  guide: GuideStatus;
+  voice: { voice_in: VoiceMode; voice_out: VoiceMode } | null;
 }
 
 const initial: State = {
@@ -65,6 +71,8 @@ const initial: State = {
   provider: "mock",
   sources: [],
   annotations: [],
+  guide: { phase: "idle", problem: "", identification: null, pending_machine: null },
+  voice: null,
 };
 
 type Action =
@@ -73,6 +81,7 @@ type Action =
   | { k: "error"; v: string | null }
   | { k: "tick" }
   | { k: "dismissAlert"; i: number }
+  | { k: "partial"; v: string }
   | { k: "reset" };
 
 let lineId = 0;
@@ -87,6 +96,8 @@ function reducer(s: State, a: Action): State {
       return { ...s, sessionRemaining: Math.max(0, s.sessionRemaining - 1) };
     case "dismissAlert":
       return { ...s, alerts: s.alerts.filter((_, idx) => idx !== a.i) };
+    case "partial":
+      return { ...s, partialUser: a.v };
     case "reset":
       return { ...initial, conn: s.conn };
     case "msg":
@@ -105,7 +116,8 @@ function applyMsg(s: State, m: ServerMessage): State {
     case "transcript": {
       if (m.role === "user") {
         if (m.final) return { ...s, lines: [...s.lines, { id: ++lineId, role: "user", text: m.text || s.partialUser }], partialUser: "" };
-        return { ...s, partialUser: s.partialUser + m.delta };
+        // Cartesia turn.update carries the whole turn so far (text); Qwen streams deltas.
+        return { ...s, partialUser: m.text ? m.text : s.partialUser + m.delta };
       }
       if (m.final) return { ...s, lines: [...s.lines, { id: ++lineId, role: "assistant", text: m.text || s.partialAssistant }], partialAssistant: "" };
       return { ...s, partialAssistant: s.partialAssistant + m.delta };
@@ -149,9 +161,13 @@ function applyControl(s: State, action: string, payload: Record<string, unknown>
     case "provider_status":
       return {
         ...s,
-        provider: payload.mock === true ? "mock" : payload.provider === "claude" ? "claude" : s.provider,
-        sources: Array.isArray(payload.sources) ? payload.sources as { kind: string; label: string }[] : s.sources,
+        provider: payload.mock === true ? "mock" : payload.provider === "claude" || payload.provider === "guide" ? payload.provider : s.provider,
+        sources: Array.isArray(payload.sources) ? payload.sources as SourceRef[] : s.sources,
       };
+    case "guide":
+      return { ...s, guide: payload as unknown as GuideStatus };
+    case "voice":
+      return { ...s, voice: { voice_in: payload.voice_in as VoiceMode, voice_out: payload.voice_out as VoiceMode } };
     case "activate_vision":
       return { ...s, visionActive: true, visible: { ...s.visible, vision: true } };
     case "deactivate_vision":
@@ -254,6 +270,9 @@ export function useRealtimeSocket(config: RuntimeConfig | null) {
   const frameProvider = useRef<FrameProvider | null>(null);
   const screenProvider = useRef<FrameProvider | null>(null);
   const micOn = useRef(false);
+  const listener = useRef<BrowserListener | null>(null);
+  const voiceIn = state.voice?.voice_in ?? config?.providers.voice_in ?? "browser";
+  const voiceOut = state.voice?.voice_out ?? config?.providers.voice_out ?? "browser";
 
   const send = useCallback((obj: unknown) => {
     if (ws.current?.readyState === WebSocket.OPEN) ws.current.send(JSON.stringify(obj));
@@ -322,11 +341,31 @@ export function useRealtimeSocket(config: RuntimeConfig | null) {
   const toggleMic = useCallback(async () => {
     if (!config) return;
     if (micOn.current) {
+      listener.current?.stop();
+      listener.current = null;
       recorder.current?.stop();
       recorder.current = null;
       micOn.current = false;
       setMicActive(false);
       dispatch({ k: "msg", m: { type: "state", status: "idle" } });
+      return;
+    }
+    if (voiceIn === "browser") {
+      // No server STT: the browser transcribes and each final phrase is a normal text turn.
+      try {
+        const l = new BrowserListener(
+          (text) => send({ type: "control", action: "text", text }),
+          (partial) => dispatch({ k: "partial", v: partial }),
+        );
+        l.start();
+        listener.current = l;
+        micOn.current = true;
+        setMicActive(true);
+        dispatch({ k: "error", v: null });
+        dispatch({ k: "msg", m: { type: "state", status: "listening" } });
+      } catch (e) {
+        dispatch({ k: "error", v: (e as Error).message });
+      }
       return;
     }
     try {
@@ -356,7 +395,17 @@ export function useRealtimeSocket(config: RuntimeConfig | null) {
       setMicActive(false);
       dispatch({ k: "error", v: `Microphone: ${(e as Error).message}` });
     }
-  }, [config]);
+  }, [config, voiceIn, send]);
+
+  // Browser voice out: read each final assistant reply aloud (server voice streams PCM instead).
+  const lastSpoken = useRef(0);
+  useEffect(() => {
+    if (voiceOut !== "browser") return;
+    const last = state.lines[state.lines.length - 1];
+    if (!last || last.role !== "assistant" || last.id === lastSpoken.current) return;
+    lastSpoken.current = last.id;
+    speak(last.text, listener.current);
+  }, [state.lines, voiceOut]);
 
   const clearError = useCallback(() => dispatch({ k: "error", v: null }), []);
   const dismissAlert = useCallback((i: number) => dispatch({ k: "dismissAlert", i }), []);
@@ -372,6 +421,7 @@ export function useRealtimeSocket(config: RuntimeConfig | null) {
   const bargeIn = useCallback(() => {
     const wasSpeaking = player.current?.speaking ?? false;
     player.current?.drain();
+    stopSpeaking();
     // Only cancel a response that's actually playing (avoids a "no active response" warning).
     if (wasSpeaking) send({ type: "control", action: "barge_in" });
   }, [send]);

@@ -3,6 +3,11 @@
 
 export type ConnState = "disconnected" | "connecting" | "connected";
 export type ConvState = "idle" | "listening" | "thinking" | "speaking";
+export type VoiceMode = "cartesia" | "qwen" | "browser";
+export type GuidePhase = "idle" | "awaiting_machine" | "guiding" | "report";
+export interface Identification { asset_id: string | null; machine_model: string; part: string; confidence: number; provider: "claude" | "local"; mock: boolean }
+export interface GuideStatus { phase: GuidePhase; problem: string; identification: Identification | null; pending_machine: string | null }
+export interface SourceRef { kind: string; label: string; url?: string }
 
 export interface RuntimeConfig {
   asset_id: string;
@@ -10,7 +15,15 @@ export interface RuntimeConfig {
   output_sample_rate: number;
   vision: { width: number; height: number; fps: number; screen: { width: number; height: number } };
   session_max_seconds: number;
-  providers: { agent: "claude" | "mock"; claude_configured: boolean; cartesia_configured: boolean; moss_configured: boolean };
+  providers: {
+    agent: "claude" | "mock";
+    claude_configured: boolean;
+    cartesia_configured: boolean;
+    moss_configured: boolean;
+    vision: "claude" | "local";
+    voice_in: VoiceMode;
+    voice_out: VoiceMode;
+  };
 }
 
 // ── server -> client messages ────────────────────────────────────────────────

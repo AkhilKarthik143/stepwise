@@ -312,7 +312,9 @@ class RealtimeBridge:
         # Voice transport: Cartesia when configured, else the legacy Qwen realtime session, else
         # the browser's own speech APIs (the frontend reads voice_in/voice_out from /api/config).
         self.voice_in, self.voice_out = voice_modes(self.settings)
-        self.tts = CartesiaTTS(self.settings.cartesia_api_key, self.settings.cartesia_voice_id, self.settings.cartesia_tts_model) if self.voice_out == "cartesia" else None
+        # The mobile app plays each reply from GET /api/tts instead of PCM over this socket.
+        is_mobile = getattr(websocket, "query_params", {}).get("client") == "mobile"
+        self.tts = CartesiaTTS(self.settings.cartesia_api_key, self.settings.cartesia_voice_id, self.settings.cartesia_tts_model) if self.voice_out == "cartesia" and not is_mobile else None
         self.stt = CartesiaSTT(self.settings.cartesia_api_key, self.settings.cartesia_stt_model, self.settings.input_sample_rate,
                                on_partial=self._on_stt_partial, on_final=self._handle_text_input) if self.voice_in == "cartesia" else None
         self._speak_task: asyncio.Task | None = None
@@ -541,7 +543,7 @@ class RealtimeBridge:
             await self._safe_send_json(protocol.state("listening", self._remaining()))
 
     async def _on_stt_partial(self, text: str) -> None:
-        await self._safe_send_json(protocol.transcript("user", delta=text))
+        await self._safe_send_json(protocol.transcript("user", text=text, final=False))
 
     def _speak(self, text: str) -> None:
         """Voice a reply with Cartesia Sonic. A new reply cuts off the previous one."""

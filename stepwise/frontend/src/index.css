@@ -129,3 +129,24 @@ body { background: var(--stepwise-bg); }
 }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* Guided repair */
+.stepwise-status-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 0 0; }
+.stepwise-pill { padding: 3px 9px; border: 1px solid rgba(232,241,245,.14); border-radius: 999px; color: var(--stepwise-muted); font-size: 11px; }
+.stepwise-pill b { color: var(--stepwise-text, #e8f1f5); font-weight: 600; margin-right: 3px; }
+.stepwise-pill.is-live { border-color: rgba(57,229,140,.45); color: #39e58c; }
+.stepwise-heard { color: var(--stepwise-muted); font-style: italic; font-size: 13px; }
+.stepwise-step-card b { font-size: 17px; }
+.stepwise-step-card--confirm { border-left-color: #65d9ff; background: rgba(101,217,255,.08); }
+.stepwise-step-card--confirm span { color: #65d9ff; }
+.stepwise-step-card--locked { border-left-width: 4px; background: rgba(246,191,85,.14); }
+.stepwise-step-card--report { border-left-color: #39e58c; background: rgba(57,229,140,.07); }
+.stepwise-step-card--report span { color: #39e58c; }
+.stepwise-step-card pre { max-height: 240px; overflow: auto; white-space: pre-wrap; font-size: 11px; line-height: 1.45; margin: 0; }
+.stepwise-safety-note { color: var(--stepwise-amber) !important; font-weight: 600; font-size: 12px !important; }
+.stepwise-source a { color: #65d9ff; }
+.stepwise-figure { max-width: 100%; border-radius: 4px; }
+.stepwise-say-row { display: flex; gap: 8px; margin-top: 6px; }
+.stepwise-say-row button { flex: 1; min-height: 48px; border: 1px solid rgba(232,241,245,.18); border-radius: 4px; background: rgba(232,241,245,.05); color: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.stepwise-say-row button.is-primary { background: #65d9ff; border-color: #65d9ff; color: #071018; }
+.stepwise-say-row button.is-safety { background: var(--stepwise-amber); border-color: var(--stepwise-amber); }

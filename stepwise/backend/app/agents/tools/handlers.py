@@ -496,6 +496,12 @@ def generate_report(state: SessionState, args: dict) -> ToolResult:
     ]
     for e in state.work_log:
         lines.append(f"  [{e['time']}] {e['type']}: {e.get('note','')}")
+    proc = state.active_procedure
+    if proc:
+        done = len(proc.get("completed", set()))
+        lines += ["", f"Procedure: {proc['title']} ({done}/{len(proc['steps'])} steps done)"]
+        if proc.get("source"):
+            lines.append(f"Source: {proc['source'].get('title')} <{proc['source'].get('url')}>")
     if alerts:
         lines.append("")
         lines.append("Threshold alerts:")

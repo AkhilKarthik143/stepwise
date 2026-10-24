@@ -39,20 +39,28 @@ class CartesiaTTS:
         self.model_id = model_id
         self._client = None
 
-    async def stream(self, transcript: str) -> AsyncIterator[bytes]:
-        """Yield PCM16 chunks with an even byte length (the browser reads them as Int16Array)."""
+    async def _generate(self, transcript: str, container: str):
         if not available(self.api_key):
             raise CartesiaUnavailable("Cartesia credentials or the optional SDK are missing")
         if self._client is None:
             from cartesia import AsyncCartesia
 
             self._client = AsyncCartesia(api_key=self.api_key)
-        resp = await self._client.tts.generate(
+        return await self._client.tts.generate(
             model_id=self.model_id,
             transcript=transcript,
             voice={"id": self.voice_id},
-            output_format={"container": "raw", "encoding": "pcm_s16le", "sample_rate": TTS_SAMPLE_RATE},
+            output_format={"container": container, "encoding": "pcm_s16le", "sample_rate": TTS_SAMPLE_RATE},
         )
+
+    async def wav(self, transcript: str) -> bytes:
+        """One WAV file for clients that play files (the React Native app)."""
+        resp = await self._generate(transcript, "wav")
+        return await resp.read()
+
+    async def stream(self, transcript: str) -> AsyncIterator[bytes]:
+        """Yield PCM16 chunks with an even byte length (the browser reads them as Int16Array)."""
+        resp = await self._generate(transcript, "raw")
         carry = b""
         async for chunk in resp.iter_bytes():
             data = carry + chunk
