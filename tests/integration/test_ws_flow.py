@@ -13,7 +13,12 @@ def _messages(ws, count: int) -> list[dict]:
     return [json.loads(ws.receive_text()) for _ in range(count)]
 
 
-def test_mock_text_turn_emits_grounded_transcript_and_provider_status(monkeypatch):
+def test_mock_text_turn_emits_grounded_transcript_and_provider_status(monkeypatch, tmp_path):
+    # Legacy CNC path: only answers when no BuildSight build is loaded.
+    import app.ws.gateway as gateway
+    from app.build.catalog import BuildCatalog
+
+    monkeypatch.setattr(gateway, "get_catalog", lambda: BuildCatalog(tmp_path))
     monkeypatch.setenv("STEPWISE_PROVIDER", "mock")
     with TestClient(app) as client:
         with client.websocket_connect("/ws") as ws:

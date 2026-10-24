@@ -6,8 +6,11 @@ store that ``GET /api/metrics`` reads (the dashboard runs on a second phone or l
 
 from __future__ import annotations
 
+import logging
 import time
 from dataclasses import asdict, dataclass, field
+
+logger = logging.getLogger("stepwise.metrics")  # exported to Application Insights when enabled
 
 
 @dataclass
@@ -28,6 +31,8 @@ class Metrics:
     def record_turn(self, kind: str, ms: float) -> None:
         self.turn_ms = (self.turn_ms + [{"kind": kind, "ms": round(ms)}])[-50:]
         self.updated_at = time.time()
+        logger.info("turn", extra={"kind": kind, "ms": round(ms), "build": self.build_id, "step": self.step,
+                                   "mistakes_caught": self.mistakes_caught, "overrides": self.overrides})
 
     def snapshot(self) -> dict:
         data = asdict(self)

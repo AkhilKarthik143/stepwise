@@ -1,8 +1,6 @@
-# Deploying BuildSight: backend on Railway, web app on Vercel
+# Deploying BuildSight on Azure
 
-The backend (FastAPI, WebSocket, manual pictures, Claude and Cartesia calls) runs as one Docker container. The phone web app is static and runs on **Vercel**, pointed at the backend with `VITE_BACKEND_URL`. The backend also serves the same app at its own URL, a handy fallback if Vercel misbehaves.
-
-Any host that runs a Dockerfile and keeps WebSockets open works. Railway is the default below. Render and Azure are at the end.
+One container on **Azure Container Apps** runs everything: the phone web app, the API, the WebSocket (voice and live checks), and the Claude and Cartesia calls. One https URL, a real certificate, no Vercel needed. **Application Insights** records latency per turn, checks and mistakes. A **passcode** keeps strangers with the link from spending the API keys.
 
 ## 0. Before you deploy
 
@@ -14,64 +12,82 @@ git add app/data/builds/<build_id>/build.json app/data/builds/<build_id>/steps
 git commit -m "Add <build> manual" && git push
 ```
 
-(`pages/` is gitignored. It's only needed for `--recrop` on your laptop.)
+## 1. Create the app (Azure Cloud Shell, once)
 
-## 1. Backend on Railway
+Open portal.azure.com, click the `>_` icon at the top, choose **Bash**. It has `az` and `git` already.
 
-1. railway.com, sign in with GitHub, then **New Project**, then **Deploy from GitHub repo**, and pick the repo (the repo owner may need to grant Railway access).
-2. Open the service's **Settings**:
-   - **Root Directory:** `stepwise` (Railway then finds `Dockerfile` and `railway.json` there)
-   - **Branch:** `stepwise`
-3. **Variables** tab, add:
-   ```
-   ANTHROPIC_API_KEY=<your key>
-   CARTESIA_API_KEY=<your key>
-   CARTESIA_VOICE_ID=ef191366-f52f-447a-a398-ed8c0f2943a1
-   CARTESIA_TTS_MODEL=sonic-3.6
-   STEPWISE_ALLOWED_ORIGINS=https://<your-app>.vercel.app
-   ```
-4. **Settings, Networking, Generate Domain.** Railway gives you `https://<something>.up.railway.app`.
-5. Check it: `https://<that-host>/api/config` should show `"claude_configured": true` and `"voice_out": "cartesia"`.
+```bash
+git clone -b stepwise https://github.com/AkhilKarthik143/stepwise.git
+cd stepwise/stepwise
+az containerapp up --name buildsight --resource-group buildsight --location westus2 \
+  --source . --ingress external --target-port 8000
+```
 
-Every push to the `stepwise` branch redeploys automatically. Keep one replica (`railway.json` sets it): sessions and the dashboard live in memory.
+This builds the `Dockerfile` in Azure and prints the app URL. The first run takes several minutes. If the repo is private, clone with a GitHub token: `https://<token>@github.com/...`.
 
-## 2. Web app on Vercel
+## 2. Application Insights (once)
 
-1. vercel.com, then **Add New**, then **Project**, then import the GitHub repo.
-2. **Root Directory:** `stepwise/frontend`. Vercel reads `vercel.json` there (Vite, `npm run build`, output `dist`).
-3. **Environment variable:** `VITE_BACKEND_URL` = `https://<railway host from step 1>` (no trailing slash).
-4. **Deploy.** Vercel prints `https://<your-app>.vercel.app`.
-5. Put that exact URL in `STEPWISE_ALLOWED_ORIGINS` on Railway if you haven't yet. For preview deployments too, also set `STEPWISE_ALLOWED_ORIGIN_REGEX=https://<your-app>-.*\.vercel\.app`.
+```bash
+az monitor app-insights component create --app buildsight-insights -g buildsight --location westus2
+az monitor app-insights component show --app buildsight-insights -g buildsight --query connectionString -o tsv
+```
 
-`VITE_BACKEND_URL` is baked in at build time: after changing it, redeploy on Vercel.
+Copy the connection string it prints (starts with `InstrumentationKey=`). If `az` asks to install the `application-insights` extension, say yes.
 
-## 3. At the demo table
+## 3. Keys, passcode, settings
 
-- Phone: `https://<your-app>.vercel.app` (real certificate, camera works, no warnings)
-- Dashboard laptop: `https://<your-app>.vercel.app/#dashboard`
-- Fallback if Vercel is down: the Railway URL serves the same app
+Type the real values here, in Cloud Shell only:
+
+```bash
+az containerapp secret set -n buildsight -g buildsight --secrets \
+  anthropic-key=<ANTHROPIC_API_KEY> cartesia-key=<CARTESIA_API_KEY> \
+  app-passcode=<a passcode for your team> insights=<connection string from step 2>
+
+az containerapp update -n buildsight -g buildsight --min-replicas 1 --max-replicas 1 \
+  --set-env-vars ANTHROPIC_API_KEY=secretref:anthropic-key CARTESIA_API_KEY=secretref:cartesia-key \
+    APP_PASSCODE=secretref:app-passcode APPLICATIONINSIGHTS_CONNECTION_STRING=secretref:insights \
+    CARTESIA_VOICE_ID=ef191366-f52f-447a-a398-ed8c0f2943a1 CARTESIA_TTS_MODEL=sonic-3.6
+```
+
+`--min-replicas 1` keeps it awake (no cold starts). `--max-replicas 1` matters: sessions and the dashboard live in memory, so there must be exactly one copy.
+
+The URL, any time:
+
+```bash
+az containerapp show -n buildsight -g buildsight --query properties.configuration.ingress.fqdn -o tsv
+```
+
+## 4. Check it
+
+- `https://<host>/healthz` shows `"status": "ok"` (open even when locked)
+- `https://<host>/` asks for the passcode once per device, then opens BuildSight
+- `https://<host>/api/config` (after unlocking) shows `"claude_configured": true` and `"voice_out": "cartesia"`
+
+## 5. Redeploy after a change
+
+In Cloud Shell: `cd ~/stepwise && git pull && cd stepwise`, then the same `az containerapp up ...` line from step 1. Secrets and settings are kept. A redeploy restarts the app, which resets the dashboard: don't redeploy right before presenting.
+
+## At the demo table
+
+- Phone: `https://<host>/`
+- Dashboard laptop: `https://<host>/#dashboard`
+- Live numbers in Azure: portal, Application Insights, **Logs**:
+  ```
+  traces
+  | where message == "turn"
+  | summarize median_ms = percentile(toint(customDimensions.ms), 50), turns = count() by kind = tostring(customDimensions.kind)
+  ```
 
 ## Troubleshooting
 
 | Symptom | Fix |
 |---|---|
-| Red dot on the phone | Open `https://<backend host>/api/config` on the phone. If that fails, the backend is down (Railway, Deployments, View logs). If it works, `VITE_BACKEND_URL` is wrong: fix it and redeploy on Vercel |
-| "Backend unreachable" with a CORS error in the browser console | `STEPWISE_ALLOWED_ORIGINS` must match the Vercel URL exactly, including `https://` |
-| "No build loaded" | The build wasn't committed before deploying. Commit `build.json` + `steps/` and push |
-| Checks say the Claude key is missing | The variable isn't set on the backend host, or the service didn't restart after you added it |
+| Red dot on the phone | Open `https://<host>/healthz`. If that fails, read the logs: `az containerapp logs show -n buildsight -g buildsight --follow` |
+| Keeps asking for the passcode | Cookies blocked (private browsing), or the passcode changed. Unlock again |
+| "No build loaded" | The build wasn't committed before deploying. Commit `build.json` + `steps/`, then redeploy |
+| Checks say the Claude key is missing | The secret or env var isn't set. Re-run the step 3 commands |
+| Nothing in Application Insights | Wait 2 to 5 minutes, and check the connection string secret |
 
-## Other backend hosts
+## Other hosts
 
-**Render.** New, then Web Service, then pick the repo. Root Directory `stepwise`, Branch `stepwise`, Runtime Docker. Add the same variables. Health check path `/healthz`. The free plan sleeps after 15 minutes idle and takes about a minute to wake, so use the Starter plan for the demo.
-
-**Azure Container Apps** (if the Microsoft track wants Azure). In Azure Cloud Shell (Bash):
-
-```bash
-git clone -b stepwise https://github.com/AkhilKarthik143/stepwise.git && cd stepwise/stepwise
-az containerapp up --name buildsight --resource-group buildsight --location westus2 --source . --ingress external --target-port 8000
-az containerapp secret set -n buildsight -g buildsight --secrets anthropic-key=<KEY> cartesia-key=<KEY>
-az containerapp update -n buildsight -g buildsight --min-replicas 1 --max-replicas 1 \
-  --set-env-vars ANTHROPIC_API_KEY=secretref:anthropic-key CARTESIA_API_KEY=secretref:cartesia-key \
-    CARTESIA_VOICE_ID=ef191366-f52f-447a-a398-ed8c0f2943a1 CARTESIA_TTS_MODEL=sonic-3.6 \
-    STEPWISE_ALLOWED_ORIGINS=https://<your-app>.vercel.app
-```
+The same `Dockerfile` runs on **Render** (Root Directory empty, Dockerfile Path `stepwise/Dockerfile`, Build Context `stepwise`, Health Check `/healthz`; the free plan sleeps after 15 minutes) and **Railway** (`railway.json`). Set the same variables there. For a separate frontend on Vercel, set `VITE_BACKEND_URL` to the backend URL and leave `APP_PASSCODE` unset on the backend, since the lock's cookie only works on one domain.

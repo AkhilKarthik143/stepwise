@@ -29,7 +29,7 @@ docs/, ar-donor/          inherited docs and reference code
 | Step check, part match, questions | Claude Sonnet 5.5 (`claude-sonnet-5-5`), structured outputs, effort `low` | `app/build/vision.py` |
 | Reading manuals into steps | Claude Opus 5.5 (`claude-opus-5-5`), run once per manual | `scripts/ingest_manual.py` |
 | Voice | Cartesia Sonic TTS + Ink STT (turn detection). Browser speech APIs when no key | `app/realtime/cartesia.py`, `frontend/src/audio/browserSpeech.ts` |
-| Hosting | Backend: Docker image on Railway (one replica; Render or Azure Container Apps also work). Web app: Vercel with `VITE_BACKEND_URL`. Steps in `stepwise/DEPLOY.md` | `stepwise/Dockerfile`, `stepwise/railway.json`, `frontend/vercel.json` |
+| Hosting | Azure Container Apps, one replica: one Docker image serves the web app, API and WebSocket. Application Insights for telemetry, `APP_PASSCODE` lock on the public URL. Render, Railway and Vercel still work. Steps in `stepwise/DEPLOY.md` | `stepwise/Dockerfile`, `app/telemetry.py`, `app/access.py` |
 
 All Claude calls go through `anthropic` (Python SDK, `client.beta.messages.parse` with pydantic models) and send `fallbacks="default"` with beta `server-side-fallback-2026-07-01`. Optional SDKs (`anthropic`, `cartesia`, `pymupdf`, `pillow`) are in `requirements-optional.txt`.
 

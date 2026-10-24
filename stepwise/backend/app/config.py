@@ -70,6 +70,9 @@ class Settings(BaseSettings):
     cartesia_tts_model: str = Field(default="sonic-latest", alias="CARTESIA_TTS_MODEL")
     cartesia_stt_model: str = Field(default="ink-2", alias="CARTESIA_STT_MODEL")
     # BuildSight: Sonnet checks each step live, Opus reads manuals once (scripts/ingest_manual.py).
+    # Public deployments: passcode for the whole site, and Azure Application Insights.
+    app_passcode: str = Field(default="", alias="APP_PASSCODE")
+    appinsights_connection_string: str = Field(default="", alias="APPLICATIONINSIGHTS_CONNECTION_STRING")
     check_model: str = Field(default="claude-sonnet-5-5", alias="STEPWISE_CHECK_MODEL")
     check_effort: str = Field(default="low", alias="STEPWISE_CHECK_EFFORT")
     ingest_model: str = Field(default="claude-opus-5-5", alias="STEPWISE_INGEST_MODEL")

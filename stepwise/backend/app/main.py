@@ -20,6 +20,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
+from app import telemetry
+from app.access import PasscodeGate
 from app.build import metrics as build_metrics
 from app.build.catalog import get_catalog
 from app.config import get_settings
@@ -58,6 +60,9 @@ async def lifespan(_: FastAPI):
     yield
 
 
+# Before the app is built, so FastAPI requests are instrumented too.
+telemetry.setup(settings.appinsights_connection_string)
+
 app = FastAPI(
     title="STEPWISE",
     version="0.1.0",
@@ -75,6 +80,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Outermost: nothing (pages, API, WebSocket) is reachable without the passcode when it's set.
+app.add_middleware(PasscodeGate, passcode=settings.app_passcode)
 
 # Alibaba Cloud proof router (OSS + cloud health). Optional so the app boots even
 # before cloud creds are wired.
