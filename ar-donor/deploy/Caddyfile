@@ -1,6 +1,0 @@
-# Caddy auto-HTTPS reverse proxy. $APP_DOMAIN comes from deploy/.env (compose
-# passes it in). Caddy obtains + renews a Let's Encrypt cert for that domain
-# automatically, then forwards to the app container on its internal port 8443.
-{$APP_DOMAIN} {
-	reverse_proxy app:8443
-}
