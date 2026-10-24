@@ -5,6 +5,13 @@ from __future__ import annotations
 from app.grounding.callbacks import ToolMetrics, execute_tool
 
 
+
+def preconfirm_safety_steps(state):
+    """Navigation tests exercise cursor/completion mechanics, not the safety interlock
+    (covered by the interlock tests below), so pre-confirm every gated step."""
+    proc = state.active_procedure
+    proc["confirmed"] = {i for i, s in enumerate(proc["steps"]) if s.get("confirm")}
+
 def run(state, name, args=None, metrics=None):
     return execute_tool(state, name, args or {}, metrics)
 
@@ -82,6 +89,7 @@ def test_safety_checklist_completes_after_all_items(state):
 # ── procedures ───────────────────────────────────────────────────────────────
 def test_procedure_steps_forward_and_back(state):
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     assert state.active_procedure["index"] == 0
     run(state, "procedure_step", {"action": "next"})
     assert state.active_procedure["index"] == 1
@@ -97,6 +105,7 @@ def test_procedure_step_without_active_is_graceful(state):
 # ── procedures: flexible goto (navigate) vs complete (operator-asserted) ──────
 def test_procedure_goto_navigates_without_completing(state):
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     r = run(state, "procedure_step", {"action": "goto", "step": 3})
     assert state.active_procedure["index"] == 2           # 1-based 3 -> 0-based 2
     assert state.active_procedure["completed"] == set()   # navigation completes nothing
@@ -105,7 +114,8 @@ def test_procedure_goto_navigates_without_completing(state):
 
 
 def test_procedure_complete_marks_through_and_moves(state):
-    run(state, "start_procedure", {"procedure_id": "tool_change"})  # 7 steps
+    run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)  # 7 steps
     r = run(state, "procedure_step", {"action": "complete", "through": 3, "goto_step": 4})
     assert state.active_procedure["completed"] == {0, 1, 2}
     assert state.active_procedure["index"] == 3            # goto_step 4 -> 0-based 3
@@ -117,6 +127,7 @@ def test_procedure_complete_marks_through_and_moves(state):
 
 def test_procedure_next_completes_current_previous_keeps_it(state):
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     run(state, "procedure_step", {"action": "next"})      # completes 0, advances to 1
     assert state.active_procedure["completed"] == {0}
     assert state.active_procedure["index"] == 1
@@ -128,6 +139,7 @@ def test_procedure_next_completes_current_previous_keeps_it(state):
 
 def test_procedure_complete_through_total_finishes(state):
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     total = len(state.active_procedure["steps"])
     r = run(state, "procedure_step", {"action": "complete", "through": total})
     assert r.output.get("complete") is True
@@ -140,7 +152,8 @@ def test_procedure_complete_through_total_finishes(state):
 def test_uncomplete_snaps_highlight_to_new_frontier(state):
     # FIX #1: complete{through:5, goto_step:6} -> completed {0..4}, cursor on 6; then uncomplete
     # back to {0,1,2} must snap the highlight to the NEW to-do (step 4, index 3), not leave it at 5.
-    run(state, "start_procedure", {"procedure_id": "tool_change"})  # 7 steps
+    run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)  # 7 steps
     run(state, "procedure_step", {"action": "complete", "through": 5, "goto_step": 6})
     p = state.active_procedure
     assert p["completed"] == {0, 1, 2, 3, 4} and p["index"] == 5
@@ -153,6 +166,7 @@ def test_uncomplete_snaps_highlight_to_new_frontier(state):
 def test_next_always_completes_the_frontier_not_the_cursor(state):
     # FIX #2: a goto moved the cursor off the frontier; next still completes the TO-DO in order.
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     run(state, "procedure_step", {"action": "goto", "step": 2})       # index 1, completed {}
     assert state.active_procedure["completed"] == set()
     r = run(state, "procedure_step", {"action": "next"})              # completes frontier = step 1
@@ -163,6 +177,7 @@ def test_next_always_completes_the_frontier_not_the_cursor(state):
 
 def test_next_marks_frontier_regardless_of_cursor_no_gaps(state):
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     run(state, "procedure_step", {"action": "complete", "through": 2})  # {0,1}
     run(state, "procedure_step", {"action": "goto", "step": 6})         # cursor far ahead
     run(state, "procedure_step", {"action": "next"})                    # completes frontier = step 3
@@ -173,6 +188,7 @@ def test_next_marks_frontier_regardless_of_cursor_no_gaps(state):
 
 def test_procedure_reset_clears_everything(state):
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     run(state, "procedure_step", {"action": "complete", "through": 3})
     run(state, "procedure_step", {"action": "reset"})
     p = state.active_procedure
@@ -182,6 +198,7 @@ def test_procedure_reset_clears_everything(state):
 
 def test_completed_procedure_is_frozen_until_reset(state):
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     total = len(state.active_procedure["steps"])
     run(state, "procedure_step", {"action": "complete", "through": total})  # finished + retained
     # any navigation/completion verb NO-OPs on a finished checklist (A5: agent asks to reset)
@@ -215,6 +232,7 @@ def test_safety_view_carries_completed_prefix_no_leak(state):
     # A1: safety sends its own authoritative completed prefix (= confirmed items before cursor),
     # so a fresh safety check never inherits a prior procedure's "done" ticks.
     run(state, "start_procedure", {"procedure_id": "tool_change"})
+    preconfirm_safety_steps(state)
     run(state, "procedure_step", {"action": "complete", "through": 3})  # procedure has 3 done
     start = run(state, "run_safety_check", {"check_type": "loto"})
     assert start.panel["data"]["completed"] == []                       # safety starts with 0 done
@@ -387,3 +405,30 @@ def test_metrics_accumulate(state):
     run(state, "lookup_torque", {"fastener_id": "tool_holder_bolt"}, m)
     assert m.count == 2
     assert m.last_tool == "lookup_torque"
+
+
+# ── safety interlock on confirm steps ────────────────────────────────────────
+def test_next_is_blocked_on_unconfirmed_safety_step(state):
+    run(state, "start_procedure", {"procedure_id": "cold_pull"})
+    run(state, "procedure_step", {"action": "complete", "through": 3})
+    r = run(state, "procedure_step", {"action": "next"})
+    assert r.output["blocked"] is True and r.output["awaiting_confirmation"] is True
+    assert "100 °C" in r.output["message"]
+    assert state.active_procedure["completed"] == {0, 1, 2}  # did NOT advance
+    assert any(e["type"] == "safety_block" for e in state.work_log)
+
+
+def test_confirm_passes_safety_step_and_logs_it(state):
+    run(state, "start_procedure", {"procedure_id": "cold_pull"})
+    run(state, "procedure_step", {"action": "complete", "through": 3})
+    run(state, "procedure_step", {"action": "confirm"})
+    assert state.active_procedure["completed"] == {0, 1, 2, 3}
+    assert any(e["type"] == "safety_confirm" for e in state.work_log)
+
+
+def test_bulk_complete_cannot_jump_a_safety_step(state):
+    run(state, "start_procedure", {"procedure_id": "cold_pull"})
+    r = run(state, "procedure_step", {"action": "complete", "through": 6})
+    assert r.output["blocked"] is True
+    assert state.active_procedure["completed"] == set()
+    assert state.active_procedure["index"] == 3  # cursor parked on the safety step

@@ -67,6 +67,10 @@ class Settings(BaseSettings):
     anthropic_model: str = Field(default="claude-sonnet-4-5-20250929", alias="STEPWISE_ANTHROPIC_MODEL")
     cartesia_api_key: str = Field(default="", alias="CARTESIA_API_KEY")
     cartesia_voice_id: str = Field(default="6ccbfb76-1fc6-48f7-b71d-91ac6298247b", alias="CARTESIA_VOICE_ID")
+    cartesia_tts_model: str = Field(default="sonic-latest", alias="CARTESIA_TTS_MODEL")
+    cartesia_stt_model: str = Field(default="ink-2", alias="CARTESIA_STT_MODEL")
+    # Below this vision confidence the technician must confirm the machine before any steps.
+    identify_min_confidence: float = Field(default=0.75, alias="STEPWISE_IDENTIFY_MIN_CONFIDENCE")
     moss_project_id: str = Field(default="", alias="MOSS_PROJECT_ID")
     moss_project_key: str = Field(default="", alias="MOSS_PROJECT_KEY")
     moss_index_name: str = Field(default="stepwise-maintenance", alias="MOSS_INDEX_NAME")

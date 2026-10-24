@@ -23,7 +23,7 @@ MEASUREMENT_TYPES = {
     "air_temperature",
     "process_temperature",
 }
-STEP_ACTIONS = {"next", "previous", "repeat", "back", "goto", "complete", "uncomplete", "reset"}
+STEP_ACTIONS = {"next", "confirm", "previous", "repeat", "back", "goto", "complete", "uncomplete", "reset"}
 NAV_ACTIONS = {"jump", "zoom_in", "zoom_out", "pan", "reset", "toggle_layer"}
 PANELS = {
     "schematic",

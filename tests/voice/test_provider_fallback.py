@@ -47,7 +47,8 @@ def test_cartesia_status_and_generation_fail_closed_without_credentials():
 
     async def exercise():
         with pytest.raises(CartesiaUnavailable):
-            await CartesiaTTS("", "voice").generate("hello")
+            async for _ in CartesiaTTS("", "voice").stream("hello"):
+                pass
 
     import asyncio
 

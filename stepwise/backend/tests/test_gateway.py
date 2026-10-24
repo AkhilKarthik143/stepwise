@@ -418,6 +418,7 @@ def test_build_ui_state_includes_checklist_position():
     # procedure: 1-based "on step X of Y" + the completed steps
     sp = SessionState()
     start_procedure(sp, {"procedure_id": "tool_change"})  # 7 steps
+    sp.active_procedure["confirmed"] = {i for i, st in enumerate(sp.active_procedure["steps"]) if st.get("confirm")}
     procedure_step(sp, {"action": "complete", "through": 2, "goto_step": 3})
     sp.visible_panels.add("procedure")
     out = build_ui_state(sp)
@@ -441,6 +442,7 @@ def test_build_ui_state_reports_completed_checklist():
 
     s = SessionState()
     start_procedure(s, {"procedure_id": "tool_change"})
+    s.active_procedure["confirmed"] = {i for i, st in enumerate(s.active_procedure["steps"]) if st.get("confirm")}
     procedure_step(s, {"action": "complete", "through": len(s.active_procedure["steps"])})
     assert "procedure" not in s.visible_panels  # auto-hidden
     out = build_ui_state(s)
@@ -480,6 +482,7 @@ def test_build_ui_state_reports_todo_and_highlight():
 
     s = SessionState()
     start_procedure(s, {"procedure_id": "tool_change"})       # 7 steps
+    s.active_procedure["confirmed"] = {i for i, st in enumerate(s.active_procedure["steps"]) if st.get("confirm")}
     procedure_step(s, {"action": "complete", "through": 2})   # to-do = step 3, cursor on it too
     s.visible_panels.add("procedure")
     out = build_ui_state(s)
@@ -498,6 +501,7 @@ def test_procedure_step_auto_logs_each_step():
     s = SessionState()
     pid = catalog.procedure_ids()[0]
     start_procedure(s, {"procedure_id": pid})
+    s.active_procedure["confirmed"] = {i for i, st in enumerate(s.active_procedure["steps"]) if st.get("confirm")}
     n0 = len(s.work_log)
     procedure_step(s, {"action": "next"})
     assert len(s.work_log) > n0

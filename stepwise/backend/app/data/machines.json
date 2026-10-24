@@ -146,6 +146,20 @@
           "status": "open"
         }
       ]
+    },
+    "PRUSA-MK4-01": {
+      "asset_id": "PRUSA-MK4-01",
+      "aliases": ["prusa", "prusa mk4", "original prusa mk4", "mk4", "3d printer", "printer", "nextruder"],
+      "nameplate": {
+        "manufacturer": "Prusa Research",
+        "model": "Original Prusa MK4",
+        "machine_class": "FDM 3D printer",
+        "asset_tag": "PRUSA-MK4-01",
+        "location": "Makerspace bench 2"
+      },
+      "specs": {},
+      "open_faults": [],
+      "manual_source": { "title": "Prusa Knowledge Base: Cold pull (MK4/S, MK3.9/S, XL)", "url": "https://help.prusa3d.com/article/cold-pull-mk4-s-mk3-9-s-xl-13702-17702_445071" }
     }
   }
 }

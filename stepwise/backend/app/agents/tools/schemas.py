@@ -177,8 +177,8 @@ TOOLS: dict[str, dict[str, Any]] = {
         {
             "action": {
                 "type": "string",
-                "enum": ["next", "previous", "repeat", "goto", "complete", "uncomplete", "reset"],
-                "description": "navigate (no completion): next/previous/repeat/goto; operator-asserted completion: complete (mark steps done), uncomplete (walk back the done prefix), reset (clear all, back to step 1).",
+                "enum": ["next", "confirm", "previous", "repeat", "goto", "complete", "uncomplete", "reset"],
+                "description": "navigate (no completion): next/previous/repeat/goto; confirm: the operator explicitly confirmed the current SAFETY step ('yes', 'confirmed') — the only way past it; operator-asserted completion: complete (mark steps done), uncomplete (walk back the done prefix), reset (clear all, back to step 1).",
             },
             "step": {
                 "type": "integer",

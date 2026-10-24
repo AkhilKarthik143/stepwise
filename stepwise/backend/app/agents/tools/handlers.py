@@ -321,7 +321,7 @@ def _safety_view(state: SessionState, spoken_prefix: str = "") -> ToolResult:
 def start_procedure(state: SessionState, args: dict) -> ToolResult:
     key, proc = catalog.resolve_procedure(args.get("procedure_id", ""))  # validated upstream
     state.last_completed = None  # fresh checklist — clear any prior completion awareness
-    state.active_procedure = {"procedure_id": key, "title": proc.get("title"), "steps": proc.get("steps", []), "index": 0, "completed": set(), "complete": False, "warnings": proc.get("warnings", [])}
+    state.active_procedure = {"procedure_id": key, "title": proc.get("title"), "steps": proc.get("steps", []), "index": 0, "completed": set(), "confirmed": set(), "complete": False, "warnings": proc.get("warnings", []), "tools": proc.get("tools", []), "verify": proc.get("verify"), "source": proc.get("source")}
     state.add_log("procedure", f"Started procedure: {proc.get('title')}")
     return _procedure_view(state)
 
@@ -383,6 +383,15 @@ def procedure_step(state: SessionState, args: dict) -> ToolResult:
     if action == "complete":
         # Operator-asserted prefix completion (NOT agent-verified): completed = {0..through-1}.
         through = max(0, min(len(steps), int(args.get("through", 0))))
+        unconfirmed = [s for i, s in enumerate(steps[:through]) if s.get("confirm") and i not in proc.get("confirmed", set())]
+        if unconfirmed:
+            # Bulk completion can never jump a safety step — it needs its own explicit confirmation.
+            first = unconfirmed[0]
+            proc["index"] = first.get("n", 1) - 1
+            view = _procedure_view(state)
+            view.output.update({"blocked": True, "awaiting_confirmation": True,
+                                "message": first.get("confirm_prompt") or f"Step {first.get('n')} is a safety step. Confirm it before marking later steps done."})
+            return view
         proc["completed"] = completed = set(range(through))
         entry = state.add_log("procedure_step",
                               f"Steps 1–{through} complete per operator (operator-asserted, not agent-verified)",
@@ -397,12 +406,25 @@ def procedure_step(state: SessionState, args: dict) -> ToolResult:
         view.log = entry
         return view
 
-    if action == "next":
+    if action in ("next", "confirm"):
         # Always complete the TO-DO (next-to-perform = the prefix frontier), regardless of where
         # the view cursor was left by a goto. completed stays a contiguous prefix {0..k-1}.
         frontier = len(completed)
         if frontier >= len(steps):  # everything already done
             return _finish()
+        # SAFETY INTERLOCK: a `confirm` step only advances on an explicit confirmation, never on
+        # a bare "next". The block is logged so the work order shows the gate held.
+        confirmed: set = proc.setdefault("confirmed", set())
+        if steps[frontier].get("confirm") and frontier not in confirmed:
+            if action != "confirm":
+                proc["index"] = frontier
+                state.add_log("safety_block", f"Blocked advance past step {steps[frontier].get('n')} until the operator confirms")
+                view = _procedure_view(state)
+                view.output.update({"blocked": True, "awaiting_confirmation": True,
+                                    "message": steps[frontier].get("confirm_prompt") or "Confirm this safety step before moving on."})
+                return view
+            confirmed.add(frontier)
+            state.add_log("safety_confirm", f"Operator confirmed step {steps[frontier].get('n')} (asserted, not agent-verified): {steps[frontier].get('text')}", step=steps[frontier].get("n"))
         completed.add(frontier)
         done = steps[frontier]
         entry = state.add_log("procedure_step",
@@ -425,9 +447,12 @@ def procedure_step(state: SessionState, args: dict) -> ToolResult:
 def _procedure_view(state: SessionState) -> ToolResult:
     proc = state.active_procedure
     step = proc["steps"][proc["index"]]
+    awaiting = bool(step.get("confirm")) and proc["index"] not in proc.get("confirmed", set())
     return ToolResult(
-        output={"procedure_id": proc["procedure_id"], "step_number": step.get("n"), "total": len(proc["steps"]), "step": step.get("text"), "warning": step.get("warning"), "expect": step.get("expect")},
-        panel={"panel": "procedure", "data": {"mode": "procedure", "id": proc["procedure_id"], "title": proc["title"], "steps": proc["steps"], "index": proc["index"], "current": len(proc.get("completed", set())), "completed": sorted(proc.get("completed", set())), "warnings": proc["warnings"]}},
+        output={"procedure_id": proc["procedure_id"], "step_number": step.get("n"), "total": len(proc["steps"]), "step": step.get("text"), "warning": step.get("warning"), "expect": step.get("expect"),
+                "safety_step": bool(step.get("confirm")), "confirm_prompt": step.get("confirm_prompt") if awaiting else None, "source": proc.get("source")},
+        panel={"panel": "procedure", "data": {"mode": "procedure", "id": proc["procedure_id"], "title": proc["title"], "steps": proc["steps"], "index": proc["index"], "current": len(proc.get("completed", set())), "completed": sorted(proc.get("completed", set())), "warnings": proc["warnings"],
+                                              "tools": proc.get("tools", []), "verify": proc.get("verify"), "source": proc.get("source"), "awaiting_confirmation": awaiting}},
         control={"action": "show_panel", "panel": "procedure"},
     )
 
