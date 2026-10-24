@@ -1,5 +1,6 @@
-# ── STEPWISE — multi-stage image for Alibaba Cloud ACR -> ECS ───────────────────
-# Stage 1: build the React field console.
+# ── BuildSight — one image: the built web app + the FastAPI backend ─────────────
+# Build from this folder:  docker build -t buildsight .   (or: az containerapp up --source .)
+# Stage 1: build the React app (also served here, so the backend URL works on its own).
 FROM node:20-alpine AS frontend
 WORKDIR /frontend
 COPY frontend/package.json frontend/package-lock.json ./
@@ -12,8 +13,9 @@ FROM python:3.12-slim AS backend
 ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PIP_NO_CACHE_DIR=1
 WORKDIR /app
 
-COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/requirements.txt backend/requirements-optional.txt ./
+# Optional SDKs (Claude, Cartesia, Moss, PDF/image tools) — without them the backend runs in demo mode.
+RUN pip install --no-cache-dir -r requirements.txt -r requirements-optional.txt
 
 COPY backend/app ./app
 COPY --from=frontend /frontend/dist ./frontend_dist

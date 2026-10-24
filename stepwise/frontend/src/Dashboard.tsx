@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { BuildMetrics } from "./lib/api";
+import { apiUrl, type BuildMetrics } from "./lib/api";
 
 const KIND_LABEL: Record<string, string> = { command: "Commands", check: "Step checks", question: "Questions", part: "Part matching" };
 
@@ -11,7 +11,7 @@ export function Dashboard() {
   useEffect(() => {
     let alive = true;
     const tick = () =>
-      fetch("/api/metrics")
+      fetch(apiUrl("/api/metrics"))
         .then((r) => r.json())
         .then((d) => { if (alive) { setM(d); setError(null); } })
         .catch((e) => alive && setError(String(e)));

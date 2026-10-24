@@ -76,13 +76,22 @@ export type ServerMessage =
   | ControlMsg | ToolMsg | MetricsMsg | StateMsg | InterruptedMsg | ErrorMsg | ARAnnotationMsg | ARAnnotationRemoveMsg;
 
 // ── helpers ──────────────────────────────────────────────────────────────────
+// Where the backend lives. Empty = same origin (the backend serves this app). Set
+// VITE_BACKEND_URL at build time when the app is hosted separately (e.g. Vercel + Azure).
+export const BACKEND_URL = ((import.meta.env.VITE_BACKEND_URL as string | undefined) ?? "").replace(/\/+$/, "");
+
+export function apiUrl(path: string): string {
+  return `${BACKEND_URL}${path}`;
+}
+
 export function wsUrl(): string {
+  if (BACKEND_URL) return `${BACKEND_URL.replace(/^http/, "ws")}/ws`;
   const proto = location.protocol === "https:" ? "wss" : "ws";
   return `${proto}://${location.host}/ws`;
 }
 
 export async function fetchConfig(): Promise<RuntimeConfig> {
-  const res = await fetch("/api/config");
+  const res = await fetch(apiUrl("/api/config"));
   if (!res.ok) throw new Error(`config ${res.status}`);
   return (await res.json()) as RuntimeConfig;
 }

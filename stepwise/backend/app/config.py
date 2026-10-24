@@ -98,6 +98,8 @@ class Settings(BaseSettings):
     # ── Server ───────────────────────────────────────────────────────────────
     host: str = Field(default="0.0.0.0", alias="STEPWISE_HOST")
     port: int = Field(default=8000, alias="STEPWISE_PORT")
+    # e.g. https://buildsight.*\.vercel\.app to also allow Vercel preview deployments.
+    allowed_origin_regex: str = Field(default="", alias="STEPWISE_ALLOWED_ORIGIN_REGEX")
     allowed_origins: str = Field(
         default="http://localhost:5173,http://127.0.0.1:5173",
         alias="STEPWISE_ALLOWED_ORIGINS",

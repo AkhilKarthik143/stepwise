@@ -28,7 +28,7 @@ At startup STEPWISE can pull these via `app.cloud.alibaba.download_object` (the 
 CI builds and pushes `stepwise:latest` + `stepwise:<sha>`. To build locally and push:
 
 ```bash
-docker build -f backend/Dockerfile -t $ACR_REGISTRY/$ACR_NAMESPACE/stepwise:latest .
+docker build -f Dockerfile -t $ACR_REGISTRY/$ACR_NAMESPACE/stepwise:latest .
 docker login $ACR_REGISTRY -u $ACR_USERNAME --password-stdin <<< "$ACR_PASSWORD"
 docker push $ACR_REGISTRY/$ACR_NAMESPACE/stepwise:latest
 ```

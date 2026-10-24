@@ -29,7 +29,7 @@ docs/, ar-donor/          inherited docs and reference code
 | Step check, part match, questions | Claude Sonnet 5.5 (`claude-sonnet-5-5`), structured outputs, effort `low` | `app/build/vision.py` |
 | Reading manuals into steps | Claude Opus 5.5 (`claude-opus-5-5`), run once per manual | `scripts/ingest_manual.py` |
 | Voice | Cartesia Sonic TTS + Ink STT (turn detection). Browser speech APIs when no key | `app/realtime/cartesia.py`, `frontend/src/audio/browserSpeech.ts` |
-| Hosting | Docker image (frontend built in) behind HTTPS. Plan: Azure Container Apps | `backend/Dockerfile` |
+| Hosting | Backend: Docker image on Azure Container Apps (one replica). Web app: Vercel with `VITE_BACKEND_URL`. Steps in `stepwise/DEPLOY.md` | `stepwise/Dockerfile`, `frontend/vercel.json` |
 
 All Claude calls go through `anthropic` (Python SDK, `client.beta.messages.parse` with pydantic models) and send `fallbacks="default"` with beta `server-side-fallback-2026-07-01`. Optional SDKs (`anthropic`, `cartesia`, `pymupdf`, `pillow`) are in `requirements-optional.txt`.
 
@@ -52,7 +52,7 @@ All Claude calls go through `anthropic` (Python SDK, `client.beta.messages.parse
 - A failed check blocks "next". Only a passing check or an explicit, logged "that's fine" clears it.
 - Below 0.7 confidence, ask for a closer look. Never guess.
 - Keep spoken replies to one instruction, about 20 words, parts named by color and size.
-- All API keys stay in `backend/.env`. The frontend only talks to `/ws` and `/api/*`.
+- All API keys stay on the backend (`backend/.env` locally, Container Apps secrets on Azure). The frontend only talks to `/ws` and `/api/*`, through `apiUrl()` / `wsUrl()` in `frontend/src/lib/api.ts`.
 - Every provider degrades without its key: commands keep working, checks and questions say the Claude key is missing, voice falls back to the browser.
 
 ## Routes

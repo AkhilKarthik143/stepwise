@@ -1,4 +1,4 @@
-import type { BuildStatus } from "../lib/api";
+import { apiUrl, type BuildStatus } from "../lib/api";
 
 interface Props {
   status: BuildStatus;
@@ -26,7 +26,7 @@ export function StepPanel({ status, lastCheckFrame }: Props) {
       {failed ? (
         <>
           <div className="bs-compare">
-            <figure><img src={step.image_url} alt={`Manual picture for step ${step.step}`} /><figcaption>Manual</figcaption></figure>
+            <figure><img src={apiUrl(step.image_url)} alt={`Manual picture for step ${step.step}`} /><figcaption>Manual</figcaption></figure>
             <figure>{lastCheckFrame ? <img src={`data:image/jpeg;base64,${lastCheckFrame}`} alt="What the camera saw" /> : <div className="bs-compare-empty" />}<figcaption>Your build</figcaption></figure>
           </div>
           {check!.issues.map((i, n) => (
@@ -35,7 +35,7 @@ export function StepPanel({ status, lastCheckFrame }: Props) {
         </>
       ) : (
         <div className="bs-step-body">
-          <img className="bs-step-img" src={step.image_url} alt={`Manual picture for step ${step.step}`} />
+          <img className="bs-step-img" src={apiUrl(step.image_url)} alt={`Manual picture for step ${step.step}`} />
           <div>
             <b className="bs-action">{step.action}</b>
             {parts.length > 0 && <ul className="bs-parts">{parts.map((p) => <li key={p}>{p}</li>)}</ul>}

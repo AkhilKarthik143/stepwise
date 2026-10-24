@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BuildCamera, type FrameGrabber } from "./components/BuildCamera";
 import { StepPanel } from "./components/StepPanel";
 import { useRealtimeSocket } from "./hooks/useRealtimeSocket";
-import { fetchConfig, type RuntimeConfig } from "./lib/api";
+import { apiUrl, fetchConfig, type RuntimeConfig } from "./lib/api";
 
 // BuildSight on the phone: overhead camera, the current step from the manual, voice in and out.
 // Every button sends the words a builder would say, so taps and voice share one server path.
@@ -102,7 +102,7 @@ export default function App() {
             <span className="bs-kicker">NO BUILD LOADED</span>
             <b>Turn a manual into a build first.</b>
             <small>On the laptop: <code>python scripts/ingest_manual.py --pdf manual.pdf --build-id my-build --title "My build"</code>, review build.json, then reload.</small>
-            <button className="bs-btn" onClick={() => fetch("/api/builds/reload", { method: "POST" }).then(() => say("what's next"))}>Reload builds</button>
+            <button className="bs-btn" onClick={() => fetch(apiUrl("/api/builds/reload"), { method: "POST" }).then(() => say("what's next"))}>Reload builds</button>
           </section>
         )}
 

@@ -60,3 +60,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# BuildSight: rendered manual pages are only needed for --recrop; commit build.json + steps/
+backend/app/data/builds/*/pages/
