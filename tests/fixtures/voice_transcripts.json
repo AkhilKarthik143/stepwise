@@ -1,0 +1,11 @@
+{
+  "source": "synthetic_fixture",
+  "sample_rate_hz": 16000,
+  "turns": [
+    {"text": "What am I looking at?", "expected_tool": "show_machine_data"},
+    {"text": "Show me where the spindle is.", "expected_tool": "highlight_component"},
+    {"text": "Confirm", "expected_tool": "run_safety_check"},
+    {"text": "", "expected_behavior": "drop_phantom_turn"},
+    {"text": "こんにちは", "expected_behavior": "drop_non_latin_turn"}
+  ]
+}

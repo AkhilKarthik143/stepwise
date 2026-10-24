@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1600" viewBox="0 0 900 1600">
+  <rect width="900" height="1600" fill="#17202a"/>
+  <rect x="180" y="470" width="540" height="660" rx="18" fill="#4b6070" stroke="#65d9ff" stroke-width="8"/>
+  <circle cx="450" cy="800" r="120" fill="#17202a" stroke="#f6bf55" stroke-width="10"/>
+  <text x="450" y="1390" fill="#ffffff" font-family="sans-serif" font-size="38" text-anchor="middle">synthetic portrait camera frame</text>
+</svg>

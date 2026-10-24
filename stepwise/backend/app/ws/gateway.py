@@ -484,7 +484,7 @@ class RealtimeBridge:
         await self._safe_send_json(protocol.state("thinking"))
         try:
             turn = await self.agent.respond(text, self._apply_tool, image_b64=self._latest_image_b64)
-            for chunk in [text[i : i + 72] for i in range(0, len(turn.text), 72)]:
+            for chunk in [turn.text[i : i + 72] for i in range(0, len(turn.text), 72)]:
                 await self._safe_send_json(protocol.transcript("assistant", delta=chunk))
             await self._safe_send_json(protocol.transcript("assistant", text=turn.text, final=True))
             await self._safe_send_json(protocol.control("provider_status", provider=turn.provider, mock=turn.mock, sources=turn.source_refs))
