@@ -23,8 +23,6 @@ ENV STEPWISE_FRONTEND_DIST=/app/frontend_dist
 
 # Long-lived WebSocket sessions: a single worker (sticky realtime session per conn),
 # generous timeouts, WS protocol enabled.
+# Railway and Render pass the port in $PORT; 8000 otherwise.
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", \
-     "--host", "0.0.0.0", "--port", "8000", \
-     "--workers", "1", "--ws", "websockets", \
-     "--timeout-keep-alive", "75", "--proxy-headers"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1 --ws websockets --timeout-keep-alive 75 --proxy-headers --forwarded-allow-ips '*'"]
