@@ -78,6 +78,8 @@ Format: **Decision** — why. *(date, PT)*
 - **Manual PDFs are cached on the server's disk** (`src/app/manual-pdf/[...path]/route.ts`, `src/lib/pdfCache.ts`), replacing the Vercel-era rewrites. The server downloads each LEGO / IKEA PDF once and serves byte ranges from disk, so phones fetch only the pages they render instead of waiting on a ~20 MB file proxied from lego.com. The cache lasts until the container restarts.
 - **Page reading and spoken answers run with thinking off** (`thinking: {type: "between_tools"}` on Sonnet 5.5): they're transcription and short replies, and thinking was most of their wait. Step checks keep thinking on, since accuracy matters most there.
 - **Read pages are shared across devices:** `/api/extract` keeps each catalog manual page's steps on the server (`src/lib/stepCache.ts`), so once any phone reads a page, others get it instantly. Uploads stay per device. Lasts until the container restarts.
+- **First open of a manual passes straight through to lego.com / ikea.com** (ranges included) while the server saves its copy in the background, instead of waiting for the full download. Later opens come from disk.
+- **Jump to a step by voice:** "go to step 8", "I'm on step 8", "I finished step 7", "completed steps 1 through 7" (digits or words) move to that step, reading pages ahead or back until it's found. Questions now get every step read so far, not just the current one.
 - **Passcode lock is back as an option:** on only when `APP_PASSCODE` is set (it is on Azure, so the public URL can't spend the keys). Unset it to remove the lock.
 
 ## Prizes

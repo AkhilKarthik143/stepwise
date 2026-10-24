@@ -49,6 +49,26 @@ function command(heard: string): Command {
   return "question";
 }
 
+// "go to step 8", "I'm on step 8" -> 8; "I finished step 7", "completed steps 1 through 7" -> 8.
+const NUMBER_WORDS: Record<string, number> = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12,
+  thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19,
+  twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90,
+};
+function wordsToDigits(t: string): string {
+  return t
+    .replace(/\b(twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)[ -](one|two|three|four|five|six|seven|eight|nine)\b/g, (_, a, b) => String(NUMBER_WORDS[a] + NUMBER_WORDS[b]))
+    .replace(/\b[a-z]+\b/g, (w) => (w in NUMBER_WORDS ? String(NUMBER_WORDS[w]) : w));
+}
+export function stepTarget(heard: string): number | null {
+  const t = wordsToDigits(heard.toLowerCase().replace(/[^a-z0-9' -]/g, " ").replace(/\s+/g, " ").trim());
+  const done = t.match(/\b(?:finished|completed|done with|did|done|through|up to|thru)\b.*?\bsteps?\b(?:.*?\b(?:to|through|thru|and)\b)?\s*(\d{1,3})\b|\bsteps? \d{1,3} (?:to|through|thru|-) (\d{1,3})\b.*\b(?:done|finished|completed)\b/);
+  if (done) return Number(done[1] ?? done[2]) + 1;
+  const go = t.match(/\b(?:go to|goto|skip to|jump to|take me to|i'm on|im on|i am on|on|show me|open)?\s*step (?:number )?(\d{1,3})\b/);
+  if (go && (/^(?:go to |goto |skip to |jump to |take me to |show me |open )?step (?:number )?\d{1,3}$/.test(t) || /\b(?:go to|goto|skip to|jump to|take me to|i'm on|im on|i am on)\b/.test(t))) return Number(go[1]);
+  return null;
+}
+
 // How many pages ahead to read in the background, and how many Claude calls may run at once.
 const LOOKAHEAD = 6;
 const MAX_PARALLEL = 6;
@@ -75,8 +95,9 @@ type PageJob = { image: Promise<string>; steps: Promise<ExtractedStep[]> };
 // shareKey (catalog manuals only) lets the server reuse a page another device already read.
 function pageReader(manualId: string, doc: PDFDocumentProxy, shareKey?: string) {
   const jobs = new Map<number, PageJob>();
+  const read = new Map<number, ExtractedStep[]>();
   const limit = limiter(MAX_PARALLEL);
-  return (page: number): PageJob => {
+  const readPage = (page: number): PageJob => {
     const existing = jobs.get(page);
     if (existing) return existing;
     const image = renderPage(doc, page, 1200);
@@ -94,17 +115,22 @@ function pageReader(manualId: string, doc: PDFDocumentProxy, shareKey?: string) 
       return data.steps as ExtractedStep[];
     })();
     const job = { image, steps };
+    steps.then((found) => read.set(page, found)).catch(() => {});
     // A failed page can be retried.
     Promise.all([image, steps]).catch(() => jobs.delete(page));
     jobs.set(page, job);
     return job;
   };
+  // Every step read so far, in page order (for questions about other steps).
+  const known = () => [...read.entries()].sort(([a], [b]) => a - b).flatMap(([, found]) => found);
+  return Object.assign(readPage, { known });
 }
 
 export default function BuildView() {
   const { id } = useParams<{ id: string }>();
   const camera = useRef<CameraHandle>(null);
   const direction = useRef<1 | -1>(1);
+  const targetStep = useRef<number | null>(null); // set by "go to step N" while pages are searched
 
   const [manual, setManual] = useState<Manual | null>(null);
   const [doc, setDoc] = useState<PDFDocumentProxy | null>(null);
@@ -181,7 +207,9 @@ export default function BuildView() {
         }
         setPageImage(image);
         setSteps(found);
-        setStepIdx(direction.current === 1 ? 0 : found.length - 1);
+        const wanted = targetStep.current === null ? -1 : found.findIndex((s) => s.number === targetStep.current);
+        targetStep.current = null;
+        setStepIdx(wanted >= 0 ? wanted : direction.current === 1 ? 0 : found.length - 1);
         setPhase({ kind: "ready" });
         saveManual({ ...manual, page, openedAt: Date.now() });
       })
@@ -271,6 +299,7 @@ export default function BuildView() {
             frame: camera.current?.capture() ?? undefined,
             expected: target ?? undefined,
             step: { number: step.number, instruction: step.instruction, parts: step.parts.map((p) => ({ name: p.name, qty: p.qty })), watchFor: step.watchFor },
+            known: (reader?.known() ?? []).slice(0, 120).map((s) => ({ number: s.number, instruction: s.instruction, parts: s.parts.map((p) => `${p.qty > 1 ? `${p.qty}x ` : ""}${p.name}`).join(", ") })),
             history: history.current,
           }),
         });
@@ -282,7 +311,40 @@ export default function BuildView() {
         say(e instanceof Error && e.message ? e.message : "I couldn't answer that.");
       }
     },
-    [step, target, say],
+    [step, target, say, reader],
+  );
+
+  // Jumps to step n: on this page if it's here, otherwise reads pages ahead (or back) until it finds it.
+  const goToStep = useCallback(
+    async (n: number) => {
+      if (!reader || !doc || phase.kind === "loading") return;
+      const here = steps.findIndex((s) => s.number === n);
+      if (here >= 0) {
+        setCheck(null);
+        return setStepIdx(here);
+      }
+      const dir: 1 | -1 = !step || n > step.number ? 1 : -1;
+      setCheck(null);
+      setPhase({ kind: "loading", label: `Finding step ${n}` });
+      try {
+        for (let p = page + dir; p >= 1 && p <= doc.numPages; p += dir) {
+          for (let k = 1; k <= LOOKAHEAD; k++) if (p + k * dir >= 1 && p + k * dir <= doc.numPages) reader(p + k * dir);
+          const found = await reader(p).steps;
+          if (found.some((s) => s.number === n)) {
+            targetStep.current = n;
+            direction.current = 1;
+            return turnTo(p);
+          }
+          // Passed it (numbers jumped over n): this book doesn't have that step.
+          if (found.length && (dir === 1 ? found[0].number > n : found[found.length - 1].number < n)) break;
+        }
+      } catch (e) {
+        return setPhase({ kind: "error", message: e instanceof Error ? e.message : "Couldn't read that page." });
+      }
+      setPhase({ kind: "ready" });
+      say(`I couldn't find step ${n} in this book.`);
+    },
+    [reader, doc, phase.kind, steps, step, page, turnTo, say],
   );
 
   // Latest handlers for the mic callback, which is set up once per listening session.
@@ -290,6 +352,8 @@ export default function BuildView() {
   useEffect(() => {
     onHeard.current = (text: string) => {
       setHeard(text);
+      const n = stepTarget(text);
+      if (n !== null) return goToStep(n);
       switch (command(text)) {
         case "next":
           return go(1);
@@ -305,7 +369,7 @@ export default function BuildView() {
           return ask(text);
       }
     };
-  }, [go, step, say, runCheck, ask]);
+  }, [go, step, say, runCheck, ask, goToStep]);
 
   const toggleMic = useCallback(async () => {
     primeAudio();

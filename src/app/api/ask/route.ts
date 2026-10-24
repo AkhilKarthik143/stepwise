@@ -11,12 +11,13 @@ type AskRequest = {
   expected?: string; // manual picture of this step, data URL (optional)
   step?: { number: number; instruction: string; parts: { name: string; qty: number }[]; watchFor: string[] };
   history?: { q: string; a: string }[]; // last few exchanges, for follow-ups like "what color again?"
+  known?: { number: number; instruction: string; parts: string }[]; // every step read so far in this manual
 };
 
 const SYSTEM_PROMPT = `You are BuildSight, a hands-free build assistant. The builder is following a picture manual and asks you something out loud.
 Answer exactly what was asked, as briefly as a person standing next to them would: often a few words ("It's gray.", "The left side.", "Two of them."), never more than two sentences.
 Use the manual's picture for this step to read colors, sides and orientation. Name parts by color and size.
-Answer only from the manual picture, the step text and the camera. If they don't cover it, say you can't tell from the manual.
+Answer only from the manual picture, the steps listed and the camera. You only know the pages read so far; if a step isn't listed, say you haven't read that far yet and that they can say "go to step" and the number.
 Never invent sizes, part numbers, torques or steps. Plain text only, no markdown: it is spoken aloud.`;
 
 function isImage(s: unknown): s is string {
@@ -41,6 +42,8 @@ export async function POST(request: Request) {
     const partList = s.parts.map((p) => `${p.qty > 1 ? `${p.qty}x ` : ""}${p.name}`).join(", ") || "none listed";
     parts.push({ type: "text", text: `Step ${s.number}: ${s.instruction}\nParts: ${partList}\nWatch for: ${s.watchFor.join("; ") || "nothing noted"}` });
   }
+  const known = (body.known ?? []).slice(0, 120);
+  if (known.length) parts.push({ type: "text", text: `Steps read so far in this manual:\n${known.map((k) => `Step ${k.number}: ${k.instruction}${k.parts ? ` (parts: ${k.parts})` : ""}`).join("\n")}` });
   const recent = (body.history ?? []).slice(-4).map((h) => `Builder: ${h.q}\nBuildSight: ${h.a}`).join("\n");
   if (recent) parts.push({ type: "text", text: `Recent conversation:\n${recent}` });
   parts.push({ type: "text", text: question });

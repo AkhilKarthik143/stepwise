@@ -1,9 +1,12 @@
 // Serves LEGO / IKEA manual PDFs from our own domain (browsers can't fetch them from lego.com or
 // ikea.com directly), with byte ranges, from the server's disk cache. See src/lib/pdfCache.ts.
+// The first time a manual is asked for, requests pass straight through to lego.com / ikea.com
+// (ranges included) while the server saves its own copy in the background, so nobody waits for
+// the whole file.
 
 import { createReadStream } from "node:fs";
 import { Readable } from "node:stream";
-import { cachedPdf, parseRange, upstreamUrl } from "@/lib/pdfCache";
+import { cachedIfReady, parseRange, upstreamUrl } from "@/lib/pdfCache";
 
 const HEADERS = { "Content-Type": "application/pdf", "Accept-Ranges": "bytes", "Cache-Control": "public, max-age=86400" };
 
@@ -15,14 +18,23 @@ export async function GET(request: Request, { params }: { params: Promise<{ path
   const url = upstreamUrl((await params).path);
   if (!url) return Response.json({ error: "Not a LEGO or IKEA manual link." }, { status: 404 });
 
-  let pdf: { file: string; size: number };
-  try {
-    pdf = await cachedPdf(url);
-  } catch (e) {
-    return Response.json({ error: e instanceof Error ? e.message : "Couldn't get that manual." }, { status: 502 });
+  const header = request.headers.get("range");
+  const pdf = await cachedIfReady(url);
+  if (!pdf) {
+    try {
+      const upstream = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 BuildSight", ...(header ? { Range: header } : {}) } });
+      if (!upstream.ok || !upstream.body) return Response.json({ error: `Manual download failed (${upstream.status}).` }, { status: 502 });
+      const headers: Record<string, string> = { "Content-Type": "application/pdf", "Cache-Control": "no-store" };
+      for (const h of ["content-length", "content-range", "accept-ranges"]) {
+        const v = upstream.headers.get(h);
+        if (v) headers[h] = v;
+      }
+      return new Response(upstream.body, { status: upstream.status, headers });
+    } catch {
+      return Response.json({ error: "Couldn't reach the manual's site." }, { status: 502 });
+    }
   }
 
-  const header = request.headers.get("range");
   const range = parseRange(header, pdf.size);
   if (header && !range) {
     return new Response(null, { status: 416, headers: { ...HEADERS, "Content-Range": `bytes */${pdf.size}` } });

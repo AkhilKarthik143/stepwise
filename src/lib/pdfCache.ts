@@ -43,6 +43,15 @@ export function upstreamUrl(parts: string[]): string | null {
 
 const downloads = new Map<string, Promise<{ file: string; size: number }>>();
 
+/** The cached copy if it's already on disk; otherwise starts downloading it and returns null. */
+export async function cachedIfReady(url: string): Promise<{ file: string; size: number } | null> {
+  const file = path.join(DIR, `${createHash("sha1").update(url).digest("hex")}.pdf`);
+  const existing = await stat(file).catch(() => null);
+  if (existing) return cachedPdf(url);
+  cachedPdf(url).catch(() => {}); // fill the cache in the background
+  return null;
+}
+
 /** Path and size of the cached copy, downloading it first if needed. Concurrent callers share one download. */
 export function cachedPdf(url: string): Promise<{ file: string; size: number }> {
   let job = downloads.get(url);
