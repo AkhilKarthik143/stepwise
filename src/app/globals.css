@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-hud: var(--font-geist-sans);
+  --color-holo: #5cc8ff;
+  --color-holo-dim: #1b6f99;
+  --color-ink: #04070d;
+}
+
+html,
+body {
+  background: var(--color-ink);
+  color: #eef6fb;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(92, 200, 255, 0.35);
+}
+
+/* ---------- Backdrop ---------- */
+
+.hud-grid {
+  background-image:
+    linear-gradient(rgba(148, 197, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 197, 255, 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 50% 20%, black 20%, transparent 70%);
+}
+
+.hud-scanlines {
+  background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 3px);
+}
+
+.spin-slow { animation: spin 90s linear infinite; transform-origin: center; }
+.spin-rev { animation: spin 60s linear infinite reverse; transform-origin: center; }
+.spin-fast { animation: spin 12s linear infinite; transform-origin: center; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- Glass panels ---------- */
+
+.hud-panel {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(160, 205, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+.holo-glow {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 0 0 1px rgba(92, 200, 255, 0.12), 0 20px 60px -20px rgba(92, 200, 255, 0.35);
+}
+
+.holo-text {
+  text-shadow: 0 0 24px rgba(92, 200, 255, 0.35);
+}
+
+/* Heading gradient */
+.text-sheen {
+  background: linear-gradient(180deg, #ffffff 30%, #a9dcff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Turns a manual picture (dark lines on white) into glowing cyan lines on nothing */
+.holo-image {
+  filter: invert(1) grayscale(1) sepia(1) hue-rotate(155deg) saturate(5) brightness(1.1) contrast(1.15)
+    drop-shadow(0 0 6px rgba(92, 200, 255, 0.5));
+  mix-blend-mode: screen;
+}
+
+/* Thin progress shimmer for loading states */
+.scan-bar {
+  position: relative;
+  overflow: hidden;
+  background: rgba(92, 200, 255, 0.12);
+}
+.scan-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(92, 200, 255, 0.9), transparent);
+  animation: scan 1.2s ease-in-out infinite;
+}
+@keyframes scan {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+/* A band of light sweeping down a page being read */
+.hud-sweep {
+  height: 35%;
+  animation: hud-sweep 2.2s ease-in-out infinite;
+}
+@keyframes hud-sweep {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(300%); }
+}
+
+.blink { animation: blink 1.4s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .spin-slow, .spin-rev, .spin-fast, .scan-bar::after, .blink, .hud-sweep { animation: none; }
+}

@@ -1,0 +1,2746 @@
+{
+ "builtAt": "2026-10-24T17:50:34.810Z",
+ "lego": [
+  {
+   "id": "lego-10342",
+   "source": "lego",
+   "set": "10342",
+   "name": "Pretty Pink Flower Bouquet",
+   "category": "Botanicals",
+   "age": "18+",
+   "pieces": 749,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10342_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "18.17MB",
+     "pdfPath": "/manual-pdf/lego/6590464.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6590464.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10343",
+   "source": "lego",
+   "set": "10343",
+   "name": "Mini Orchid",
+   "category": "Botanicals",
+   "age": "18+",
+   "pieces": 274,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10343_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "10.63MB",
+     "pdfPath": "/manual-pdf/lego/6555769.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6555769.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10328",
+   "source": "lego",
+   "set": "10328",
+   "name": "Bouquet of Roses",
+   "category": "Botanicals",
+   "age": "18+",
+   "pieces": 822,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10328_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "4.85MB",
+     "pdfPath": "/manual-pdf/lego/6536293.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6536293.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "3.93MB",
+     "pdfPath": "/manual-pdf/lego/6536294.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6536294.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "3.93MB",
+     "pdfPath": "/manual-pdf/lego/6536295.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6536295.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10313",
+   "source": "lego",
+   "set": "10313",
+   "name": "Wildflower Bouquet",
+   "category": "Botanicals",
+   "age": "18+",
+   "pieces": 939,
+   "year": 2023,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10313_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "13.09MB",
+     "pdfPath": "/manual-pdf/lego/6508206.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6508206.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10314",
+   "source": "lego",
+   "set": "10314",
+   "name": "Dried Flower Centerpiece",
+   "category": "Botanicals",
+   "age": "18+",
+   "pieces": 812,
+   "year": 2023,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10314_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "12.86MB",
+     "pdfPath": "/manual-pdf/lego/6452568.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6452568.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "13.46MB",
+     "pdfPath": "/manual-pdf/lego/6452572.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6452572.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10329",
+   "source": "lego",
+   "set": "10329",
+   "name": "Tiny Plants",
+   "category": "Botanicals",
+   "age": "18+",
+   "pieces": 758,
+   "year": 2023,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10329_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "7.27MB",
+     "pdfPath": "/manual-pdf/lego/6494684.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6494684.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "5.75MB",
+     "pdfPath": "/manual-pdf/lego/6494685.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6494685.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "6.76MB",
+     "pdfPath": "/manual-pdf/lego/6494686.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6494686.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10309",
+   "source": "lego",
+   "set": "10309",
+   "name": "Succulents",
+   "category": "Botanicals",
+   "age": "18+",
+   "pieces": 771,
+   "year": 2022,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10309_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "8.24MB",
+     "pdfPath": "/manual-pdf/lego/6415232.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6415232.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "4.99MB",
+     "pdfPath": "/manual-pdf/lego/6415271.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6415271.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "5.96MB",
+     "pdfPath": "/manual-pdf/lego/6415273.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6415273.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10311",
+   "source": "lego",
+   "set": "10311",
+   "name": "Orchid",
+   "category": "Botanicals",
+   "age": "18+",
+   "pieces": 608,
+   "year": 2022,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10311_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "19.25MB",
+     "pdfPath": "/manual-pdf/lego/6519907.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6519907.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10327",
+   "source": "lego",
+   "set": "10327",
+   "name": "Dune Atreides Royal Ornithopter",
+   "category": "Icons",
+   "age": "18+",
+   "pieces": 1369,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10327_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "70.31MB",
+     "pdfPath": "/manual-pdf/lego/6502380.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6502380.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10330",
+   "source": "lego",
+   "set": "10330",
+   "name": "McLaren MP4/4 & Ayrton Senna",
+   "category": "Icons",
+   "age": "18+",
+   "pieces": 693,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10330_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "32.83MB",
+     "pdfPath": "/manual-pdf/lego/6503515.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6503515.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10331",
+   "source": "lego",
+   "set": "10331",
+   "name": "Kingfisher Bird",
+   "category": "Icons",
+   "age": "18+",
+   "pieces": 834,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10331_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "28.60MB",
+     "pdfPath": "/manual-pdf/lego/6507120.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507120.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10332",
+   "source": "lego",
+   "set": "10332",
+   "name": "Medieval Town Square",
+   "category": "Icons",
+   "age": "18+",
+   "pieces": 3304,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10332_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "71.49MB",
+     "pdfPath": "/manual-pdf/lego/6512248.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6512248.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "92.38MB",
+     "pdfPath": "/manual-pdf/lego/6512249.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6512249.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10333",
+   "source": "lego",
+   "set": "10333",
+   "name": "The Lord of the Rings: Barad-dûr",
+   "category": "Icons",
+   "age": "18+",
+   "pieces": 5471,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10333_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 2 of 3",
+     "size": "40.86MB",
+     "pdfPath": "/manual-pdf/lego/6521154.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521154.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "79.37MB",
+     "pdfPath": "/manual-pdf/lego/6521156.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521156.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 1 of 3",
+     "size": "137.31MB",
+     "pdfPath": "/manual-pdf/lego/6576299.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6576299.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10316",
+   "source": "lego",
+   "set": "10316",
+   "name": "THE LORD OF THE RINGS: RIVENDELL",
+   "category": "Icons",
+   "age": "18+",
+   "pieces": 6167,
+   "year": 2023,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10316_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "72.10MB",
+     "pdfPath": "/manual-pdf/lego/6455635.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6455635.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "184.68MB",
+     "pdfPath": "/manual-pdf/lego/6455639.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6455639.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "79.72MB",
+     "pdfPath": "/manual-pdf/lego/6698730.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6698730.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10317",
+   "source": "lego",
+   "set": "10317",
+   "name": "Land Rover Classic Defender 90",
+   "category": "Icons",
+   "age": "18+",
+   "pieces": 2336,
+   "year": 2023,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10317_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "109.90MB",
+     "pdfPath": "/manual-pdf/lego/6458828.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6458828.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-10318",
+   "source": "lego",
+   "set": "10318",
+   "name": "Concorde",
+   "category": "Icons",
+   "age": "18+",
+   "pieces": 2083,
+   "year": 2023,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/10318_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "95.49MB",
+     "pdfPath": "/manual-pdf/lego/6515068.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6515068.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-11039",
+   "source": "lego",
+   "set": "11039",
+   "name": "Creative Food Friends",
+   "category": "Classic",
+   "age": "4+",
+   "pieces": 150,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/11039_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "7.06MB",
+     "pdfPath": "/manual-pdf/lego/6555451.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6555451.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-11040",
+   "source": "lego",
+   "set": "11040",
+   "name": "Magical Transparent Box",
+   "category": "Classic",
+   "age": "5+",
+   "pieces": 340,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/11040_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "10.62MB",
+     "pdfPath": "/manual-pdf/lego/6566292.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6566292.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-11034",
+   "source": "lego",
+   "set": "11034",
+   "name": "Creative Pets",
+   "category": "Classic",
+   "age": "5+",
+   "pieces": 450,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/11034_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "9.82MB",
+     "pdfPath": "/manual-pdf/lego/6497645.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6497645.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-11035",
+   "source": "lego",
+   "set": "11035",
+   "name": "Creative Houses",
+   "category": "Classic",
+   "age": "4+",
+   "pieces": 850,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/11035_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "31.78MB",
+     "pdfPath": "/manual-pdf/lego/6497647.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6497647.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-11036",
+   "source": "lego",
+   "set": "11036",
+   "name": "Creative Vehicles",
+   "category": "Classic",
+   "age": "5+",
+   "pieces": 900,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/11036_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "21.86MB",
+     "pdfPath": "/manual-pdf/lego/6497649.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6497649.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-11037",
+   "source": "lego",
+   "set": "11037",
+   "name": "Creative Space Planets",
+   "category": "Classic",
+   "age": "5+",
+   "pieces": 450,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/11037_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "13.03MB",
+     "pdfPath": "/manual-pdf/lego/6497651.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6497651.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-11038",
+   "source": "lego",
+   "set": "11038",
+   "name": "Vibrant Creative Brick Box",
+   "category": "Classic",
+   "age": "4+",
+   "pieces": 850,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/11038_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "13.63MB",
+     "pdfPath": "/manual-pdf/lego/6509312.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6509312.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "8.62MB",
+     "pdfPath": "/manual-pdf/lego/6509313.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6509313.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-11030",
+   "source": "lego",
+   "set": "11030",
+   "name": "Lots of Bricks",
+   "category": "Classic",
+   "age": "5+",
+   "pieces": 1000,
+   "year": 2023,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/11030_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "41.82MB",
+     "pdfPath": "/manual-pdf/lego/6457298.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6457298.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21064",
+   "source": "lego",
+   "set": "21064",
+   "name": "Paris – City of Love",
+   "category": "Architecture",
+   "age": "18+",
+   "pieces": 958,
+   "year": 2026,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21064_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "44.19MB",
+     "pdfPath": "/manual-pdf/lego/6636042.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6636042.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21062",
+   "source": "lego",
+   "set": "21062",
+   "name": "Trevi Fountain",
+   "category": "Architecture",
+   "age": "18+",
+   "pieces": 1880,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21062_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "113.58MB",
+     "pdfPath": "/manual-pdf/lego/6566168.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6566168.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21063",
+   "source": "lego",
+   "set": "21063",
+   "name": "Neuschwanstein Castle",
+   "category": "Architecture",
+   "age": "18+",
+   "pieces": 3455,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21063_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "132.94MB",
+     "pdfPath": "/manual-pdf/lego/6592611.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6592611.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21061",
+   "source": "lego",
+   "set": "21061",
+   "name": "Notre-Dame de Paris",
+   "category": "Architecture",
+   "age": "18+",
+   "pieces": 4383,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21061_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "193.04MB",
+     "pdfPath": "/manual-pdf/lego/6634577.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6634577.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21060",
+   "source": "lego",
+   "set": "21060",
+   "name": "Himeji Castle",
+   "category": "Architecture",
+   "age": "18+",
+   "pieces": 2125,
+   "year": 2023,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21060_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "122.15MB",
+     "pdfPath": "/manual-pdf/lego/6474321.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6474321.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21058",
+   "source": "lego",
+   "set": "21058",
+   "name": "Great Pyramid of Giza",
+   "category": "Architecture",
+   "age": "18+",
+   "pieces": 1476,
+   "year": 2022,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21058_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "86.89MB",
+     "pdfPath": "/manual-pdf/lego/6590114.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6590114.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21251",
+   "source": "lego",
+   "set": "21251",
+   "name": "Steve's Desert Expedition",
+   "category": "Minecraft",
+   "age": "6+",
+   "pieces": 75,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21251_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "11.61MB",
+     "pdfPath": "/manual-pdf/lego/6495804.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495804.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21254",
+   "source": "lego",
+   "set": "21254",
+   "name": "The Turtle Beach House",
+   "category": "Minecraft",
+   "age": "8+",
+   "pieces": 234,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21254_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "23.07MB",
+     "pdfPath": "/manual-pdf/lego/6495806.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495806.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21255",
+   "source": "lego",
+   "set": "21255",
+   "name": "The Nether Portal Ambush",
+   "category": "Minecraft",
+   "age": "8+",
+   "pieces": 352,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21255_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "28.37MB",
+     "pdfPath": "/manual-pdf/lego/6495807.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495807.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21256",
+   "source": "lego",
+   "set": "21256",
+   "name": "The Frog House",
+   "category": "Minecraft",
+   "age": "8+",
+   "pieces": 400,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21256_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "37.30MB",
+     "pdfPath": "/manual-pdf/lego/6495808.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495808.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21257",
+   "source": "lego",
+   "set": "21257",
+   "name": "The Devourer Showdown",
+   "category": "Minecraft",
+   "age": "8+",
+   "pieces": 420,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21257_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "33.20MB",
+     "pdfPath": "/manual-pdf/lego/6495141.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495141.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21259",
+   "source": "lego",
+   "set": "21259",
+   "name": "The Pirate Ship Voyage",
+   "category": "Minecraft",
+   "age": "8+",
+   "pieces": 166,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21259_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "13.72MB",
+     "pdfPath": "/manual-pdf/lego/6520683.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6520683.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21260",
+   "source": "lego",
+   "set": "21260",
+   "name": "The Cherry Blossom Garden",
+   "category": "Minecraft",
+   "age": "8+",
+   "pieces": 304,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21260_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "21.13MB",
+     "pdfPath": "/manual-pdf/lego/6520684.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6520684.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21261",
+   "source": "lego",
+   "set": "21261",
+   "name": "The Wolf Stronghold",
+   "category": "Minecraft",
+   "age": "8+",
+   "pieces": 312,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21261_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "32.47MB",
+     "pdfPath": "/manual-pdf/lego/6520685.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6520685.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21354",
+   "source": "lego",
+   "set": "21354",
+   "name": "Twilight The Cullen House",
+   "category": "Ideas",
+   "age": "18+",
+   "pieces": 2001,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21354_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "124.09MB",
+     "pdfPath": "/manual-pdf/lego/6561570.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6561570.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21345",
+   "source": "lego",
+   "set": "21345",
+   "name": "Polaroid OneStep SX-70 Camera",
+   "category": "Ideas",
+   "age": "18+",
+   "pieces": 516,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21345_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "29.37MB",
+     "pdfPath": "/manual-pdf/lego/6494183.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6494183.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21346",
+   "source": "lego",
+   "set": "21346",
+   "name": "Family Tree",
+   "category": "Ideas",
+   "age": "18+",
+   "pieces": 1040,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21346_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "43.74MB",
+     "pdfPath": "/manual-pdf/lego/6501745.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6501745.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21347",
+   "source": "lego",
+   "set": "21347",
+   "name": "Red London Telephone Box",
+   "category": "Ideas",
+   "age": "18+",
+   "pieces": 1460,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21347_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "70.86MB",
+     "pdfPath": "/manual-pdf/lego/6506843.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6506843.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21348",
+   "source": "lego",
+   "set": "21348",
+   "name": "Dungeons & Dragons: Red Dragon's Tale",
+   "category": "Ideas",
+   "age": "18+",
+   "pieces": 3745,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21348_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 4",
+     "size": "48.26MB",
+     "pdfPath": "/manual-pdf/lego/6562296.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6562296.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 4",
+     "size": "71.00MB",
+     "pdfPath": "/manual-pdf/lego/6562297.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6562297.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 4",
+     "size": "59.40MB",
+     "pdfPath": "/manual-pdf/lego/6562298.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6562298.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 4 of 4",
+     "size": "26.28MB",
+     "pdfPath": "/manual-pdf/lego/6562299.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6562299.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21349",
+   "source": "lego",
+   "set": "21349",
+   "name": "Tuxedo Cat",
+   "category": "Ideas",
+   "age": "18+",
+   "pieces": 1710,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21349_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "64.38MB",
+     "pdfPath": "/manual-pdf/lego/6519974.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6519974.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21350",
+   "source": "lego",
+   "set": "21350",
+   "name": "Jaws",
+   "category": "Ideas",
+   "age": "18+",
+   "pieces": 1503,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21350_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "86.70MB",
+     "pdfPath": "/manual-pdf/lego/6600681.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6600681.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-21351",
+   "source": "lego",
+   "set": "21351",
+   "name": "Disney Tim Burton's The Nightmare Before Christmas",
+   "category": "Ideas",
+   "age": "18+",
+   "pieces": 2193,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/21351_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "38.93MB",
+     "pdfPath": "/manual-pdf/lego/6535578.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6535578.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "28.89MB",
+     "pdfPath": "/manual-pdf/lego/6535580.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6535580.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "16.62MB",
+     "pdfPath": "/manual-pdf/lego/6535794.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6535794.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-31159",
+   "source": "lego",
+   "set": "31159",
+   "name": "Wild Animals: Surprising Spider",
+   "category": "Creator",
+   "age": "7+",
+   "pieces": 153,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/31159_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "13.64MB",
+     "pdfPath": "/manual-pdf/lego/6556253.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556253.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "10.01MB",
+     "pdfPath": "/manual-pdf/lego/6556254.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556254.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "6.14MB",
+     "pdfPath": "/manual-pdf/lego/6556255.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556255.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-31160",
+   "source": "lego",
+   "set": "31160",
+   "name": "Aircraft: Race Plane",
+   "category": "Creator",
+   "age": "7+",
+   "pieces": 178,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/31160_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "23.64MB",
+     "pdfPath": "/manual-pdf/lego/6556256.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556256.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "14.56MB",
+     "pdfPath": "/manual-pdf/lego/6556257.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556257.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "11.05MB",
+     "pdfPath": "/manual-pdf/lego/6556258.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556258.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-31161",
+   "source": "lego",
+   "set": "31161",
+   "name": "Medieval Dragon",
+   "category": "Creator",
+   "age": "9+",
+   "pieces": 715,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/31161_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "54.20MB",
+     "pdfPath": "/manual-pdf/lego/6556259.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556259.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "29.42MB",
+     "pdfPath": "/manual-pdf/lego/6556260.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556260.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "31.97MB",
+     "pdfPath": "/manual-pdf/lego/6556261.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556261.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-31162",
+   "source": "lego",
+   "set": "31162",
+   "name": "Cute Bunny",
+   "category": "Creator",
+   "age": "8+",
+   "pieces": 326,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/31162_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "46.34MB",
+     "pdfPath": "/manual-pdf/lego/6556262.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556262.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "11.76MB",
+     "pdfPath": "/manual-pdf/lego/6556263.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556263.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "8.86MB",
+     "pdfPath": "/manual-pdf/lego/6556264.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556264.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-31163",
+   "source": "lego",
+   "set": "31163",
+   "name": "Playful Cat",
+   "category": "Creator",
+   "age": "8+",
+   "pieces": 407,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/31163_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "19.96MB",
+     "pdfPath": "/manual-pdf/lego/6556265.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556265.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "8.59MB",
+     "pdfPath": "/manual-pdf/lego/6556266.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556266.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "5.71MB",
+     "pdfPath": "/manual-pdf/lego/6556267.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556267.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-31164",
+   "source": "lego",
+   "set": "31164",
+   "name": "Space Robot",
+   "category": "Creator",
+   "age": "8+",
+   "pieces": 281,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/31164_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "37.73MB",
+     "pdfPath": "/manual-pdf/lego/6556268.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556268.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "9.11MB",
+     "pdfPath": "/manual-pdf/lego/6556269.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556269.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "7.56MB",
+     "pdfPath": "/manual-pdf/lego/6556270.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556270.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-31165",
+   "source": "lego",
+   "set": "31165",
+   "name": "Wild Animals: Panda Family",
+   "category": "Creator",
+   "age": "8+",
+   "pieces": 626,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/31165_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "33.46MB",
+     "pdfPath": "/manual-pdf/lego/6556271.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556271.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "18.60MB",
+     "pdfPath": "/manual-pdf/lego/6556272.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6556272.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "18.41MB",
+     "pdfPath": "/manual-pdf/lego/6570194.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6570194.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-31166",
+   "source": "lego",
+   "set": "31166",
+   "name": "Beautiful Horse",
+   "category": "Creator",
+   "age": "9+",
+   "pieces": 685,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/31166_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "46.22MB",
+     "pdfPath": "/manual-pdf/lego/6592813.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6592813.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "27.21MB",
+     "pdfPath": "/manual-pdf/lego/6592814.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6592814.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "26.49MB",
+     "pdfPath": "/manual-pdf/lego/6592815.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6592815.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42163",
+   "source": "lego",
+   "set": "42163",
+   "name": "Heavy-Duty Bulldozer",
+   "category": "Technic",
+   "age": "7+",
+   "pieces": 195,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42163_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "7.68MB",
+     "pdfPath": "/manual-pdf/lego/6495263.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495263.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42164",
+   "source": "lego",
+   "set": "42164",
+   "name": "Off-Road Race Buggy",
+   "category": "Technic",
+   "age": "8+",
+   "pieces": 219,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42164_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "6.18MB",
+     "pdfPath": "/manual-pdf/lego/6495264.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495264.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "9.56MB",
+     "pdfPath": "/manual-pdf/lego/6495265.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495265.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42165",
+   "source": "lego",
+   "set": "42165",
+   "name": "Mercedes-AMG F1 W14 E Performance Pull-Back",
+   "category": "Technic",
+   "age": "7+",
+   "pieces": 240,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42165_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "17.38MB",
+     "pdfPath": "/manual-pdf/lego/6507098.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507098.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42166",
+   "source": "lego",
+   "set": "42166",
+   "name": "NEOM McLaren Extreme E Race Car",
+   "category": "Technic",
+   "age": "7+",
+   "pieces": 252,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42166_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "17.73MB",
+     "pdfPath": "/manual-pdf/lego/6495266.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495266.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42167",
+   "source": "lego",
+   "set": "42167",
+   "name": "Mack LR Electric Garbage Truck",
+   "category": "Technic",
+   "age": "8+",
+   "pieces": 503,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42167_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "24.99MB",
+     "pdfPath": "/manual-pdf/lego/6495267.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495267.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42168",
+   "source": "lego",
+   "set": "42168",
+   "name": "John Deere 9700 Forage Harvester",
+   "category": "Technic",
+   "age": "9+",
+   "pieces": 559,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42168_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "39.66MB",
+     "pdfPath": "/manual-pdf/lego/6495268.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495268.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42169",
+   "source": "lego",
+   "set": "42169",
+   "name": "NEOM McLaren Formula E Race Car",
+   "category": "Technic",
+   "age": "9+",
+   "pieces": 452,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42169_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "37.59MB",
+     "pdfPath": "/manual-pdf/lego/6503513.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6503513.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42170",
+   "source": "lego",
+   "set": "42170",
+   "name": "Kawasaki Ninja H2R Motorcycle",
+   "category": "Technic",
+   "age": "10+",
+   "pieces": 643,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42170_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "41.56MB",
+     "pdfPath": "/manual-pdf/lego/6503514.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6503514.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42640",
+   "source": "lego",
+   "set": "42640",
+   "name": "Guinea Pig Playground",
+   "category": "Friends",
+   "age": "5+",
+   "pieces": 86,
+   "year": 2025,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42640_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "15.32MB",
+     "pdfPath": "/manual-pdf/lego/6554550.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6554550.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42630",
+   "source": "lego",
+   "set": "42630",
+   "name": "Heartlake City Water Park",
+   "category": "Friends",
+   "age": "8+",
+   "pieces": 814,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42630_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "146.83MB",
+     "pdfPath": "/manual-pdf/lego/6521591.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521591.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42631",
+   "source": "lego",
+   "set": "42631",
+   "name": "Adventure Camp Tree House",
+   "category": "Friends",
+   "age": "8+",
+   "pieces": 1128,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42631_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "79.22MB",
+     "pdfPath": "/manual-pdf/lego/6521592.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521592.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "62.07MB",
+     "pdfPath": "/manual-pdf/lego/6521593.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521593.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "50.46MB",
+     "pdfPath": "/manual-pdf/lego/6521594.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521594.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42632",
+   "source": "lego",
+   "set": "42632",
+   "name": "Farm Animal Vet Clinic",
+   "category": "Friends",
+   "age": "4+",
+   "pieces": 161,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42632_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 3",
+     "size": "14.83MB",
+     "pdfPath": "/manual-pdf/lego/6495178.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495178.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 3",
+     "size": "12.49MB",
+     "pdfPath": "/manual-pdf/lego/6495179.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495179.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 3",
+     "size": "10.85MB",
+     "pdfPath": "/manual-pdf/lego/6495180.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495180.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42633",
+   "source": "lego",
+   "set": "42633",
+   "name": "Hot Dog Food Truck",
+   "category": "Friends",
+   "age": "4+",
+   "pieces": 100,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42633_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "14.65MB",
+     "pdfPath": "/manual-pdf/lego/6493644.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6493644.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "8.06MB",
+     "pdfPath": "/manual-pdf/lego/6493645.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6493645.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42634",
+   "source": "lego",
+   "set": "42634",
+   "name": "Horse and Pony Trailer",
+   "category": "Friends",
+   "age": "4+",
+   "pieces": 105,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42634_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "9.55MB",
+     "pdfPath": "/manual-pdf/lego/6495181.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495181.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "10.70MB",
+     "pdfPath": "/manual-pdf/lego/6495182.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6495182.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42635",
+   "source": "lego",
+   "set": "42635",
+   "name": "Dog-Grooming Car",
+   "category": "Friends",
+   "age": "4+",
+   "pieces": 60,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42635_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "11.96MB",
+     "pdfPath": "/manual-pdf/lego/6521595.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521595.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-42636",
+   "source": "lego",
+   "set": "42636",
+   "name": "Heartlake City Preschool",
+   "category": "Friends",
+   "age": "4+",
+   "pieces": 239,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/42636_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 5",
+     "size": "24.70MB",
+     "pdfPath": "/manual-pdf/lego/6521596.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521596.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 5",
+     "size": "22.32MB",
+     "pdfPath": "/manual-pdf/lego/6521597.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521597.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 5",
+     "size": "8.02MB",
+     "pdfPath": "/manual-pdf/lego/6521598.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521598.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 4 of 5",
+     "size": "14.05MB",
+     "pdfPath": "/manual-pdf/lego/6521599.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521599.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 5 of 5",
+     "size": "8.05MB",
+     "pdfPath": "/manual-pdf/lego/6521600.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521600.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-60402",
+   "source": "lego",
+   "set": "60402",
+   "name": "Blue Monster Truck",
+   "category": "City",
+   "age": "5+",
+   "pieces": 148,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/60402_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "20.06MB",
+     "pdfPath": "/manual-pdf/lego/6490978.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6490978.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-60403",
+   "source": "lego",
+   "set": "60403",
+   "name": "Emergency Ambulance and Snowboarder",
+   "category": "City",
+   "age": "4+",
+   "pieces": 79,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/60403_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "16.54MB",
+     "pdfPath": "/manual-pdf/lego/6490979.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6490979.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "4.86MB",
+     "pdfPath": "/manual-pdf/lego/6490980.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6490980.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-60404",
+   "source": "lego",
+   "set": "60404",
+   "name": "Burger Truck",
+   "category": "City",
+   "age": "5+",
+   "pieces": 194,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/60404_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "15.17MB",
+     "pdfPath": "/manual-pdf/lego/6490981.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6490981.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "8.57MB",
+     "pdfPath": "/manual-pdf/lego/6490982.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6490982.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-60405",
+   "source": "lego",
+   "set": "60405",
+   "name": "Emergency Rescue Helicopter",
+   "category": "City",
+   "age": "6+",
+   "pieces": 226,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/60405_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "26.49MB",
+     "pdfPath": "/manual-pdf/lego/6492739.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6492739.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-60406",
+   "source": "lego",
+   "set": "60406",
+   "name": "Race Car and Car Carrier Truck",
+   "category": "City",
+   "age": "6+",
+   "pieces": 328,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/60406_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "12.44MB",
+     "pdfPath": "/manual-pdf/lego/6490984.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6490984.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "21.91MB",
+     "pdfPath": "/manual-pdf/lego/6490985.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6490985.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-60407",
+   "source": "lego",
+   "set": "60407",
+   "name": "Red Double-Decker Sightseeing Bus",
+   "category": "City",
+   "age": "7+",
+   "pieces": 384,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/60407_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "41.30MB",
+     "pdfPath": "/manual-pdf/lego/6521793.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521793.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-60408",
+   "source": "lego",
+   "set": "60408",
+   "name": "Car Transporter Truck with Sports Cars",
+   "category": "City",
+   "age": "7+",
+   "pieces": 998,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/60408_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 4",
+     "size": "9.57MB",
+     "pdfPath": "/manual-pdf/lego/6521794.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521794.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 4",
+     "size": "9.47MB",
+     "pdfPath": "/manual-pdf/lego/6521795.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521795.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 3 of 4",
+     "size": "11.97MB",
+     "pdfPath": "/manual-pdf/lego/6521796.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521796.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 4 of 4",
+     "size": "64.11MB",
+     "pdfPath": "/manual-pdf/lego/6521797.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521797.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-60409",
+   "source": "lego",
+   "set": "60409",
+   "name": "Yellow Mobile Construction Crane",
+   "category": "City",
+   "age": "9+",
+   "pieces": 1116,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/60409_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "96.42MB",
+     "pdfPath": "/manual-pdf/lego/6521798.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6521798.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-75375",
+   "source": "lego",
+   "set": "75375",
+   "name": "Millennium Falcon",
+   "category": "Star Wars",
+   "age": "18+",
+   "pieces": 921,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/75375_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "34.75MB",
+     "pdfPath": "/manual-pdf/lego/6509377.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6509377.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-75376",
+   "source": "lego",
+   "set": "75376",
+   "name": "Tantive IV",
+   "category": "Star Wars",
+   "age": "18+",
+   "pieces": 654,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/75376_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "27.82MB",
+     "pdfPath": "/manual-pdf/lego/6509379.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6509379.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-75377",
+   "source": "lego",
+   "set": "75377",
+   "name": "Invisible Hand",
+   "category": "Star Wars",
+   "age": "18+",
+   "pieces": 557,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/75377_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "21.95MB",
+     "pdfPath": "/manual-pdf/lego/6509381.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6509381.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-75378",
+   "source": "lego",
+   "set": "75378",
+   "name": "BARC Speeder Escape",
+   "category": "Star Wars",
+   "age": "8+",
+   "pieces": 221,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/75378_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "15.40MB",
+     "pdfPath": "/manual-pdf/lego/6515730.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6515730.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-75379",
+   "source": "lego",
+   "set": "75379",
+   "name": "R2-D2",
+   "category": "Star Wars",
+   "age": "10+",
+   "pieces": 1050,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/75379_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "80.02MB",
+     "pdfPath": "/manual-pdf/lego/6516541.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6516541.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-75380",
+   "source": "lego",
+   "set": "75380",
+   "name": "Mos Espa Podrace Diorama",
+   "category": "Star Wars",
+   "age": "18+",
+   "pieces": 718,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/75380_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "41.58MB",
+     "pdfPath": "/manual-pdf/lego/6515731.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6515731.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-75381",
+   "source": "lego",
+   "set": "75381",
+   "name": "Droideka",
+   "category": "Star Wars",
+   "age": "18+",
+   "pieces": 583,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/75381_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "21.63MB",
+     "pdfPath": "/manual-pdf/lego/6515753.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6515753.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-75382",
+   "source": "lego",
+   "set": "75382",
+   "name": "TIE Interceptor",
+   "category": "Star Wars",
+   "age": "18+",
+   "pieces": 1931,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/75382_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "92.20MB",
+     "pdfPath": "/manual-pdf/lego/6515733.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6515733.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76426",
+   "source": "lego",
+   "set": "76426",
+   "name": "Hogwarts Castle Boathouse",
+   "category": "Harry Potter",
+   "age": "8+",
+   "pieces": 350,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76426_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "40.67MB",
+     "pdfPath": "/manual-pdf/lego/6507714.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507714.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76427",
+   "source": "lego",
+   "set": "76427",
+   "name": "Buckbeak",
+   "category": "Harry Potter",
+   "age": "9+",
+   "pieces": 723,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76427_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "47.66MB",
+     "pdfPath": "/manual-pdf/lego/6520762.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6520762.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76428",
+   "source": "lego",
+   "set": "76428",
+   "name": "Hagrid's Hut: An Unexpected Visit",
+   "category": "Harry Potter",
+   "age": "8+",
+   "pieces": 896,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76428_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "86.49MB",
+     "pdfPath": "/manual-pdf/lego/6507126.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507126.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76429",
+   "source": "lego",
+   "set": "76429",
+   "name": "Talking Sorting Hat",
+   "category": "Harry Potter",
+   "age": "18+",
+   "pieces": 561,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76429_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "67.94MB",
+     "pdfPath": "/manual-pdf/lego/6507124.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507124.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76430",
+   "source": "lego",
+   "set": "76430",
+   "name": "Hogwarts Castle Owlery",
+   "category": "Harry Potter",
+   "age": "8+",
+   "pieces": 364,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76430_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "32.64MB",
+     "pdfPath": "/manual-pdf/lego/6507122.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507122.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76431",
+   "source": "lego",
+   "set": "76431",
+   "name": "Hogwarts Castle: Potions Class",
+   "category": "Harry Potter",
+   "age": "8+",
+   "pieces": 397,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76431_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "44.33MB",
+     "pdfPath": "/manual-pdf/lego/6520763.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6520763.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76432",
+   "source": "lego",
+   "set": "76432",
+   "name": "Forbidden Forest: Magical Creatures",
+   "category": "Harry Potter",
+   "age": "8+",
+   "pieces": 172,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76432_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "22.77MB",
+     "pdfPath": "/manual-pdf/lego/6507089.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507089.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76433",
+   "source": "lego",
+   "set": "76433",
+   "name": "Mandrake",
+   "category": "Harry Potter",
+   "age": "10+",
+   "pieces": 579,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76433_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "56.11MB",
+     "pdfPath": "/manual-pdf/lego/6520764.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6520764.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76921",
+   "source": "lego",
+   "set": "76921",
+   "name": "Audi S1 e-tron quattro Race Car",
+   "category": "Speed Champions",
+   "age": "9+",
+   "pieces": 274,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76921_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "18.27MB",
+     "pdfPath": "/manual-pdf/lego/6507095.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507095.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76922",
+   "source": "lego",
+   "set": "76922",
+   "name": "BMW M4 GT3 & BMW M Hybrid V8 Race Cars",
+   "category": "Speed Champions",
+   "age": "9+",
+   "pieces": 676,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76922_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "31.77MB",
+     "pdfPath": "/manual-pdf/lego/6507085.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507085.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "37.46MB",
+     "pdfPath": "/manual-pdf/lego/6507087.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6507087.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76923",
+   "source": "lego",
+   "set": "76923",
+   "name": "Lamborghini Lambo V12 Vision GT Super Car",
+   "category": "Speed Champions",
+   "age": "10+",
+   "pieces": 230,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76923_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 1",
+     "size": "20.85MB",
+     "pdfPath": "/manual-pdf/lego/6522907.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6522907.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76924",
+   "source": "lego",
+   "set": "76924",
+   "name": "Mercedes-AMG G 63 & Mercedes-AMG SL 63",
+   "category": "Speed Champions",
+   "age": "10+",
+   "pieces": 808,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76924_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "23.34MB",
+     "pdfPath": "/manual-pdf/lego/6522908.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6522908.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "35.00MB",
+     "pdfPath": "/manual-pdf/lego/6572271.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6572271.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  },
+  {
+   "id": "lego-76925",
+   "source": "lego",
+   "set": "76925",
+   "name": "Aston Martin Safety Car & AMR23",
+   "category": "Speed Champions",
+   "age": "9+",
+   "pieces": 564,
+   "year": 2024,
+   "image": "https://www.lego.com/cdn/product-assets/product.img.pri/76925_Prod.png?format=webply&fit=bounds&quality=75&width=480&height=480",
+   "manuals": [
+    {
+     "label": "Book 1 of 2",
+     "size": "29.93MB",
+     "pdfPath": "/manual-pdf/lego/6527283.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6527283.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    },
+    {
+     "label": "Book 2 of 2",
+     "size": "22.24MB",
+     "pdfPath": "/manual-pdf/lego/6527284.pdf",
+     "coverUrl": "https://www.lego.com/cdn/product-assets/product.bi.core.img/6527284.png?format=webply&fit=crop&quality=75&width=400&height=400"
+    }
+   ]
+  }
+ ],
+ "ikea": [
+  {
+   "id": "ikea-80104268",
+   "source": "ikea",
+   "itemNo": "80104268",
+   "name": "Lack side table",
+   "category": "Tables & desks",
+   "image": "https://www.ikea.com/us/en/images/products/lack-side-table-black-brown__57544_pe163126_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/lack-side-table-black-brown__AA-207276-4-1.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-40104294",
+   "source": "ikea",
+   "itemNo": "40104294",
+   "name": "Lack coffee table",
+   "category": "Tables & desks",
+   "image": "https://www.ikea.com/us/en/images/products/lack-coffee-table-black-brown__57540_pe163122_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/lack-coffee-table-black-brown__AA-472482-3-2.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-20631663",
+   "source": "ikea",
+   "itemNo": "20631663",
+   "name": "Kallax shelf unit",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/kallax-shelf-unit-white__0644757_pe702939_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/kallax-shelf-unit-white__AA-2703433-1-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-20522046",
+   "source": "ikea",
+   "itemNo": "20522046",
+   "name": "Billy bookcase",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/billy-bookcase-white__1590272_pe1038911_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/billy-bookcase-white__AA-2289108-3-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-00559291",
+   "source": "ikea",
+   "itemNo": "00559291",
+   "name": "Storklinta 3-drawer dresser",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/storklinta-3-drawer-dresser-white-anchor-unlock-function__1283591_pe932548_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/storklinta-3-drawer-dresser-white-anchor-unlock-function__AA-2413713-6-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-70576193",
+   "source": "ikea",
+   "itemNo": "70576193",
+   "name": "Hemnes 3-drawer dresser",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/hemnes-3-drawer-dresser-white-stain__1602245_pe1043337_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/hemnes-3-drawer-dresser-white-stain__AA-2406536-4-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-00473546",
+   "source": "ikea",
+   "itemNo": "00473546",
+   "name": "Alex drawer unit",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/alex-drawer-unit-white__0977775_pe813763_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/alex-drawer-unit-white__AA-2242840-5-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-80213074",
+   "source": "ikea",
+   "itemNo": "80213074",
+   "name": "Micke desk",
+   "category": "Tables & desks",
+   "image": "https://www.ikea.com/us/en/images/products/micke-desk-white__0736018_pe740345_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/micke-desk-white__AA-476615-12-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-90217972",
+   "source": "ikea",
+   "itemNo": "90217972",
+   "name": "Adils leg",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/adils-leg-white__0734621_pe739540_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/adils-leg-white__AA-844478-7-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-29420393",
+   "source": "ikea",
+   "itemNo": "29420393",
+   "name": "Sandsberg table",
+   "category": "Tables & desks",
+   "image": "https://www.ikea.com/us/en/images/products/sandsberg-table-black__1074348_pe856162_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/sandsberg-underframe-for-table-top-black__AA-2274887-5-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-20597918",
+   "source": "ikea",
+   "itemNo": "20597918",
+   "name": "Ålhult table",
+   "category": "Tables & desks",
+   "image": "https://www.ikea.com/us/en/images/products/alhult-table-beige-brown__1403274_pe969281_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/alhult-table-beige-brown__AA-2539743-3-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-60416925",
+   "source": "ikea",
+   "itemNo": "60416925",
+   "name": "Kyrre stool",
+   "category": "Seating",
+   "image": "https://www.ikea.com/us/en/images/products/kyrre-stool-birch__1488024_pe1003293_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/kyrre-stool-birch__AA-2118871-4-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-80485338",
+   "source": "ikea",
+   "itemNo": "80485338",
+   "name": "Perjohan stool with storage",
+   "category": "Seating",
+   "image": "https://www.ikea.com/us/en/images/products/perjohan-stool-with-storage-pine__1018243_pe831131_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/perjohan-stool-with-storage-pine__AA-2242616-4-2.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-50248541",
+   "source": "ikea",
+   "itemNo": "50248541",
+   "name": "Sniglar crib",
+   "category": "Kids",
+   "image": "https://www.ikea.com/us/en/images/products/sniglar-crib-beech__1448915_pe989685_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/sniglar-crib-beech__AA-1976314-7-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-50298418",
+   "source": "ikea",
+   "itemNo": "50298418",
+   "name": "Flisat children's table",
+   "category": "Kids",
+   "image": "https://www.ikea.com/us/en/images/products/flisat-childrens-table__0735831_pe740206_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/flisat-childrens-table__AA-2282638-3-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-80153800",
+   "source": "ikea",
+   "itemNo": "80153800",
+   "name": "Trofast frame",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/trofast-frame-white__0642668_pe701350_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/trofast-frame-white__AA-344735-4-2.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-39407070",
+   "source": "ikea",
+   "itemNo": "39407070",
+   "name": "Ivar shelf unit",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/ivar-shelf-unit-pine__0578810_pe669773_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/ivar-side-unit__AA-2204612-8-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-79129608",
+   "source": "ikea",
+   "itemNo": "79129608",
+   "name": "Brimnes bed frame with storage & headboard",
+   "category": "Beds",
+   "image": "https://www.ikea.com/us/en/images/products/brimnes-bed-frame-with-storage-headboard-black-luroey__1151053_pe884765_s5.jpg",
+   "manuals": [
+    {
+     "label": "Part 1 of 2",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/brimnes-bed-frame-with-storage-black__AA-473492-22-100.pdf"
+    },
+    {
+     "label": "Part 2 of 2",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/brimnes-headboard-with-storage-compartment-black__AA-472733-16-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-09574367",
+   "source": "ikea",
+   "itemNo": "09574367",
+   "name": "Malm bed frame",
+   "category": "Beds",
+   "image": "https://www.ikea.com/us/en/images/products/malm-bed-frame-dark-brown-veneer__1364772_pe956028_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/malm-bed-frame-dark-brown-veneer__AA-2558683-1-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-29007794",
+   "source": "ikea",
+   "itemNo": "29007794",
+   "name": "Tarva bed frame",
+   "category": "Beds",
+   "image": "https://www.ikea.com/us/en/images/products/tarva-bed-frame-pine-luroey__0637611_pe698421_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/tarva-bed-frame-pine__AA-1921249-6-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-60581538",
+   "source": "ikea",
+   "itemNo": "60581538",
+   "name": "Hauga 6-drawer dresser",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/hauga-6-drawer-dresser-white__1602283_pe1043373_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/hauga-6-drawer-dresser-white__AA-2481579-4-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-90622071",
+   "source": "ikea",
+   "itemNo": "90622071",
+   "name": "Nordli 6-drawer dresser",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/nordli-6-drawer-dresser-white__1602264_pe1043354_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/nordli-6-drawer-dresser-white__AA-2587499-4-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-70582165",
+   "source": "ikea",
+   "itemNo": "70582165",
+   "name": "Rast 3-drawer dresser",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/rast-3-drawer-dresser-pine__1291243_pe934857_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/rast-3-drawer-dresser-pine__AA-2413402-4-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-60561248",
+   "source": "ikea",
+   "itemNo": "60561248",
+   "name": "Storklinta 6-drawer dresser",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/storklinta-6-drawer-dresser-white-anchor-unlock-function__1283583_pe932540_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/storklinta-6-drawer-dresser-white-anchor-unlock-function__AA-2413736-7-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-50214678",
+   "source": "ikea",
+   "itemNo": "50214678",
+   "name": "Vittsjö shelf unit",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/vittsjoe-shelf-unit-black-brown-glass__0644374_pe702640_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/vittsjoe-shelf-unit-black-brown-glass__AA-542661-17-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-49581182",
+   "source": "ikea",
+   "itemNo": "49581182",
+   "name": "Eket wall cabinet/2 door",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/eket-wall-cabinet-2-door-brown-walnut-effect__1418050_pe976391_s5.jpg",
+   "manuals": [
+    {
+     "label": "Part 1 of 2",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/eket-cabinet-with-2-doors-and-shelf-brown-walnut-effect__AA-1914760-9-100.pdf"
+    },
+    {
+     "label": "Part 2 of 2",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/eket-suspension-rail__AA-1912543-9-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-20510005",
+   "source": "ikea",
+   "itemNo": "20510005",
+   "name": "Tonstad sideboard",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/tonstad-sideboard-oak-veneer__1186256_pe898738_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/tonstad-sideboard-oak-veneer__AA-2355176-1-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-19389152",
+   "source": "ikea",
+   "itemNo": "19389152",
+   "name": "Småstad bench with toy storage",
+   "category": "Seating",
+   "image": "https://www.ikea.com/us/en/images/products/smastad-bench-with-toy-storage-white-white__0918197_pe786134_s5.jpg",
+   "manuals": [
+    {
+     "label": "Part 1 of 2",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/smastad-bench-white__AA-2203659-1-2.pdf"
+    },
+    {
+     "label": "Part 2 of 2",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/smastad-box-white__AA-2203702-1-2.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-70588167",
+   "source": "ikea",
+   "itemNo": "70588167",
+   "name": "Pax wall-mounted storage frame",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/pax-wall-mounted-storage-frame-white__1346286_pe950907_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/pax-wall-mounted-storage-frame-white__AA-2462037-5-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-50587692",
+   "source": "ikea",
+   "itemNo": "50587692",
+   "name": "Gullaberg shoe cabinet with 2 compartments",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/gullaberg-shoe-cabinet-with-2-compartments-white__1384131_pe962849_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/gullaberg-shoe-cabinet-with-2-compartments-white__AA-2514824-4-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-50561668",
+   "source": "ikea",
+   "itemNo": "50561668",
+   "name": "Kilberget 3-drawer dresser",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/kilberget-3-drawer-dresser-white-anchor-unlock-function__1283561_pe932532_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/kilberget-3-drawer-dresser-white-anchor-unlock-function__AA-2404076-4-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-29530278",
+   "source": "ikea",
+   "itemNo": "29530278",
+   "name": "Mittzon desk sit/stand",
+   "category": "Tables & desks",
+   "image": "https://www.ikea.com/us/en/images/products/mittzon-desk-sit-stand-electric-walnut-veneer-black__1209453_pe909230_s5.jpg",
+   "manuals": [
+    {
+     "label": "Part 1 of 2",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/mittzon-underframe-for-sit-stand-desk-electric-black__AA-2405369-6-100.pdf"
+    },
+    {
+     "label": "Part 2 of 2",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/mittzon-underframe-for-sit-stand-desk-electric-black__AA-2445413-2-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-50411990",
+   "source": "ikea",
+   "itemNo": "50411990",
+   "name": "Gladom tray table",
+   "category": "Tables & desks",
+   "image": "https://www.ikea.com/us/en/images/products/gladom-tray-table-black__0567223_pe664991_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/gladom-tray-table-black__AA-2544925-1-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-70483274",
+   "source": "ikea",
+   "itemNo": "70483274",
+   "name": "Vihals shelving unit with 10 shelves",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/vihals-shelving-unit-with-10-shelves-white__1035575_pe838110_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/vihals-shelving-unit-with-10-shelves-white__AA-2305714-3-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-30621480",
+   "source": "ikea",
+   "itemNo": "30621480",
+   "name": "Baggebo shelf unit",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/baggebo-shelf-unit-bright-green__1498087_pe1006161_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/baggebo-shelf-unit-bright-green__AA-2235402-4-100.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-70152702",
+   "source": "ikea",
+   "itemNo": "70152702",
+   "name": "Tjusig bench with shoe storage",
+   "category": "Seating",
+   "image": "https://www.ikea.com/us/en/images/products/tjusig-bench-with-shoe-storage-white__0710725_pe727746_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/tjusig-bench-with-shoe-storage-white__AA-354147-1-2.pdf"
+    }
+   ]
+  },
+  {
+   "id": "ikea-69516138",
+   "source": "ikea",
+   "itemNo": "69516138",
+   "name": "Bror shelving unit",
+   "category": "Storage",
+   "image": "https://www.ikea.com/us/en/images/products/bror-shelving-unit-gray-green-pine-plywood__1197332_pe903480_s5.jpg",
+   "manuals": [
+    {
+     "label": "Assembly instructions",
+     "pdfPath": "/manual-pdf/ikea/us/en/assembly_instructions/bror-post-gray-green__AA-2062545-8-100.pdf"
+    }
+   ]
+  }
+ ]
+}

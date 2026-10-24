@@ -1,9 +1,0 @@
-{
-  "coordinate_system": "normalized_1000",
-  "source": "synthetic_fixture",
-  "frames": [
-    {"name": "landscape_center", "image_size": [1600, 900], "viewport": [400, 400], "box": [250, 350, 750, 650]},
-    {"name": "portrait_center", "image_size": [900, 1600], "viewport": [400, 400], "box": [300, 250, 700, 750]},
-    {"name": "edge_clipped", "image_size": [1600, 900], "viewport": [400, 400], "box": [0, 0, 250, 250]}
-  ]
-}

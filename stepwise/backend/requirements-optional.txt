@@ -1,9 +1,0 @@
-# Optional live provider SDKs. The core mock/local demo does not require them.
-anthropic
-cartesia>=4.2.0
-moss
-# Manual ingestion and the risk test (scripts/)
-pymupdf
-pillow
-# Azure Application Insights (set APPLICATIONINSIGHTS_CONNECTION_STRING)
-azure-monitor-opentelemetry
