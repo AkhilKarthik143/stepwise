@@ -38,7 +38,8 @@ All Claude calls go through `anthropic` (Python SDK, `client.beta.messages.parse
 1. Ingest, two ways. In the app: the Manuals sheet searches LEGO by set number or IKEA by product name (`app/build/library.py` scrapes their public pages) or takes a PDF upload; the server reads the pages in the background with Sonnet and the build opens as soon as the first steps are ready. Offline, for the demo manual: `ingest_manual.py` renders PDF pages, Opus returns one record per step (parts, action, watch_for, crop box), the step pictures are cropped to `steps/NN.png`. A person reviews `build.json`, fixes crops (`--recrop`) and sets `approved: true`.
 2. Live: the browser keeps a recent frame on the server. When hands leave the frame and the scene is still for 1.5 s (`BuildCamera.tsx`), it sends `{"type":"control","action":"check"}`. Sonnet compares the camera frame with the manual picture for this step and the previous one.
 3. `BuildGuide` (`app/build/guide.py`) owns the flow:
-   - "next", "repeat", "back", "what's next", "what step am I on", "switch to the stool", "that's fine" are matched in code, no model call
+   - "next", "repeat", "back", "what's next", "what step am I on", "go to step 9" (digits or words), "switch to the stool", "that's fine" are matched in code, no model call
+   - "where am I?" (and the first "what's next?" of a fresh session) finds the step from the camera: Sonnet compares the frame with numbered contact sheets of every step picture (`app/build/locate.py`) and jumps to the step after the last finished one. Below 0.7 confidence it doesn't move
    - a passing check says "Good" and advances
    - an issue sets the step to failed: "next" is refused until a later check passes or the builder says "that's fine" (logged as an override)
    - confidence below 0.7 asks for a closer look instead of judging

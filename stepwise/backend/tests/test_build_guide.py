@@ -17,7 +17,7 @@ from PIL import Image
 from app.build.catalog import BuildCatalog
 from app.build.guide import FAILED, BuildGuide
 from app.build.metrics import Metrics
-from app.build.models import CheckIssue, CheckResult, PartMatch
+from app.build.models import CheckIssue, CheckResult, PartMatch, StepLocation
 
 
 def write_build(root: Path, build_id: str, title: str, aliases: list[str], n_steps: int = 3) -> None:
@@ -42,6 +42,7 @@ def catalog(tmp_path: Path) -> BuildCatalog:
 class FakeVision:
     def __init__(self) -> None:
         self.next_check = CheckResult(step_complete=True, confidence=0.9, issues=[])
+        self.next_location = StepLocation(completed_step=2, confidence=0.85)
         self.calls: list[str] = []
 
     async def check_step(self, settings, *, expected, previous, frame_b64, step):
@@ -50,6 +51,10 @@ class FakeVision:
 
     async def match_part(self, settings, *, frame_b64, step, question):
         return PartMatch(is_right_part=False, confidence=0.9, held_part="short bolt", say="That's the short one. You need the long one.")
+
+    async def locate_step(self, settings, *, sheets, frame_b64, build):
+        self.calls.append(f"locate:{len(sheets)}:{sheets[0][1]}")
+        return self.next_location
 
     async def answer(self, settings, *, build, step, question, frame_b64, step_image=None, history=None):
         self.calls.append(f"answer:{question}:{step_image.name if step_image else None}:{len(history or [])}")
@@ -73,7 +78,7 @@ def say(guide, text, frame="FRAME"):
 
 def test_commands_answer_without_a_model(catalog):
     g, vision = guide_for(catalog)
-    assert say(g, "what's next?").text == "You're on step 1. Grab the red brick 2x4. Put it on the left, step 1."
+    assert say(g, "what's next?", frame=None).text == "You're on step 1. Grab the red brick 2x4. Put it on the left, step 1."
     assert say(g, "next").text.startswith("Step 2.")
     assert say(g, "repeat").text.startswith("Step 2.")
     assert say(g, "what step am I on").text == "You're on step 2 of 3."
@@ -205,7 +210,7 @@ def test_websocket_check_flow_reports_mistake(catalog, monkeypatch):
 
 def test_follow_up_question_gets_a_direct_answer_not_the_whole_step(catalog):
     g, vision = guide_for(catalog)
-    say(g, "what's next?")
+    say(g, "what's next?", frame=None)
     assert say(g, "what was the color again?").text == "It's gray."
     # the question saw the manual picture for this step and the earlier exchange
     assert vision.calls[-1] == "answer:what was the color again?:01.png:1"
@@ -213,3 +218,35 @@ def test_follow_up_question_gets_a_direct_answer_not_the_whole_step(catalog):
     assert say(g, "again").text.startswith("Step 1.")
     assert say(g, "repeat that").text.startswith("Step 1.")
     assert say(g, "next").text.startswith("Step 2.")
+
+
+def test_go_to_step_by_number_or_words_without_counting_steps_done(catalog):
+    g, vision = guide_for(catalog)
+    assert say(g, "go to step 3").text.startswith("Okay. Step 3.")
+    assert say(g, "I'm on step two").text.startswith("Okay. Step 2.")
+    assert say(g, "step 1").text.startswith("Okay. Step 1.")
+    assert say(g, "go to step 9").text == "There's no step 9. This manual has steps 1 to 3."
+    assert g.metrics.steps_done == 0 and vision.calls == []
+
+
+def test_where_am_i_finds_the_step_from_the_camera(catalog):
+    g, vision = guide_for(catalog)
+    assert say(g, "where am I?").text.startswith("Looks like you've finished step 2. Step 3.")
+    assert vision.calls == ["locate:1:[1, 2, 3]"]  # one contact sheet with all three steps
+    vision.next_location = StepLocation(completed_step=1, confidence=0.4)
+    turn = say(g, "where am I?")
+    assert turn.text.startswith("I'm not sure where you are. It might be around step 2.")
+    assert g.step.step == 3  # an unsure answer doesn't move the builder
+
+
+def test_first_whats_next_finds_the_place_once(catalog):
+    g, vision = guide_for(catalog)
+    assert say(g, "what's next?").text.startswith("Looks like you've finished step 2. Step 3.")
+    assert say(g, "what's next?").text.startswith("You're on step 3.")  # only the first time
+    assert sum(c.startswith("locate") for c in vision.calls) == 1
+
+
+def test_no_key_where_am_i_explains(catalog):
+    g, _ = guide_for(catalog, key="")
+    assert "Claude key" in say(g, "where am I?").text
+    assert say(g, "what's next?").text.startswith("You're on step 1.")

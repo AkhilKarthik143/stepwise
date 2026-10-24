@@ -77,6 +77,11 @@ class CheckResult(BaseModel):
     issues: list[CheckIssue]
 
 
+class StepLocation(BaseModel):
+    completed_step: int  # last step that looks finished in the camera; 0 = nothing built yet
+    confidence: float
+
+
 class PartMatch(BaseModel):
     is_right_part: bool
     confidence: float

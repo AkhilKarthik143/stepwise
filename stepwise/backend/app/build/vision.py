@@ -16,7 +16,7 @@ from typing import TypeVar
 
 from pydantic import BaseModel
 
-from app.build.models import Build, BuildStep, CheckResult, PageExtraction, PartMatch
+from app.build.models import Build, BuildStep, CheckResult, PageExtraction, PartMatch, StepLocation
 
 logger = logging.getLogger("stepwise.vision")
 
@@ -99,6 +99,25 @@ async def check_step(settings, *, expected: Path, previous: Path | None, frame_b
         {"type": "text", "text": f"This step: {_step_brief(step)}"},
     ]
     return await _parse(settings, model=settings.check_model, effort=settings.check_effort, system=CHECK_SYSTEM, content=content, schema=CheckResult)
+
+
+# ── "where am I?" ────────────────────────────────────────────────────────────
+LOCATE_SYSTEM = """A builder is partway through a build. You get contact sheets of the manual: every step's "after" picture in a tile labeled with its step number. Then a CAMERA photo of the real build now.
+Find the last step whose "after" picture matches the real build: everything up to that step is built, the next step's parts are not attached yet.
+Compare shape, size, colors and which parts are present. Ignore camera angle, lighting and loose parts lying beside the build.
+completed_step is 0 if nothing is built yet. Confidence below 0.7 when two steps look alike or the view is unclear."""
+
+
+async def locate_step(settings, *, sheets: list[tuple[bytes, list[int]]], frame_b64: str, build: Build) -> StepLocation:
+    content: list[dict] = []
+    for png, numbers in sheets:
+        content += [{"type": "text", "text": f"Manual steps {numbers[0]} to {numbers[-1]}:"}, _image_block(png, "image/png")]
+    content += [
+        {"type": "text", "text": f"CAMERA, the real {build.title} now:"},
+        _jpeg_b64(frame_b64),
+        {"type": "text", "text": "Which step has the builder just finished?"},
+    ]
+    return await _parse(settings, model=settings.check_model, effort=settings.check_effort, system=LOCATE_SYSTEM, content=content, schema=StepLocation, max_tokens=4000)
 
 
 # ── "is this the right one?" ─────────────────────────────────────────────────

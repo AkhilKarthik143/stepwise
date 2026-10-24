@@ -48,7 +48,43 @@ def is_check(t: str) -> bool:
 
 
 def is_where(t: str) -> bool:
-    return _has(t, r"what'?s next", r"what now", r"where am i", r"what do i do")
+    return _has(t, r"what'?s next", r"what now", r"what do i do")
+
+
+def is_locate(t: str) -> bool:
+    """Work out the step from the camera."""
+    return _has(t, r"where am i", r"find my (place|step|spot)", r"figure out where", r"what step is this", r"which step is this", r"where did i leave off")
+
+
+_NUMBER_WORDS = {w: i for i, w in enumerate(
+    "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen "
+    "seventeen eighteen nineteen".split())}
+_TENS = {"twenty": 20, "thirty": 30, "forty": 40, "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90}
+
+
+def spoken_number(text: str) -> int | None:
+    """'9', 'nine', 'twenty one', 'twenty-one' -> int (speech-to-text writes numbers either way)."""
+    text = text.strip().replace("-", " ")
+    if text.isdigit():
+        return int(text)
+    words = text.split()
+    if not words:
+        return None
+    total = _TENS.get(words[0], _NUMBER_WORDS.get(words[0]))
+    if total is None:
+        return None
+    if len(words) > 1 and words[0] in _TENS and words[1] in _NUMBER_WORDS and _NUMBER_WORDS[words[1]] < 10:
+        total += _NUMBER_WORDS[words[1]]
+    return total
+
+
+_NUM = r"(\d+|(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety)(?:[ -](?:one|two|three|four|five|six|seven|eight|nine))?|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen)"
+_GOTO = re.compile(rf"(?:go(?:ing)? to|jump to|skip to|take me to|start (?:at|from)|i'?m (?:on|at)|i am (?:on|at)|back to|open) step (?:number )?{_NUM}\b")
+
+
+def goto_target(t: str) -> int | None:
+    match = _GOTO.search(t) or re.fullmatch(rf"(?:go to )?step (?:number )?{_NUM}[.!]?", t.strip())
+    return spoken_number(match.group(1)) if match else None
 
 
 def is_step_number(t: str) -> bool:
@@ -100,6 +136,7 @@ class BuildGuide:
         self.progress: dict[str, Progress] = {}
         self._told_no_key = False
         self.history: list[tuple[str, str]] = []  # recent (builder said, BuildSight said), for follow-ups
+        self._located: set[str] = set()  # builds whose starting point was already found from the camera
         self._sync_metrics()
 
     # ── state ────────────────────────────────────────────────────────────────
@@ -195,7 +232,17 @@ class BuildGuide:
             return self._override()
         if is_part_question(t):
             return await self._match_part(t, frame_b64)
+        target = goto_target(t)
+        if target is not None:
+            return self._goto(target)
+        if is_locate(t):
+            return await self._locate(frame_b64, asked=True)
         if is_where(t):
+            # A fresh session on a half-built model: find the place from the camera first.
+            if self._fresh() and frame_b64 and self.settings.anthropic_api_key:
+                turn = await self._locate(frame_b64, asked=False)
+                if turn is not None:
+                    return turn
             line = self.step_line()
             if self.p.index < len(self.build.steps):
                 line = line.replace(f"Step {self.step.step}.", f"You're on step {self.step.step}.", 1)
@@ -270,6 +317,53 @@ class BuildGuide:
         self.progress[self.build.build_id] = Progress(index=p.index + 1)
         self._sync_metrics()
         return GuideTurn(self.step_line(lead), "command")
+
+    def _fresh(self) -> bool:
+        p = self.p
+        return self.build.build_id not in self._located and p.index == 0 and p.state == UNCHECKED and self.metrics.steps_done == 0
+
+    def _jump(self, index: int) -> None:
+        """Move to a step without counting anything as done (the builder did it earlier)."""
+        self.progress[self.build.build_id] = Progress(index=max(0, min(index, len(self.build.steps))))
+        self._sync_metrics()
+
+    def _goto(self, number: int) -> GuideTurn:
+        numbers = [s.step for s in self.build.steps]
+        if number in numbers:
+            self._jump(numbers.index(number))
+            return GuideTurn(self.step_line(f"Okay. "), "command")
+        if number > numbers[-1] and self.is_reading(self.build.build_id):
+            return GuideTurn(f"I haven't read step {number} yet. I'm still reading the manual. Try again in a few seconds.", "command")
+        return GuideTurn(f"There's no step {number}. This manual has steps {numbers[0]} to {numbers[-1]}.", "command")
+
+    async def _locate(self, frame_b64: str | None, *, asked: bool) -> GuideTurn | None:
+        """Find the step from the camera: the last step that looks finished, then the next one."""
+        if not frame_b64:
+            return GuideTurn("I can't see the camera yet.", "check") if asked else None
+        if not self.settings.anthropic_api_key:
+            return GuideTurn("Finding your place needs the Claude key. Say go to step and the number.", "check") if asked else None
+        from app.build.locate import contact_sheets
+
+        try:
+            found = await self.vision.locate_step(self.settings, sheets=contact_sheets(self.catalog, self.build), frame_b64=frame_b64, build=self.build)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("locate failed: %r", exc)
+            return GuideTurn("I couldn't work out where you are. Say go to step and the number.", "check") if asked else None
+        self._located.add(self.build.build_id)
+        numbers = [s.step for s in self.build.steps]
+        done = found.completed_step
+        if found.confidence < self.settings.check_min_confidence:
+            guess = f" It might be around step {done + 1}." if 0 < done < numbers[-1] else ""
+            return GuideTurn(f"I'm not sure where you are.{guess} Show me the whole build from above, or say go to step and the number.", "check")
+        if done <= 0:
+            self._jump(0)
+            return GuideTurn(self.step_line("Looks like a fresh start. "), "check")
+        if done >= numbers[-1]:
+            self._jump(len(numbers))
+            return GuideTurn(self.step_line(), "check")
+        next_index = next((i for i, n in enumerate(numbers) if n > done), len(numbers))
+        self._jump(next_index)
+        return GuideTurn(self.step_line(f"Looks like you've finished step {done}. "), "check")
 
     def _back(self) -> GuideTurn:
         p = self.p
