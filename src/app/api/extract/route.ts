@@ -2,6 +2,7 @@
 
 import { askClaude, ClaudeError } from "@/lib/claude";
 import { firstJsonObject } from "@/lib/json";
+import { readSteps, saveSteps } from "@/lib/stepCache";
 
 const MAX_IMAGE_CHARS = 6_000_000;
 
@@ -79,8 +80,9 @@ function parse(text: string): ExtractedStep[] | null {
 
 export async function POST(request: Request) {
   let page: unknown;
+  let key: unknown; // "<pdf link>#<page>" for catalog manuals: shared across devices
   try {
-    page = (await request.json())?.page;
+    ({ page, key } = (await request.json()) ?? {});
   } catch {
     return Response.json({ error: "Body must be JSON." }, { status: 400 });
   }
@@ -89,6 +91,11 @@ export async function POST(request: Request) {
   }
 
   const started = Date.now();
+  const cacheKey = typeof key === "string" && key.length < 500 ? key : null;
+  if (cacheKey) {
+    const cached = await readSteps<ExtractedStep[]>(cacheKey);
+    if (cached) return Response.json({ steps: cached, latencyMs: Date.now() - started, cached: true });
+  }
   let lastRaw = "";
   try {
     // One retry: replies occasionally come back as prose instead of JSON.
@@ -99,9 +106,13 @@ export async function POST(request: Request) {
           { type: "image", dataUrl: page },
           { type: "text", text: "Extract the steps on this page. JSON only." },
         ],
+        thinking: "off",
       });
       const steps = parse(lastRaw);
-      if (steps) return Response.json({ steps, latencyMs: Date.now() - started });
+      if (steps) {
+        if (cacheKey) await saveSteps(cacheKey, steps);
+        return Response.json({ steps, latencyMs: Date.now() - started });
+      }
       console.warn("[extract] unparseable reply:", lastRaw.slice(0, 400));
     }
   } catch (e) {

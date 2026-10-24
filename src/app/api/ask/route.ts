@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 
   const started = Date.now();
   try {
-    const text = (await askClaude({ system: SYSTEM_PROMPT, parts })).trim();
+    const text = (await askClaude({ system: SYSTEM_PROMPT, parts, thinking: "off" })).trim();
     return Response.json({ text, latencyMs: Date.now() - started });
   } catch (e) {
     const err = e instanceof ClaudeError ? e : new ClaudeError("Couldn't answer that.");

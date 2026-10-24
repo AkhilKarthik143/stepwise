@@ -9,6 +9,9 @@ type Ask = {
   system: string;
   parts: Part[];
   effort?: "low" | "medium" | "high";
+  // "off" skips thinking for transcription-style calls (reading a page, short answers), which
+  // cuts latency. Checks keep it on. Anthropic API only; OpenRouter ignores it.
+  thinking?: "on" | "off";
 };
 
 export class ClaudeError extends Error {
@@ -37,7 +40,7 @@ export function claudeConfigured() {
 
 let client: Anthropic | null = null;
 
-async function viaAnthropic({ system, parts, effort = "low" }: Ask): Promise<string> {
+async function viaAnthropic({ system, parts, effort = "low", thinking = "on" }: Ask): Promise<string> {
   client ??= new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY!.trim() });
   const content: Anthropic.Beta.BetaContentBlockParam[] = parts.map((p) => {
     if (p.type === "text") return { type: "text", text: p.text };
@@ -50,6 +53,8 @@ async function viaAnthropic({ system, parts, effort = "low" }: Ask): Promise<str
       model: ANTHROPIC_MODEL,
       max_tokens: MAX_TOKENS,
       output_config: { effort },
+      // Sonnet 5.5 can't disable thinking outright; between_tools turns it off for a plain reply.
+      ...(thinking === "off" ? { thinking: { type: "between_tools" as const } } : {}),
       // If a safety filter wrongly declines, the API re-runs the request on a fallback model.
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
