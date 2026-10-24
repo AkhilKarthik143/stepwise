@@ -11,7 +11,8 @@ export async function GET() {
       status: "ok",
       claude: claudeConfigured() ? (process.env.ANTHROPIC_API_KEY?.trim() ? "anthropic" : "openrouter") : "missing",
       voice: cartesiaConfigured() ? "cartesia" : "browser",
-      telemetry: process.env.APPLICATIONINSIGHTS_CONNECTION_STRING?.trim() ? "application-insights" : "off",
+      // "invalid" = the connection string is set but Application Insights rejected it (see instrumentation.ts)
+      telemetry: process.env.BUILDSIGHT_TELEMETRY === "on" ? "application-insights" : process.env.APPLICATIONINSIGHTS_CONNECTION_STRING?.trim() ? "invalid" : "off",
       locked: Boolean(process.env.APP_PASSCODE?.trim()),
     },
     { headers: { "Cache-Control": "no-store" } },
