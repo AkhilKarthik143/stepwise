@@ -9,7 +9,8 @@ const MAX_IMAGE_CHARS = 4_000_000;
 export type CheckResult = {
   step_complete: boolean;
   confidence: number; // 0–1
-  issues: { part: string; problem: string; fix: string }[];
+  // box: where the problem is in the CAMERA frame, 0-1 of its width/height (when the model can point at it)
+  issues: { part: string; problem: string; fix: string; box?: { x: number; y: number; w: number; h: number } }[];
   say: string; // one short sentence to speak aloud
 };
 
@@ -34,12 +35,28 @@ in the right place and orientation?
 
 Reply with JSON only, no other text:
 {"step_complete": boolean, "confidence": number between 0 and 1,
- "issues": [{"part": "piece by color and size", "problem": "what's wrong", "fix": "what to do"}],
+ "issues": [{"part": "piece by color and size", "problem": "what's wrong", "fix": "what to do",
+             "box": {"left": 0-100, "top": 0-100, "right": 0-100, "bottom": 0-100}}],
  "say": "one sentence, at most 20 words, to speak to the builder"}
+"box" marks where that problem is in the CAMERA image, as whole-number percentages of its width and height, drawn tight around the wrong piece. Leave "box" out if you can't point at it.
 If the camera view is too unclear to judge, set confidence below 0.5 and ask for a closer or clearer view in "say".`;
 
 function isImage(s: unknown): s is string {
   return typeof s === "string" && s.startsWith("data:image/") && s.length <= MAX_IMAGE_CHARS;
+}
+
+// Keeps the text fields and turns a percentage box into a 0-1 one; drops boxes that make no sense.
+function cleanIssue(i: Record<string, unknown>): CheckResult["issues"][number] {
+  const issue = { part: String(i?.part ?? ""), problem: String(i?.problem ?? ""), fix: String(i?.fix ?? "") };
+  const b = i?.box as Record<string, unknown> | undefined;
+  const pct = (n: unknown) => Math.max(0, Math.min(1, Number(n) / 100));
+  if (!b || ![b.left, b.top, b.right, b.bottom].every((n) => Number.isFinite(Number(n)))) return issue;
+  const [x, y, right, bottom] = [pct(b.left), pct(b.top), pct(b.right), pct(b.bottom)];
+  const w = right - x;
+  const h = bottom - y;
+  // Too small to see or nearly the whole frame: not a useful pointer.
+  if (w < 0.02 || h < 0.02 || w * h > 0.8) return issue;
+  return { ...issue, box: { x, y, w, h } };
 }
 
 // The model is asked for bare JSON; tolerate a stray code fence anyway.
@@ -51,7 +68,7 @@ function parseResult(text: string): CheckResult | null {
     return {
       step_complete: r.step_complete,
       confidence: Math.max(0, Math.min(1, r.confidence)),
-      issues: Array.isArray(r.issues) ? r.issues : [],
+      issues: Array.isArray(r.issues) ? r.issues.map(cleanIssue) : [],
       say: typeof r.say === "string" ? r.say : "",
     };
   } catch {

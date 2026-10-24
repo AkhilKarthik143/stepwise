@@ -109,3 +109,15 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .spin-slow, .spin-rev, .spin-fast, .scan-bar::after, .blink, .hud-sweep { animation: none; }
 }
+
+/* Box around a mistake on the checked camera frame: a soft pulse so the eye finds it */
+.mistake-box {
+  box-shadow: 0 0 0 2px rgba(252, 211, 77, 0.25), 0 0 18px rgba(252, 211, 77, 0.55);
+  animation: mistake-pulse 1.4s ease-in-out infinite;
+}
+@keyframes mistake-pulse {
+  50% { box-shadow: 0 0 0 4px rgba(252, 211, 77, 0.15), 0 0 26px rgba(252, 211, 77, 0.8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mistake-box { animation: none; }
+}

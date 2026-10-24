@@ -10,6 +10,7 @@ import type { PDFDocumentProxy } from "pdfjs-dist";
 import type { CheckResult } from "@/app/api/check/route";
 import type { ExtractedStep } from "@/app/api/extract/route";
 import CameraFeed, { type CameraHandle } from "@/components/CameraFeed";
+import { contactSheets } from "@/lib/contactSheet";
 import { getManual, getPageSteps, saveManual, savePageSteps, type Manual } from "@/lib/manuals";
 import { openManualPdf, renderPage } from "@/lib/pdf";
 import { startListening, type Listener } from "@/lib/listen";
@@ -38,7 +39,7 @@ async function crop(pageImage: string, box: ExtractedStep["box"]): Promise<strin
 }
 
 // Spoken commands, matched in code so they're instant. Anything else is a question for Claude.
-type Command = "next" | "back" | "repeat" | "check" | "stop" | "question";
+type Command = "next" | "back" | "repeat" | "check" | "stop" | "locate" | "question";
 function command(heard: string): Command {
   const t = heard.toLowerCase().replace(/[^a-z' ]/g, " ").replace(/\s+/g, " ").trim();
   if (/^(ok |okay |alright |and )?(next|next step|next one|continue|go on|go ahead|move on|skip)( please)?$/.test(t)) return "next";
@@ -46,6 +47,7 @@ function command(heard: string): Command {
   if (/^(repeat|repeat that|say that again|again|what was that|come again|one more time|what do i do)( please)?$/.test(t)) return "repeat";
   if (/^(check|check it|check this|check my build|check the build|is this right|did i do it right|does this look right|how does this look|i'm done|im done|done|finished|all done)( please)?$/.test(t)) return "check";
   if (/^(stop|quiet|be quiet|shut up|stop talking|pause)$/.test(t)) return "stop";
+  if (/^(ok |okay |so |hey )?(where am i|where was i|where are we|what step am i on|which step am i on|what step is this|which step is this|find my place|find where i am|figure out where i am)( now| please)?$/.test(t)) return "locate";
   return "question";
 }
 
@@ -123,7 +125,13 @@ function pageReader(manualId: string, doc: PDFDocumentProxy, shareKey?: string) 
   };
   // Every step read so far, in page order (for questions about other steps).
   const known = () => [...read.entries()].sort(([a], [b]) => a - b).flatMap(([, found]) => found);
-  return Object.assign(readPage, { known });
+  // Pages read so far with their rendered images (for "where am I?").
+  const pages = () =>
+    [...read.keys()].sort((a, b) => a - b).flatMap((p) => {
+      const job = jobs.get(p);
+      return job ? [{ page: p, steps: read.get(p)!, image: job.image }] : [];
+    });
+  return Object.assign(readPage, { known, pages, count: () => read.size });
 }
 
 export default function BuildView() {
@@ -145,6 +153,9 @@ export default function BuildView() {
   const [muted, setMuted] = useState(false);
   const [showManual, setShowManual] = useState(true);
   const [attempt, setAttempt] = useState(0); // bumped by Retry to re-read the page
+  const [readCount, setReadCount] = useState(0); // pages read so far, in view or in the background
+  const [locating, setLocating] = useState(false);
+  const backgroundStarted = useRef(false);
   const [preview, setPreview] = useState<string | null>(null); // page image shown while Claude reads it
   const [listener, setListener] = useState<Listener | null>(null);
   const [heard, setHeard] = useState<string | null>(null); // what the mic is hearing right now
@@ -232,6 +243,29 @@ export default function BuildView() {
       cancelled = true;
     };
   }, [pageImage, step, steps, stepIdx]);
+
+  // 3b. once the first step is up, read the rest of the book in the background, two pages at a
+  // time (so the page in view never waits), for "where am I?" and questions about other steps.
+  // Read pages are cached on this device and, for catalog manuals, on the server for everyone.
+  useEffect(() => {
+    if (!reader || !doc || phase.kind !== "ready" || backgroundStarted.current) return;
+    backgroundStarted.current = true;
+    let stopped = false;
+    let next = 1;
+    const lane = async () => {
+      while (!stopped && next <= doc.numPages) {
+        const p = next++;
+        await reader(p).steps.catch(() => {});
+        if (!stopped) setReadCount(reader.count());
+      }
+    };
+    lane();
+    lane();
+    return () => {
+      stopped = true;
+      backgroundStarted.current = false;
+    };
+  }, [reader, doc, phase.kind]);
 
   // 4. read each new step aloud
   useEffect(() => {
@@ -347,6 +381,56 @@ export default function BuildView() {
     [reader, doc, phase.kind, steps, step, page, turnTo, say],
   );
 
+  // "Where am I?": compares the camera with every step picture read so far, then jumps to the
+  // step after the last finished one. Below 0.7 confidence it only suggests.
+  const locate = useCallback(async () => {
+    if (!reader || !doc || locating) return;
+    const frame = camera.current?.capture();
+    if (!frame) return say("The camera isn't ready yet.");
+    const pages = reader.pages();
+    if (!pages.length) return say("I haven't read any steps yet. Give me a moment.");
+    setLocating(true);
+    setReply("Finding your place…");
+    try {
+      const seen = new Set<number>();
+      const tiles: { number: number; image: string }[] = [];
+      for (const pg of pages) {
+        const pageImage = await pg.image;
+        for (const s of pg.steps) {
+          if (seen.has(s.number)) continue;
+          seen.add(s.number);
+          tiles.push({ number: s.number, image: await crop(pageImage, s.box) });
+        }
+      }
+      tiles.sort((a, b) => a.number - b.number);
+      const used = tiles.slice(0, 160);
+      const complete = reader.count() >= doc.numPages;
+      const res = await fetch("/api/locate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ frame, sheets: await contactSheets(used), complete }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      const done = data.completed_step as number;
+      const still = complete ? "" : " I'm still reading the rest of the book.";
+      if (data.confidence < 0.7) {
+        return say(`I'm not sure. It might be around step ${Math.max(1, done)}. Say "I finished step" and the number.${still}`);
+      }
+      const nextStep = used.map((t) => t.number).find((n) => n > done);
+      if (nextStep === undefined) {
+        return say(complete ? `Looks like you've finished step ${done}, the last one.` : `Looks like you've finished step ${done}.${still} Ask again in a minute.`);
+      }
+      // The new step is read aloud when it opens; the caption says why we moved.
+      setReply(done === 0 ? `Looks like nothing's built yet. Starting at step ${nextStep}.` : `Looks like you've finished step ${done}. Going to step ${nextStep}.`);
+      await goToStep(nextStep);
+    } catch (e) {
+      say(e instanceof Error && e.message ? e.message : "I couldn't find your place.");
+    } finally {
+      setLocating(false);
+    }
+  }, [reader, doc, locating, say, goToStep]);
+
   // Latest handlers for the mic callback, which is set up once per listening session.
   const onHeard = useRef<(text: string) => void>(() => {});
   useEffect(() => {
@@ -363,13 +447,15 @@ export default function BuildView() {
           return step && say(`Step ${step.number}. ${step.instruction}`);
         case "check":
           return runCheck();
+        case "locate":
+          return locate();
         case "stop":
           return stopSpeaking();
         default:
           return ask(text);
       }
     };
-  }, [go, step, say, runCheck, ask, goToStep]);
+  }, [go, step, say, runCheck, ask, goToStep, locate]);
 
   const toggleMic = useCallback(async () => {
     primeAudio();
@@ -429,6 +515,7 @@ export default function BuildView() {
           <p className="truncate text-[11px] text-white/50">
             {manual?.subtitle}
             {doc && page > 0 ? ` · Page ${page}/${doc.numPages}` : ""}
+            {doc && readCount > 0 && readCount < doc.numPages ? ` · read ${readCount}/${doc.numPages}` : ""}
           </p>
         </div>
         <div className="flex gap-2">
@@ -624,6 +711,16 @@ export default function BuildView() {
                             {Math.round(check.result.confidence * 100)}%
                           </p>
                           <p className="mt-1">{check.result.say}</p>
+                          {verdict === "fix" && check.result.issues.length > 1 && (
+                            <ol className="mt-2 space-y-1 text-xs">
+                              {check.result.issues.map((issue, i) => (
+                                <li key={i}>
+                                  <span className="mr-1.5 rounded bg-amber-300 px-1 text-[9px] font-bold text-ink">{i + 1}</span>
+                                  {issue.part}: {issue.problem}. {issue.fix}
+                                </li>
+                              ))}
+                            </ol>
+                          )}
                           {verdict === "fix" && check.result.issues.length > 0 && (
                             <div className="mt-3 grid grid-cols-2 gap-2">
                               <figure>
@@ -631,7 +728,23 @@ export default function BuildView() {
                                 <figcaption className="mt-1 text-[10px] text-white/50">Manual</figcaption>
                               </figure>
                               <figure>
-                                <img src={check.frame} alt="Your build" className="rounded-md" />
+                                <div className="relative">
+                                  <img src={check.frame} alt="Your build" className="block w-full rounded-md" />
+                                  {/* where the problem is, on the same frame Claude checked */}
+                                  {check.result.issues.map(
+                                    (issue, i) =>
+                                      issue.box && (
+                                        <span
+                                          key={i}
+                                          aria-label={`Problem: ${issue.part}`}
+                                          className="mistake-box absolute rounded-md border-2 border-amber-300"
+                                          style={{ left: `${issue.box.x * 100}%`, top: `${issue.box.y * 100}%`, width: `${issue.box.w * 100}%`, height: `${issue.box.h * 100}%` }}
+                                        >
+                                          <span className="absolute -top-2.5 left-1 rounded bg-amber-300 px-1 text-[9px] font-bold leading-4 text-ink">{i + 1}</span>
+                                        </span>
+                                      ),
+                                  )}
+                                </div>
                                 <figcaption className="mt-1 text-[10px] text-white/50">Your build</figcaption>
                               </figure>
                             </div>
@@ -642,7 +755,15 @@ export default function BuildView() {
                   )}
                 </AnimatePresence>
 
-                <div className="mt-5 grid grid-cols-[1fr_1.4fr_1fr] gap-2">
+                <button
+                  onClick={() => (primeAudio(), locate())}
+                  disabled={locating}
+                  className="mt-4 text-xs font-medium text-sky-300 transition hover:text-sky-200 disabled:opacity-60"
+                >
+                  {locating ? "Finding your place…" : "Where am I? Find my place from the camera"}
+                </button>
+
+                <div className="mt-3 grid grid-cols-[1fr_1.4fr_1fr] gap-2">
                   <button onClick={() => (primeAudio(), go(-1))} className="rounded-xl border border-white/15 bg-white/[0.06] py-3 text-sm font-medium text-white/80 transition hover:bg-white/10 active:scale-95">
                     Back
                   </button>
