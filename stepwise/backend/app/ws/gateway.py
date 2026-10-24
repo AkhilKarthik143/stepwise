@@ -34,7 +34,9 @@ import time
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from app.agents import intent, workflows
-from app.agents.guide import RepairGuide
+from app.build import metrics as build_metrics
+from app.build.catalog import get_catalog
+from app.build.guide import BuildGuide
 from app.agents.orchestrator import Orchestrator
 from app.agents.runtime import build_agent
 from app.ar.annotations import confirmed_anchor
@@ -318,7 +320,7 @@ class RealtimeBridge:
         self.stt = CartesiaSTT(self.settings.cartesia_api_key, self.settings.cartesia_stt_model, self.settings.input_sample_rate,
                                on_partial=self._on_stt_partial, on_final=self._handle_text_input) if self.voice_in == "cartesia" else None
         self._speak_task: asyncio.Task | None = None
-        self.guide = RepairGuide(self.settings, self.orch.state, self._apply_tool, self._switch_asset)
+        self.guide = BuildGuide(self.settings, get_catalog(), build_metrics.new_session())
         self._workflow: dict | None = None  # active autonomous workflow {name, steps, index, paused}
         self._stepwise_recent_text = ""  # STEPWISE's current/last spoken text (to detect echo)
         self._spoke_over_stepwise = False  # the in-progress user turn began while STEPWISE was speaking
@@ -340,7 +342,7 @@ class RealtimeBridge:
         )
         await self._safe_send_json(protocol.state("listening", self.settings.session_resume_after_seconds))
         await self._safe_send_json(protocol.control("voice", voice_in=self.voice_in, voice_out=self.voice_out))
-        await self._safe_send_json(protocol.control("guide", **self.guide.status()))
+        await self._send_build_status()
 
         up = asyncio.create_task(self._upstream(), name="stepwise-upstream")
         down = asyncio.create_task(self._downstream(), name="stepwise-downstream")
@@ -499,6 +501,8 @@ class RealtimeBridge:
                         logger.debug("idle close: %r", exc)
             elif action == "text":
                 await self._handle_text_input(str(payload.get("text", "")))
+            elif action == "check":
+                await self._handle_check(payload)
             elif action == "confirm_anchor":
                 await self._handle_anchor_confirmation(payload)
             elif action == "resync":
@@ -522,11 +526,13 @@ class RealtimeBridge:
         await self._safe_send_json(protocol.transcript("user", text=text, final=True))
         await self._safe_send_json(protocol.state("thinking"))
         try:
-            # The guide owns fixed-meaning turns (problem, machine confirm, next/repeat/yes);
-            # anything else is a question for the agent while the procedure holds its step.
+            # With a build loaded, BuildSight answers every turn (commands without a model call,
+            # questions from the manual). With no build on disk, the legacy CNC agent answers.
+            t0 = time.monotonic()
             guided = await self.guide.handle(text, self._latest_image_b64)
             if guided is not None:
-                reply, provider, mock, sources = guided.text, "guide", False, guided.source_refs
+                self.guide.metrics.record_turn(guided.kind, (time.monotonic() - t0) * 1000)
+                reply, provider, mock, sources = guided.text, "buildsight", False, self._build_sources()
             else:
                 turn = await self.agent.respond(text, self._apply_tool, image_b64=self._latest_image_b64)
                 reply, provider, mock, sources = turn.text, turn.provider, turn.mock, turn.source_refs
@@ -534,7 +540,7 @@ class RealtimeBridge:
                 await self._safe_send_json(protocol.transcript("assistant", delta=chunk))
             await self._safe_send_json(protocol.transcript("assistant", text=reply, final=True))
             await self._safe_send_json(protocol.control("provider_status", provider=provider, mock=mock, sources=sources))
-            await self._safe_send_json(protocol.control("guide", **self.guide.status()))
+            await self._send_build_status()
             self._speak(reply)
             await self._safe_send_json(protocol.state("listening", self._remaining()))
         except Exception as exc:  # noqa: BLE001 — text fallback must never crash the socket
@@ -566,12 +572,31 @@ class RealtimeBridge:
 
         self._speak_task = asyncio.create_task(run(), name="stepwise-tts")
 
-    async def _switch_asset(self, asset_id: str) -> None:
-        state = self.orch.state
-        state.asset_id = asset_id
-        state.telemetry = {}
-        state._seed_telemetry()
-        await self._set_asset_label(asset_id)
+    async def _send_build_status(self) -> None:
+        await self._safe_send_json(protocol.control("build", **self.guide.status()))
+        await self._safe_send_json(protocol.control("metrics_update", **self.guide.metrics.snapshot()))
+
+    def _build_sources(self) -> list[dict]:
+        build = self.guide.build
+        if build and build.source:
+            return [{"kind": "manual", "label": build.source.title, "url": build.source.url}]
+        return [{"kind": "manual", "label": build.title if build else "manual"}]
+
+    async def _handle_check(self, payload: dict) -> None:
+        """The browser saw the scene go still after movement (or the builder tapped Check)."""
+        if payload.get("jpeg_b64"):
+            self._latest_image_b64 = str(payload["jpeg_b64"])[:6_000_000]
+        trigger = "voice" if payload.get("trigger") == "button" else "stillness"
+        await self._safe_send_json(protocol.state("thinking"))
+        t0 = time.monotonic()
+        turn = await self.guide.check(self._latest_image_b64, trigger=trigger)
+        self.guide.metrics.record_turn("check", (time.monotonic() - t0) * 1000)
+        if turn is not None:
+            await self._safe_send_json(protocol.transcript("assistant", text=turn.text, final=True))
+            await self._safe_send_json(protocol.control("provider_status", provider="buildsight", mock=False, sources=self._build_sources()))
+            self._speak(turn.text)
+        await self._send_build_status()
+        await self._safe_send_json(protocol.state("listening", self._remaining()))
 
     async def _handle_anchor_confirmation(self, payload: dict) -> None:
         component_id = str(payload.get("component_id", ""))

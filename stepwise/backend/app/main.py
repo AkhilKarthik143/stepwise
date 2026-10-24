@@ -20,6 +20,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 
+from app.build import metrics as build_metrics
+from app.build.catalog import get_catalog
 from app.config import get_settings
 from app.data.catalog import catalog
 from app.data.catalog import SCHEMATICS_DIR
@@ -130,6 +132,36 @@ def schematic(file: str) -> FileResponse | JSONResponse:
     if not path.is_file():
         return JSONResponse({"error": "not found"}, status_code=404)
     return FileResponse(path, media_type="image/svg+xml")
+
+
+@app.get("/api/builds")
+def list_builds() -> dict[str, object]:
+    cat = get_catalog()
+    return {"builds": [{"id": b.build_id, "title": b.title, "steps": len(b.steps), "approved": sum(s.approved for s in b.steps)} for b in cat.builds.values()]}
+
+
+@app.post("/api/builds/reload")
+def reload_builds() -> dict[str, object]:
+    """Pick up a build just written by scripts/ingest_manual.py without restarting."""
+    get_catalog().reload()
+    return list_builds()
+
+
+@app.get("/api/builds/{build_id}/{path:path}", response_model=None)
+def build_file(build_id: str, path: str) -> FileResponse | JSONResponse:
+    # Only step and page pictures inside the build's own folder.
+    if not (path.startswith("steps/") or path.startswith("pages/")) or not path.endswith(".png"):
+        return JSONResponse({"error": "not found"}, status_code=404)
+    file = get_catalog().image_path(build_id, path)
+    if file is None:
+        return JSONResponse({"error": "not found"}, status_code=404)
+    return FileResponse(file, media_type="image/png")
+
+
+@app.get("/api/metrics")
+def metrics() -> dict[str, object]:
+    """Live numbers for the dashboard on a second screen."""
+    return build_metrics.LATEST.snapshot()
 
 
 @app.get("/api/tts", response_model=None)

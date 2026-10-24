@@ -69,8 +69,12 @@ class Settings(BaseSettings):
     cartesia_voice_id: str = Field(default="6ccbfb76-1fc6-48f7-b71d-91ac6298247b", alias="CARTESIA_VOICE_ID")
     cartesia_tts_model: str = Field(default="sonic-latest", alias="CARTESIA_TTS_MODEL")
     cartesia_stt_model: str = Field(default="ink-2", alias="CARTESIA_STT_MODEL")
-    # Below this vision confidence the technician must confirm the machine before any steps.
-    identify_min_confidence: float = Field(default=0.75, alias="STEPWISE_IDENTIFY_MIN_CONFIDENCE")
+    # BuildSight: Sonnet checks each step live, Opus reads manuals once (scripts/ingest_manual.py).
+    check_model: str = Field(default="claude-sonnet-5-5", alias="STEPWISE_CHECK_MODEL")
+    check_effort: str = Field(default="low", alias="STEPWISE_CHECK_EFFORT")
+    ingest_model: str = Field(default="claude-opus-5-5", alias="STEPWISE_INGEST_MODEL")
+    # Below this confidence a step check asks for a closer look instead of judging.
+    check_min_confidence: float = Field(default=0.7, alias="STEPWISE_CHECK_MIN_CONFIDENCE")
     moss_project_id: str = Field(default="", alias="MOSS_PROJECT_ID")
     moss_project_key: str = Field(default="", alias="MOSS_PROJECT_KEY")
     moss_index_name: str = Field(default="stepwise-maintenance", alias="MOSS_INDEX_NAME")

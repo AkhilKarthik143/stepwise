@@ -29,10 +29,6 @@ Operating video — "KAFO KA-24A CNC Vertical Machining Center - Year 2020" by C
 
 ## Procedures / manuals / parts (reference only — re-authored, not reproduced)
 
-### Original Prusa MK4: cold pull (clogged nozzle)
-
-The `cold_pull` procedure in `backend/app/data/procedures.json` is re-authored from the Prusa Research Knowledge Base article [Cold pull (MK4/S, MK3.9/S, XL)](https://help.prusa3d.com/article/cold-pull-mk4-s-mk3-9-s-xl-13702-17702_445071). The temperatures (around 170 °C for PLA to stop extruding, 100 °C to pull), the straight-up pull, the repeat-until-clean advice and the nozzle-imprint check come from that article. No other values were added. The app cites this source on every step and in the service report.
-
 
 | Source | Link | License / Status | Use in STEPWISE |
 |---|---|---|---|

@@ -139,37 +139,6 @@ class Catalog:
     def resolve_check(self, check_type: str) -> tuple[str, dict[str, Any]] | None:
         return self._resolve(check_type, self.safety, self._safety_index)
 
-    def resolve_machine(self, text: str) -> str | None:
-        """Map a spoken/vision machine name ("Prusa MK4", "the 3D printer") to an asset id.
-        Longest alias wins so "prusa mk4" beats "printer"."""
-        norm = f" {_normalize(text)} "
-        best: tuple[int, str] | None = None
-        for key, m in self.machines.items():
-            names = [key, m.get("nameplate", {}).get("model", ""), *(m.get("aliases") or [])]
-            for name in names:
-                n = _normalize(name)
-                if n and f" {n} " in norm and (best is None or len(n) > best[0]):
-                    best = (len(n), key)
-        return best[1] if best else None
-
-    def procedure_machine(self, procedure_id: str) -> str:
-        """The asset a procedure belongs to. Entries without `machine` are the default CNC's."""
-        return (self.procedures.get(procedure_id) or {}).get("machine") or self.default_asset_id
-
-    def procedure_for_problem(self, text: str, asset_id: str | None = None) -> str | None:
-        """Pick the procedure whose aliases/symptoms appear in a problem statement
-        ("the nozzle is clogged" -> cold_pull). Restricted to `asset_id` when given."""
-        norm = f" {_normalize(text)} "
-        best: tuple[int, str] | None = None
-        for key, proc in self.procedures.items():
-            if asset_id and self.procedure_machine(key) != asset_id:
-                continue
-            for phrase in [*(proc.get("aliases") or []), *(proc.get("symptoms") or [])]:
-                n = _normalize(phrase)
-                if n and f" {n} " in norm and (best is None or len(n) > best[0]):
-                    best = (len(n), key)
-        return best[1] if best else None
-
     def resolve_diagram(self, diagram_type: str) -> tuple[str, dict[str, Any]] | None:
         return self._resolve(diagram_type, self.diagrams, self._diagram_index)
 

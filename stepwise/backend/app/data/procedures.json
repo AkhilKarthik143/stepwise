@@ -72,34 +72,6 @@
         { "n": 3, "text": "Replace the carbon face seal; inspect the rotating seat for scoring.", "part_ref": "coolant_union" },
         { "n": 4, "text": "Reinstall, reconnect, restore LOTO, and leak-test at 20 bar.", "safety_ref": "loto", "expect": "No weep at 20 bar" }
       ]
-    },
-    "cold_pull": {
-      "procedure_id": "cold_pull",
-      "machine": "PRUSA-MK4-01",
-      "title": "Cold pull (clogged nozzle)",
-      "aliases": ["cold pull", "clogged nozzle", "nozzle clog", "unclog nozzle", "nozzle cleaning"],
-      "symptoms": ["clog", "clogged", "blocked nozzle", "not extruding", "under extrusion", "underextrusion", "nothing comes out"],
-      "est_minutes": 15,
-      "warnings": [
-        "The nozzle and heater block get hot enough to burn you. Don't touch them while heated.",
-        "Pull straight up, not sideways, or the filament can break inside."
-      ],
-      "tools": ["Pliers", "PLA filament"],
-      "steps": [
-        { "n": 1, "text": "Heat the nozzle with the printer's Preheat menu for PLA, then load PLA filament." },
-        { "n": 2, "text": "Turn the heater off and keep pushing the PLA down through the extruder by hand while the nozzle cools." },
-        { "n": 3, "text": "Keep pushing until the filament no longer comes out, around 170 °C for PLA." },
-        { "n": 4, "text": "Wait for the nozzle to cool to 100 °C. Watch the temperature on the printer screen.", "confirm": true, "confirm_prompt": "Is the nozzle at 100 °C on the printer screen? Say yes to continue." },
-        { "n": 5, "text": "Grab the filament with pliers and pull it slowly but steadily straight up out of the extruder." },
-        { "n": 6, "text": "Check the tip. It should show the imprint of the nozzle, with no mixed color or dark marks.", "expect": "Nozzle imprint on the tip, no dark marks" },
-        { "n": 7, "text": "If the tip isn't clean, repeat the cold pull until it comes out clean." }
-      ],
-      "verify": "The pulled tip shows the imprint of the nozzle, with no mixed color or dark marks.",
-      "if_not_fixed": [
-        "Repeat the cold pull. Prusa notes you may need to repeat it several times before the filament comes out clean.",
-        "The manual section I have doesn't cover what to do after repeated cold pulls fail. Check Prusa's nozzle guides or contact Prusa support."
-      ],
-      "source": { "title": "Prusa Knowledge Base: Cold pull (MK4/S, MK3.9/S, XL)", "url": "https://help.prusa3d.com/article/cold-pull-mk4-s-mk3-9-s-xl-13702-17702_445071" }
     }
   }
 }

@@ -409,26 +409,24 @@ def test_metrics_accumulate(state):
 
 # ── safety interlock on confirm steps ────────────────────────────────────────
 def test_next_is_blocked_on_unconfirmed_safety_step(state):
-    run(state, "start_procedure", {"procedure_id": "cold_pull"})
-    run(state, "procedure_step", {"action": "complete", "through": 3})
-    r = run(state, "procedure_step", {"action": "next"})
-    assert r.output["blocked"] is True and r.output["awaiting_confirmation"] is True
-    assert "100 °C" in r.output["message"]
-    assert state.active_procedure["completed"] == {0, 1, 2}  # did NOT advance
+    run(state, "start_procedure", {"procedure_id": "drawbar_inspection"})  # step 1 = confirm LOTO
+    for _ in range(2):
+        r = run(state, "procedure_step", {"action": "next"})
+        assert r.output["blocked"] is True and r.output["awaiting_confirmation"] is True
+    assert state.active_procedure["completed"] == set()  # did NOT advance
     assert any(e["type"] == "safety_block" for e in state.work_log)
 
 
 def test_confirm_passes_safety_step_and_logs_it(state):
-    run(state, "start_procedure", {"procedure_id": "cold_pull"})
-    run(state, "procedure_step", {"action": "complete", "through": 3})
+    run(state, "start_procedure", {"procedure_id": "drawbar_inspection"})
     run(state, "procedure_step", {"action": "confirm"})
-    assert state.active_procedure["completed"] == {0, 1, 2, 3}
+    assert state.active_procedure["completed"] == {0}
     assert any(e["type"] == "safety_confirm" for e in state.work_log)
 
 
 def test_bulk_complete_cannot_jump_a_safety_step(state):
-    run(state, "start_procedure", {"procedure_id": "cold_pull"})
-    r = run(state, "procedure_step", {"action": "complete", "through": 6})
+    run(state, "start_procedure", {"procedure_id": "drawbar_inspection"})
+    r = run(state, "procedure_step", {"action": "complete", "through": 4})
     assert r.output["blocked"] is True
     assert state.active_procedure["completed"] == set()
-    assert state.active_procedure["index"] == 3  # cursor parked on the safety step
+    assert state.active_procedure["index"] == 0  # cursor parked on the safety step
