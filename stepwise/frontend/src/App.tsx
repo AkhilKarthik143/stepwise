@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BuildCamera, type FrameGrabber } from "./components/BuildCamera";
+import { Library } from "./components/Library";
 import { StepPanel } from "./components/StepPanel";
 import { useRealtimeSocket } from "./hooks/useRealtimeSocket";
-import { apiUrl, fetchConfig, type RuntimeConfig } from "./lib/api";
+import { fetchConfig, type RuntimeConfig } from "./lib/api";
 
 // BuildSight on the phone: overhead camera, the current step from the manual, voice in and out.
 // Every button sends the words a builder would say, so taps and voice share one server path.
@@ -12,7 +13,8 @@ export default function App() {
   const [command, setCommand] = useState("");
   const [lastCheckFrame, setLastCheckFrame] = useState<string | null>(null);
   const grabber = useRef<FrameGrabber | null>(null);
-  const { state, connect, toggleMic, registerFrameProvider, setManualVision, micActive, bargeIn, sendText, requestCheck, clearError } = useRealtimeSocket(config);
+  const [libraryOpen, setLibraryOpen] = useState(false);
+  const { state, connect, toggleMic, registerFrameProvider, setManualVision, micActive, bargeIn, sendText, requestCheck, clearError, loadBuild, refreshBuild } = useRealtimeSocket(config);
 
   useEffect(() => {
     fetchConfig().then(setConfig).catch((e) => setConfigError(String(e)));
@@ -31,6 +33,14 @@ export default function App() {
 
   const build = state.build;
   const hasBuild = !!build?.build;
+  const reading = !!build?.build?.reading;
+
+  // While the open manual is still being read, keep the step count and the first step fresh.
+  useEffect(() => {
+    if (!reading) return;
+    const id = window.setInterval(refreshBuild, 2000);
+    return () => window.clearInterval(id);
+  }, [reading, refreshBuild]);
   const busy = state.conv === "thinking";
 
   const runCheck = useCallback((frame: string | null, trigger: "stillness" | "button") => {
@@ -69,14 +79,7 @@ export default function App() {
       <header className="bs-header">
         <div className="bs-brand"><strong>BuildSight</strong><small>hands-free build copilot</small></div>
         <div className="bs-header-right">
-          {(build?.builds.length ?? 0) > 1 && (
-            <select aria-label="Switch build" value={build?.build?.id ?? ""} onChange={(e) => {
-              const target = build!.builds.find((b) => b.id === e.target.value);
-              if (target) say(`switch to ${target.title}`);
-            }}>
-              {build!.builds.map((b) => <option key={b.id} value={b.id}>{b.title}</option>)}
-            </select>
-          )}
+          <button className="bs-manuals-btn" onClick={() => setLibraryOpen(true)}>{build?.build ? build.build.title : "Manuals"}</button>
           <span className={`bs-conn bs-conn--${state.conn}`} title={state.conn} />
         </div>
       </header>
@@ -99,12 +102,13 @@ export default function App() {
 
         {hasBuild ? <StepPanel status={build!} lastCheckFrame={lastCheckFrame} /> : (
           <section className="bs-step">
-            <span className="bs-kicker">NO BUILD LOADED</span>
-            <b>Turn a manual into a build first.</b>
-            <small>On the laptop: <code>python scripts/ingest_manual.py --pdf manual.pdf --build-id my-build --title "My build"</code>, review build.json, then reload.</small>
-            <button className="bs-btn" onClick={() => fetch(apiUrl("/api/builds/reload"), { method: "POST" }).then(() => say("what's next"))}>Reload builds</button>
+            <span className="bs-kicker">NO MANUAL OPEN</span>
+            <b>Pick the instructions you're building from.</b>
+            <small>Search a LEGO set number or an IKEA product, or upload any picture-based PDF.</small>
+            <button className="bs-btn is-primary" onClick={() => setLibraryOpen(true)}>Find a manual</button>
           </section>
         )}
+        {libraryOpen && <Library status={build} onOpen={loadBuild} onClose={() => setLibraryOpen(false)} />}
 
         <div className="bs-pills">{pills.map(([k, v, live]) => <span key={k} className={`bs-pill ${live ? "is-live" : ""}`}><b>{k}</b> {v}</span>)}</div>
 

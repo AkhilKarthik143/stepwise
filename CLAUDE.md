@@ -35,7 +35,7 @@ All Claude calls go through `anthropic` (Python SDK, `client.beta.messages.parse
 
 ## How it works
 
-1. Ingest (before the demo): `ingest_manual.py` renders PDF pages, Opus returns one record per step (parts, action, watch_for, crop box), the step pictures are cropped to `steps/NN.png`. A person reviews `build.json`, fixes crops (`--recrop`) and sets `approved: true`.
+1. Ingest, two ways. In the app: the Manuals sheet searches LEGO by set number or IKEA by product name (`app/build/library.py` scrapes their public pages) or takes a PDF upload; the server reads the pages in the background with Sonnet and the build opens as soon as the first steps are ready. Offline, for the demo manual: `ingest_manual.py` renders PDF pages, Opus returns one record per step (parts, action, watch_for, crop box), the step pictures are cropped to `steps/NN.png`. A person reviews `build.json`, fixes crops (`--recrop`) and sets `approved: true`.
 2. Live: the browser keeps a recent frame on the server. When hands leave the frame and the scene is still for 1.5 s (`BuildCamera.tsx`), it sends `{"type":"control","action":"check"}`. Sonnet compares the camera frame with the manual picture for this step and the previous one.
 3. `BuildGuide` (`app/build/guide.py`) owns the flow:
    - "next", "repeat", "back", "what's next", "what step am I on", "switch to the stool", "that's fine" are matched in code, no model call
@@ -49,6 +49,7 @@ All Claude calls go through `anthropic` (Python SDK, `client.beta.messages.parse
 
 - Never invent sizes, part numbers or steps. Answers come from the ingested manual only.
 - Never draw or generate a manual picture. Show the real cropped step image, or none.
+- Manuals imported in the app live on the server's disk until the next redeploy. Ingest and commit the demo manuals so they survive.
 - A failed check blocks "next". Only a passing check or an explicit, logged "that's fine" clears it.
 - Below 0.7 confidence, ask for a closer look. Never guess.
 - Keep spoken replies to one instruction, about 20 words, parts named by color and size.
@@ -57,7 +58,7 @@ All Claude calls go through `anthropic` (Python SDK, `client.beta.messages.parse
 
 ## Routes
 
-`GET /api/config` · `GET /api/builds` · `POST /api/builds/reload` · `GET /api/builds/{id}/steps/NN.png` · `GET /api/metrics` · `GET /api/tts?text=` · `WS /ws`
+`GET /api/config` · `GET /api/manuals/search?q=` · `POST /api/manuals/import` · `POST /api/manuals/upload` · `GET /api/manuals/jobs` · `GET /api/builds` · `POST /api/builds/reload` · `GET /api/builds/{id}/steps/NN.png` · `GET /api/metrics` · `GET /api/tts?text=` · `WS /ws`
 
 ## Running locally
 

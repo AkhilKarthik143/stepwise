@@ -73,7 +73,7 @@ def say(guide, text, frame="FRAME"):
 
 def test_commands_answer_without_a_model(catalog):
     g, vision = guide_for(catalog)
-    assert say(g, "what's next?").text == "You're on step 1. Step 1. Grab the red brick 2x4. Put it on the left, step 1."
+    assert say(g, "what's next?").text == "You're on step 1. Grab the red brick 2x4. Put it on the left, step 1."
     assert say(g, "next").text.startswith("Step 2.")
     assert say(g, "repeat").text.startswith("Step 2.")
     assert say(g, "what step am I on").text == "You're on step 2 of 3."

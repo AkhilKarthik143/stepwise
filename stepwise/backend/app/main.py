@@ -15,7 +15,7 @@ import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, Form, UploadFile, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -24,6 +24,8 @@ from app import telemetry
 from app.access import PasscodeGate
 from app.build import metrics as build_metrics
 from app.build.catalog import get_catalog
+from app.build.library import ImportRefused, get_library
+from app.build.library import search as search_manuals
 from app.config import get_settings
 from app.data.catalog import catalog
 from app.data.catalog import SCHEMATICS_DIR
@@ -164,6 +166,41 @@ def build_file(build_id: str, path: str) -> FileResponse | JSONResponse:
     if file is None:
         return JSONResponse({"error": "not found"}, status_code=404)
     return FileResponse(file, media_type="image/png")
+
+
+@app.get("/api/manuals/search")
+async def manuals_search(q: str = "") -> JSONResponse:
+    """LEGO by set number (4-7 digits), anything else searches IKEA."""
+    try:
+        return JSONResponse(await search_manuals(q))
+    except Exception as exc:  # noqa: BLE001 — lego.com / ikea.com down or changed
+        logger.warning("manual search failed: %r", exc)
+        return JSONResponse({"error": "Search failed. Try again, or upload the PDF."}, status_code=502)
+
+
+@app.post("/api/manuals/import")
+async def manuals_import(body: dict) -> JSONResponse:
+    try:
+        job = await get_library().import_url(str(body.get("pdf_url", "")), str(body.get("title", "")).strip() or "Manual")
+    except ImportRefused as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    return JSONResponse(job.as_dict())
+
+
+@app.post("/api/manuals/upload")
+async def manuals_upload(file: UploadFile, title: str = Form("")) -> JSONResponse:
+    data = await file.read()
+    name = title.strip() or (file.filename or "Manual").rsplit(".", 1)[0].replace("_", " ").replace("-", " ")
+    try:
+        job = await get_library().import_bytes(data, name)
+    except ImportRefused as exc:
+        return JSONResponse({"error": str(exc)}, status_code=400)
+    return JSONResponse(job.as_dict())
+
+
+@app.get("/api/manuals/jobs")
+def manuals_jobs() -> dict[str, object]:
+    return {"jobs": [j.as_dict() for j in get_library().jobs.values()]}
 
 
 @app.get("/api/metrics")

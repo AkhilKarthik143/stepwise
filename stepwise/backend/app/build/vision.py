@@ -168,15 +168,16 @@ For every numbered step on the page:
 Pages with no numbered steps (covers, parts lists, ads) return an empty list. Never invent a step that isn't drawn."""
 
 
-def extract_page(settings, *, page_png: bytes, page_number: int, title: str, page_size: tuple[int, int]) -> PageExtraction:
-    """Synchronous: ingestion runs as a script, one page at a time."""
+def extract_page(settings, *, page_png: bytes, page_number: int, title: str, page_size: tuple[int, int],
+                 model: str | None = None, effort: str = "high") -> PageExtraction:
+    """Synchronous (the script calls it directly; in-app imports run it in a worker thread)."""
     if not settings.anthropic_api_key:
         raise VisionUnavailable("ANTHROPIC_API_KEY is not set")
     from anthropic import Anthropic
 
     client = Anthropic(api_key=settings.anthropic_api_key)
     with client.beta.messages.stream(
-        model=settings.ingest_model,
+        model=model or settings.ingest_model,
         max_tokens=32000,
         system=INGEST_SYSTEM,
         messages=[{"role": "user", "content": [
@@ -184,7 +185,7 @@ def extract_page(settings, *, page_png: bytes, page_number: int, title: str, pag
             {"type": "text", "text": f"Manual: {title}. This is page {page_number}. The page image is {page_size[0]}x{page_size[1]} pixels; give crops on the 0-1000 scale described above."},
         ]}],
         output_format=PageExtraction,
-        output_config={"effort": "high"},
+        output_config={"effort": effort},
         betas=[FALLBACK_BETA],
         fallbacks="default",
     ) as stream:

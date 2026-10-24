@@ -76,6 +76,8 @@ class Settings(BaseSettings):
     check_model: str = Field(default="claude-sonnet-5-5", alias="STEPWISE_CHECK_MODEL")
     check_effort: str = Field(default="low", alias="STEPWISE_CHECK_EFFORT")
     ingest_model: str = Field(default="claude-opus-5-5", alias="STEPWISE_INGEST_MODEL")
+    # Manuals imported from the phone are read page by page while the builder waits: faster model.
+    live_ingest_model: str = Field(default="claude-sonnet-5-5", alias="STEPWISE_LIVE_INGEST_MODEL")
     # Below this confidence a step check asks for a closer look instead of judging.
     check_min_confidence: float = Field(default=0.7, alias="STEPWISE_CHECK_MIN_CONFIDENCE")
     moss_project_id: str = Field(default="", alias="MOSS_PROJECT_ID")

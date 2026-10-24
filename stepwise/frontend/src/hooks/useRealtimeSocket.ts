@@ -421,6 +421,10 @@ export function useRealtimeSocket(config: RuntimeConfig | null) {
     speak(last.text, listener.current);
   }, [state.lines, voiceOut]);
 
+  // BuildSight: open a build from the manual library, and refresh status while one is being read.
+  const loadBuild = useCallback((buildId: string) => send({ type: "control", action: "load_build", build_id: buildId }), [send]);
+  const refreshBuild = useCallback(() => send({ type: "control", action: "build_status" }), [send]);
+
   // BuildSight: ask the server to compare this frame with the manual's picture.
   const requestCheck = useCallback((jpegB64: string, trigger: "stillness" | "button") => {
     send({ type: "control", action: "check", jpeg_b64: jpegB64, trigger });
@@ -501,7 +505,7 @@ export function useRealtimeSocket(config: RuntimeConfig | null) {
   useEffect(() => () => disconnect(), [disconnect]);
 
   return useMemo(
-    () => ({ state, connect, disconnect, toggleMic, registerFrameProvider, registerScreenProvider, bargeIn, micActive, manualVision, setManualVision, visionStreaming, clearError, dismissAlert, sendText, confirmAnchor, requestCheck }),
-    [state, connect, disconnect, toggleMic, registerFrameProvider, registerScreenProvider, bargeIn, micActive, manualVision, visionStreaming, clearError, dismissAlert, sendText, confirmAnchor, requestCheck],
+    () => ({ state, connect, disconnect, toggleMic, registerFrameProvider, registerScreenProvider, bargeIn, micActive, manualVision, setManualVision, visionStreaming, clearError, dismissAlert, sendText, confirmAnchor, requestCheck, loadBuild, refreshBuild }),
+    [state, connect, disconnect, toggleMic, registerFrameProvider, registerScreenProvider, bargeIn, micActive, manualVision, visionStreaming, clearError, dismissAlert, sendText, confirmAnchor, requestCheck, loadBuild, refreshBuild],
   );
 }

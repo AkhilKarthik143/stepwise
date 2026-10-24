@@ -10,6 +10,9 @@ interface Props {
 export function StepPanel({ status, lastCheckFrame }: Props) {
   const { build, step, check } = status;
   if (!build) return null;
+  if (!step && build.reading) {
+    return <section className="bs-step"><span className="bs-kicker">READING THE MANUAL</span><b>Getting the first steps of the {build.title} ready…</b><small>This takes a few seconds per page. Say "what's next?" when the first step shows up.</small></section>;
+  }
   if (status.complete || !step) {
     return <section className="bs-step bs-step--done"><span className="bs-kicker">BUILD COMPLETE</span><b>The {build.title} is done.</b></section>;
   }

@@ -15,7 +15,7 @@ import logging
 import re
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Callable
 
 from app.build import vision as default_vision
 from app.build.catalog import BuildCatalog
@@ -88,12 +88,15 @@ class GuideTurn:
 
 
 class BuildGuide:
-    def __init__(self, settings, catalog: BuildCatalog, metrics: Metrics, vision: Any = default_vision) -> None:
+    def __init__(self, settings, catalog: BuildCatalog, metrics: Metrics, vision: Any = default_vision,
+                 is_reading: Callable[[str], bool] = lambda build_id: False) -> None:
         self.settings = settings
         self.catalog = catalog
         self.metrics = metrics
         self.vision = vision
-        self.build: Build | None = catalog.first()
+        self.is_reading = is_reading  # a manual imported from the phone may still be gaining steps
+        first = catalog.first()
+        self._build_id: str | None = first.build_id if first else None
         self.progress: dict[str, Progress] = {}
         self._told_no_key = False
         self.history: list[tuple[str, str]] = []  # recent (builder said, BuildSight said), for follow-ups
@@ -101,8 +104,17 @@ class BuildGuide:
 
     # ── state ────────────────────────────────────────────────────────────────
     @property
+    def build(self) -> Build | None:
+        # Looked up by id each time: an import in progress replaces the Build as pages are read.
+        return self.catalog.get(self._build_id) if self._build_id else None
+
+    @build.setter
+    def build(self, value: Build | None) -> None:
+        self._build_id = value.build_id if value else None
+
+    @property
     def active(self) -> bool:
-        return self.build is not None
+        return self.build is not None and bool(self.build.steps)
 
     @property
     def p(self) -> Progress:
@@ -121,11 +133,16 @@ class BuildGuide:
         builds = [{"id": b.build_id, "title": b.title} for b in self.catalog.builds.values()]
         if not self.build:
             return {"build": None, "builds": builds}
-        b, s, p = self.build, self.step, self.p
+        b = self.build
+        info = {"id": b.build_id, "title": b.title, "total": len(b.steps), "source": b.source.model_dump() if b.source else None,
+                "reading": self.is_reading(b.build_id)}
+        if not b.steps:
+            return {"builds": builds, "build": info, "step": None}
+        s, p = self.step, self.p
         prev = b.steps[p.index - 1] if 0 < p.index < len(b.steps) else None
         return {
             "builds": builds,
-            "build": {"id": b.build_id, "title": b.title, "total": len(b.steps), "source": b.source.model_dump() if b.source else None},
+            "build": info,
             "index": p.index,
             "complete": p.index >= len(b.steps),
             "step": {**s.model_dump(exclude={"crop"}), "image_url": self.image_url(b, s)},
@@ -135,7 +152,7 @@ class BuildGuide:
 
     def _sync_metrics(self) -> None:
         m = self.metrics
-        if self.build:
+        if self.active:
             m.build_id, m.build_title = self.build.build_id, self.build.title
             m.step, m.total_steps = self.step.step, len(self.build.steps)
 
@@ -164,10 +181,12 @@ class BuildGuide:
         if self.build is None:
             self.build = self.catalog.first()  # a build ingested after this session started
             self._sync_metrics()
+        if self.build is not None and not self.build.steps and not is_switch(t):
+            return GuideTurn(f"I'm still reading the {self.build.title} manual. The first steps will be ready in a few seconds.", "command")
         if is_switch(t):
             target = self.catalog.resolve(t)
             if target:
-                return self._switch(target)
+                return self.load(target.build_id)
             if not self.active:
                 return None
         if not self.active:
@@ -177,7 +196,10 @@ class BuildGuide:
         if is_part_question(t):
             return await self._match_part(t, frame_b64)
         if is_where(t):
-            return GuideTurn(self.step_line(f"You're on step {self.step.step}. ") if self.p.index < len(self.build.steps) else self.step_line(), "command")
+            line = self.step_line()
+            if self.p.index < len(self.build.steps):
+                line = line.replace(f"Step {self.step.step}.", f"You're on step {self.step.step}.", 1)
+            return GuideTurn(line, "command")
         if is_step_number(t):
             return GuideTurn(f"You're on step {self.step.step} of {self.build.steps[-1].step}.", "command")
         if is_check(t):
@@ -238,6 +260,8 @@ class BuildGuide:
         p = self.p
         if p.index >= len(self.build.steps):
             return GuideTurn(self.step_line(), "command")
+        if p.index + 1 >= len(self.build.steps) and self.is_reading(self.build.build_id):
+            return GuideTurn("I'm still reading the next pages of the manual. Say next again in a few seconds.", "command")
         if p.state == FAILED and p.issues:
             fix = p.issues[0].fix
             return GuideTurn(f"Fix this first: {fix} Or say that's fine if it's right.", "command")
@@ -261,6 +285,16 @@ class BuildGuide:
         logger.info("override on %s step %s: %s", self.build.build_id, self.step.step, [i.model_dump() for i in p.issues])
         p.state, p.issues = PASSED, []
         return self._advance(lead="Okay, logged. ")
+
+    def load(self, build_id: str) -> GuideTurn | None:
+        """Open a build picked in the app's manual library."""
+        target = self.catalog.get(build_id)
+        if target is None:
+            return None
+        if not target.steps:
+            self.build = target
+            return GuideTurn(f"Opening the {target.title}. I'm still reading the manual; the first steps are a few seconds away.", "command")
+        return self._switch(target)
 
     def _switch(self, target: Build) -> GuideTurn:
         self.build = target

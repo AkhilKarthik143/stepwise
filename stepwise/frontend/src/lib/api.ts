@@ -14,10 +14,10 @@ export interface BuildPart { name: string; color: string; qty: number }
 export interface BuildIssue { part: string; problem: string; fix: string }
 export interface BuildStatus {
   builds: { id: string; title: string }[];
-  build: { id: string; title: string; total: number; source: { title: string; url: string } | null } | null;
+  build: { id: string; title: string; total: number; source: { title: string; url: string } | null; reading?: boolean } | null;
   index?: number;
   complete?: boolean;
-  step?: { step: number; page: number; parts: BuildPart[]; action: string; watch_for: string[]; image_url: string; approved: boolean };
+  step?: null | { step: number; page: number; parts: BuildPart[]; action: string; watch_for: string[]; image_url: string; approved: boolean };
   previous_image_url?: string | null;
   check?: { state: "unchecked" | "building" | "passed" | "failed"; confidence: number | null; issues: BuildIssue[] };
 }
@@ -88,6 +88,35 @@ export function wsUrl(): string {
   if (BACKEND_URL) return `${BACKEND_URL.replace(/^http/, "ws")}/ws`;
   const proto = location.protocol === "https:" ? "wss" : "ws";
   return `${proto}://${location.host}/ws`;
+}
+
+// Manual library (mirrors backend/app/build/library.py)
+export interface ManualResult { source: "lego" | "ikea"; title: string; subtitle: string; cover_url?: string; pdf_url: string; size_label?: string }
+export interface ImportJob { build_id: string; title: string; status: "downloading" | "reading" | "done" | "failed"; pages_total: number; pages_done: number; steps_ready: number; error: string }
+
+async function jsonOrThrow<T>(res: Response): Promise<T> {
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error((data as { error?: string }).error || `Request failed (${res.status})`);
+  return data as T;
+}
+
+export async function searchManuals(q: string): Promise<ManualResult[]> {
+  const data = await jsonOrThrow<{ results: ManualResult[] }>(await fetch(apiUrl(`/api/manuals/search?q=${encodeURIComponent(q)}`)));
+  return data.results;
+}
+
+export async function importManual(r: ManualResult): Promise<ImportJob> {
+  return jsonOrThrow(await fetch(apiUrl("/api/manuals/import"), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pdf_url: r.pdf_url, title: r.title }) }));
+}
+
+export async function uploadManual(file: File): Promise<ImportJob> {
+  const form = new FormData();
+  form.append("file", file);
+  return jsonOrThrow(await fetch(apiUrl("/api/manuals/upload"), { method: "POST", body: form }));
+}
+
+export async function listImports(): Promise<ImportJob[]> {
+  return (await jsonOrThrow<{ jobs: ImportJob[] }>(await fetch(apiUrl("/api/manuals/jobs")))).jobs;
 }
 
 export async function fetchConfig(): Promise<RuntimeConfig> {

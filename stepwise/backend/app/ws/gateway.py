@@ -37,6 +37,7 @@ from app.agents import intent, workflows
 from app.build import metrics as build_metrics
 from app.build.catalog import get_catalog
 from app.build.guide import BuildGuide
+from app.build.library import get_library
 from app.agents.orchestrator import Orchestrator
 from app.agents.runtime import build_agent
 from app.ar.annotations import confirmed_anchor
@@ -320,7 +321,7 @@ class RealtimeBridge:
         self.stt = CartesiaSTT(self.settings.cartesia_api_key, self.settings.cartesia_stt_model, self.settings.input_sample_rate,
                                on_partial=self._on_stt_partial, on_final=self._handle_text_input) if self.voice_in == "cartesia" else None
         self._speak_task: asyncio.Task | None = None
-        self.guide = BuildGuide(self.settings, get_catalog(), build_metrics.new_session())
+        self.guide = BuildGuide(self.settings, get_catalog(), build_metrics.new_session(), is_reading=get_library().is_reading)
         self._workflow: dict | None = None  # active autonomous workflow {name, steps, index, paused}
         self._stepwise_recent_text = ""  # STEPWISE's current/last spoken text (to detect echo)
         self._spoke_over_stepwise = False  # the in-progress user turn began while STEPWISE was speaking
@@ -503,6 +504,14 @@ class RealtimeBridge:
                 await self._handle_text_input(str(payload.get("text", "")))
             elif action == "check":
                 await self._handle_check(payload)
+            elif action == "load_build":
+                turn = self.guide.load(str(payload.get("build_id", "")))
+                if turn is not None:
+                    await self._safe_send_json(protocol.transcript("assistant", text=turn.text, final=True))
+                    self._speak(turn.text)
+                await self._send_build_status()
+            elif action == "build_status":
+                await self._send_build_status()  # the app polls this while a manual is being read
             elif action == "confirm_anchor":
                 await self._handle_anchor_confirmation(payload)
             elif action == "resync":
