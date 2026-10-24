@@ -1,11 +1,11 @@
 {
-  "build_id": "lego",
-  "title": "LEGO set name",
+  "build_id": "toaster",
+  "title": "Toaster",
   "aliases": [
-    "lego"
+    "toaster"
   ],
   "source": {
-    "title": "LEGO set name",
+    "title": "Toaster",
     "url": ""
   },
   "steps": [

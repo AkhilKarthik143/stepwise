@@ -1,0 +1,31 @@
+{
+  "steps": [
+    {
+      "step": 25,
+      "parts": [
+        {
+          "name": "brick 1x4",
+          "color": "tan",
+          "qty": 4
+        },
+        {
+          "name": "slope 2x2 (1x2 slope 45)",
+          "color": "tan",
+          "qty": 4
+        }
+      ],
+      "action": "Build two toast slices by stacking two tan 1x4 bricks and adding two tan slopes on top facing outward from each end, then set them beside the toaster and press the lever to pop up the brown toast.",
+      "watch_for": [
+        "Build the sub-assembly twice (2x)",
+        "Slopes must face outward at opposite ends so the top forms a peaked bread-slice shape",
+        "Stack the 1x4 bricks directly aligned, not offset"
+      ],
+      "crop": {
+        "x0": 0,
+        "y0": 640,
+        "x1": 750,
+        "y1": 1190
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "steps": [
+    {
+      "step": 17,
+      "parts": [
+        {
+          "name": "brick 1x6",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Place the two 1x6 bricks lengthwise along the back and front long edges of the top, flanking the gray plates in the middle.",
+      "watch_for": [
+        "Keep the bricks on the outer long edges so the center gray plate studs stay exposed",
+        "Align ends flush with the wall below"
+      ],
+      "crop": {
+        "x0": 235,
+        "y0": 213,
+        "x1": 450,
+        "y1": 475
+      }
+    },
+    {
+      "step": 18,
+      "parts": [
+        {
+          "name": "brick 2x2",
+          "color": "light bluish gray",
+          "qty": 1
+        }
+      ],
+      "action": "Attach the gray 2x2 brick onto the center gray plate, toward the back, overlapping the rear 1x6 brick edge.",
+      "watch_for": [
+        "Position the brick on the correct studs at the back-left of the gray plate, not centered"
+      ],
+      "crop": {
+        "x0": 235,
+        "y0": 693,
+        "x1": 450,
+        "y1": 955
+      }
+    }
+  ]
+}

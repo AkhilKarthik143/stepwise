@@ -1,0 +1,46 @@
+{
+  "steps": [
+    {
+      "step": 6,
+      "parts": [
+        {
+          "name": "round brick 2x2",
+          "color": "red",
+          "qty": 2
+        }
+      ],
+      "action": "Stack the two red 2x2 round bricks on the center of the base, on top of the green plates in front of the gray slopes, forming a column.",
+      "watch_for": [
+        "Place both round bricks on top of each other to make a two-high column, not side by side",
+        "Center the column between the green plates in front of the gray slope"
+      ],
+      "crop": {
+        "x0": 402,
+        "y0": 232,
+        "x1": 746,
+        "y1": 558
+      }
+    },
+    {
+      "step": 7,
+      "parts": [
+        {
+          "name": "brick 1x1 with side stud",
+          "color": "blue",
+          "qty": 2
+        }
+      ],
+      "action": "Attach the two blue 1x1 bricks with side studs at the back corners on either side of the gray slope, with the side studs facing outward.",
+      "watch_for": [
+        "Side stud must face outward (left and right), not forward",
+        "One brick goes on each side of the gray slope, behind it at the back corners"
+      ],
+      "crop": {
+        "x0": 402,
+        "y0": 737,
+        "x1": 746,
+        "y1": 1212
+      }
+    }
+  ]
+}

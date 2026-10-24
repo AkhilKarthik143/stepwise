@@ -1,0 +1,51 @@
+{
+  "steps": [
+    {
+      "step": 13,
+      "parts": [
+        {
+          "name": "brick 1x4",
+          "color": "medium azure",
+          "qty": 4
+        }
+      ],
+      "action": "Stack the four 1x4 bricks on top of the outer walls to raise the wall by one layer all around the box.",
+      "watch_for": [
+        "Stagger the new bricks over the joints below so the wall stays locked together",
+        "Leave the gray sloped pieces and the side studs uncovered"
+      ],
+      "crop": {
+        "x0": 240,
+        "y0": 160,
+        "x1": 450,
+        "y1": 460
+      }
+    },
+    {
+      "step": 14,
+      "parts": [
+        {
+          "name": "round plate 1x1",
+          "color": "trans red",
+          "qty": 1
+        },
+        {
+          "name": "cone 1x1",
+          "color": "dark bluish gray",
+          "qty": 1
+        }
+      ],
+      "action": "Attach the red round plate to the side stud on the left end and the gray cone to the side stud on the front face, both pointing outward.",
+      "watch_for": [
+        "Use the side studs on the correct faces: red on the left end, cone on the front",
+        "Cone must point outward with its wide end against the wall"
+      ],
+      "crop": {
+        "x0": 230,
+        "y0": 700,
+        "x1": 450,
+        "y1": 950
+      }
+    }
+  ]
+}

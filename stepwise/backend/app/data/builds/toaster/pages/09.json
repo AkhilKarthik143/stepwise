@@ -1,0 +1,47 @@
+{
+  "steps": [
+    {
+      "step": 11,
+      "parts": [
+        {
+          "name": "round brick 2x2",
+          "color": "red",
+          "qty": 1
+        }
+      ],
+      "action": "Place the red round 2x2 brick on the center of the red plate, toward the back between the grey slopes and the front wall.",
+      "watch_for": [
+        "Center it on the red plate, not on the grey grille piece at the left",
+        "Press it fully down onto the studs"
+      ],
+      "crop": {
+        "x0": 240,
+        "y0": 222,
+        "x1": 450,
+        "y1": 452
+      }
+    },
+    {
+      "step": 12,
+      "parts": [
+        {
+          "name": "slope 1x2x3",
+          "color": "light grey",
+          "qty": 2
+        }
+      ],
+      "action": "Attach the two grey tall slopes on the left end, one at each back and front corner, with the sloped faces pointing inward toward the center.",
+      "watch_for": [
+        "Slopes must face inward toward the red plate, not outward",
+        "Place them on the left end, matching the grey slopes already on the right end",
+        "Do not cover the grey grille piece between them"
+      ],
+      "crop": {
+        "x0": 240,
+        "y0": 720,
+        "x1": 450,
+        "y1": 952
+      }
+    }
+  ]
+}

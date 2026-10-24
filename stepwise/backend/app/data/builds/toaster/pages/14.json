@@ -1,0 +1,45 @@
+{
+  "steps": [
+    {
+      "step": 21,
+      "parts": [
+        {
+          "name": "tile 1x4",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Place one tile along the top of each long side wall, centered between the two end studs.",
+      "watch_for": [
+        "Leave the single end studs exposed at both ends of each wall",
+        "Put one tile on the front wall and one on the back wall, not both on one side"
+      ],
+      "crop": {
+        "x0": 236,
+        "y0": 182,
+        "x1": 450,
+        "y1": 460
+      }
+    },
+    {
+      "step": 22,
+      "parts": [
+        {
+          "name": "plate 1x6",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Press one plate along the top of each long side wall, covering the tiles and the end studs.",
+      "watch_for": [
+        "Align each plate flush over the full wall length so it locks onto both end studs"
+      ],
+      "crop": {
+        "x0": 236,
+        "y0": 657,
+        "x1": 450,
+        "y1": 936
+      }
+    }
+  ]
+}

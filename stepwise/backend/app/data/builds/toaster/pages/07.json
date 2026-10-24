@@ -1,0 +1,51 @@
+{
+  "steps": [
+    {
+      "step": 8,
+      "parts": [
+        {
+          "name": "brick 1x2",
+          "color": "blue",
+          "qty": 6
+        }
+      ],
+      "action": "Stack the six blue 1x2 bricks along the top of the back and front walls, staggering joints, leaving the left front corner open and keeping clear of the grey slopes.",
+      "watch_for": [
+        "Place bricks to overlap the seams of the layer below for strength",
+        "Do not cover the front-left corner where the 1x1 brick goes next"
+      ],
+      "crop": {
+        "x0": 650,
+        "y0": 278,
+        "x1": 1000,
+        "y1": 563
+      }
+    },
+    {
+      "step": 9,
+      "parts": [
+        {
+          "name": "brick 1x1 with side stud",
+          "color": "blue",
+          "qty": 2
+        },
+        {
+          "name": "brick 1x1 with side stud",
+          "color": "blue",
+          "qty": 2
+        }
+      ],
+      "action": "Place the two 1x1 bricks with side studs at the left end of the back wall and the left end of the front wall, side studs pointing outward to the left.",
+      "watch_for": [
+        "Side studs must face outward (left), not into the boat",
+        "One goes on the back wall corner and one on the front wall corner"
+      ],
+      "crop": {
+        "x0": 650,
+        "y0": 888,
+        "x1": 1000,
+        "y1": 1172
+      }
+    }
+  ]
+}

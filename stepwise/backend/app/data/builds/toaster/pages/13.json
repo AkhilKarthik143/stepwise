@@ -1,0 +1,46 @@
+{
+  "steps": [
+    {
+      "step": 19,
+      "parts": [
+        {
+          "name": "curved slope 1x4",
+          "color": "light gray",
+          "qty": 4
+        }
+      ],
+      "action": "Place the four curved slopes on top in two rows of two, flanking the central gray plate, with the curves sloping down toward the front and back edges.",
+      "watch_for": [
+        "Curve direction: each slope must slope away from the center toward the outer edge",
+        "Leave the central 2x2 studs exposed between the slopes"
+      ],
+      "crop": {
+        "x0": 235,
+        "y0": 140,
+        "x1": 450,
+        "y1": 455
+      }
+    },
+    {
+      "step": 20,
+      "parts": [
+        {
+          "name": "brick curved 1x2x1 1/3 with curved top",
+          "color": "medium azure",
+          "qty": 4
+        }
+      ],
+      "action": "Attach the four curved bricks at the four top corners, with the curved sides facing outward to round off the ends.",
+      "watch_for": [
+        "Curves must face outward at each corner, not inward",
+        "Place them on the corner studs, not in the middle of the edge"
+      ],
+      "crop": {
+        "x0": 235,
+        "y0": 695,
+        "x1": 450,
+        "y1": 980
+      }
+    }
+  ]
+}

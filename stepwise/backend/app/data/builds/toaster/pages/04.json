@@ -1,0 +1,46 @@
+{
+  "steps": [
+    {
+      "step": 2,
+      "parts": [
+        {
+          "name": "slope 75° 2x2x3",
+          "color": "light gray",
+          "qty": 2
+        }
+      ],
+      "action": "Place the two tall slopes side by side along the back-right edge of the dark gray plate, sloped faces pointing toward the front-left.",
+      "watch_for": [
+        "Slopes must face forward (sloped side toward the open plate area), not backward",
+        "Position them flush against the back edge, toward the right side of the plate"
+      ],
+      "crop": {
+        "x0": 245,
+        "y0": 240,
+        "x1": 452,
+        "y1": 470
+      }
+    },
+    {
+      "step": 3,
+      "parts": [
+        {
+          "name": "brick 1x4",
+          "color": "medium azure",
+          "qty": 2
+        }
+      ],
+      "action": "Attach one blue 1x4 brick along the back edge to the left of the slopes, and the other along the right edge in front of the slopes.",
+      "watch_for": [
+        "The two bricks go in different places: one at the back-left beside the slopes, one at the right side in front of them",
+        "Keep each brick pressed against the slopes with no gap"
+      ],
+      "crop": {
+        "x0": 245,
+        "y0": 712,
+        "x1": 452,
+        "y1": 942
+      }
+    }
+  ]
+}
