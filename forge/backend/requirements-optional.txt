@@ -1,0 +1,4 @@
+# Optional live provider SDKs. The core mock/local demo does not require them.
+anthropic
+cartesia>=4.2.0
+moss

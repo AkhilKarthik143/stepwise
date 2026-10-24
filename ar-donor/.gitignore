@@ -1,0 +1,25 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets & local config
+.env
+
+# TLS material
+certs/*.pem
+
+# Logs
+*.log
+.gstack/
+
+# Frontend build artifacts + deps
+web/node_modules/
+web/dist/
+
+# Test / tooling caches
+.pytest_cache/
+bash.exe.stackdump
+
+# Per-company Solution Memory data (tenant DBs + photos) - never commit
+data/

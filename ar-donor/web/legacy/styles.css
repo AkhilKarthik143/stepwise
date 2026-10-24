@@ -1,0 +1,144 @@
+/* AR Technician Assistant — HUD / DOM-overlay styling. */
+
+:root {
+  --accent: #19c37d;
+  --accent-dark: #0e8a57;
+  --danger: #e5484d;
+  --bg-panel: rgba(12, 16, 22, 0.72);
+  --text: #f5f7fa;
+  --muted: #9aa6b2;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text);
+  background: #0b0f14;
+  overflow: hidden;
+}
+
+/* The A-Frame canvas fills the screen behind the overlay. */
+a-scene { position: fixed; inset: 0; }
+
+/*
+ * #overlay is handed to the WebXR domOverlay, so it must be pointer-events
+ * transparent except on the actual controls (so AR taps reach the scene).
+ */
+#overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px);
+  pointer-events: none;
+  z-index: 10;
+}
+#overlay button,
+#overlay video,
+#overlay .log { pointer-events: auto; }
+
+.hud-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  background: var(--bg-panel);
+  padding: 8px 14px;
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+
+.status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg-panel);
+  border: 1px solid transparent;
+}
+.status.idle { color: var(--muted); }
+.status.connecting { color: #f4c542; border-color: #f4c54255; }
+.status.connected { color: var(--accent); border-color: var(--accent); }
+.status.error { color: var(--danger); border-color: var(--danger); }
+
+.hud-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+  flex: 1;
+}
+
+.connect-btn, .hangup-btn {
+  font-size: 1.15rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 14px;
+  padding: 18px 34px;
+  cursor: pointer;
+  color: #06140d;
+  background: var(--accent);
+  box-shadow: 0 8px 28px rgba(25, 195, 125, 0.35);
+  transition: transform 0.08s ease, background 0.2s ease;
+}
+.connect-btn:hover { background: #1fd98a; }
+.connect-btn:active { transform: scale(0.97); }
+.connect-btn:disabled { opacity: 0.55; cursor: default; }
+
+.hangup-btn {
+  color: #fff;
+  background: var(--danger);
+  box-shadow: 0 8px 28px rgba(229, 72, 77, 0.35);
+}
+
+.hint {
+  max-width: 460px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  background: var(--bg-panel);
+  padding: 10px 16px;
+  border-radius: 12px;
+}
+
+.hud-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#local-video {
+  width: 132px;
+  height: 92px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: #000;
+  /* No mirroring: this previews the rear/environment camera (the technician's
+     actual viewpoint), so it must match the real scene, not flip it. */
+}
+
+.log {
+  flex: 1;
+  max-width: 60%;
+  max-height: 120px;
+  overflow-y: auto;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--muted);
+  background: var(--bg-panel);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}

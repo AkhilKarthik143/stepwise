@@ -1,0 +1,43 @@
+# Render Blueprint for the backend Web Service (Docker).
+#
+# Usage: dashboard.render.com -> New -> Blueprint -> connect this GitHub repo.
+# Render reads this file, builds the Dockerfile, and creates the service. Then
+# fill in the env vars marked `sync: false` in the dashboard (they are secrets,
+# so they are NOT stored in this committed file).
+#
+# After the service is live, copy its URL (https://<name>.onrender.com) into the
+# Vercel project's VITE_API_BASE, and set ALLOWED_ORIGINS here to the Vercel
+# domain so the browser is allowed to call this backend.
+services:
+  - type: web
+    name: ar-technician-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    # Free tier sleeps after ~15 min idle and cold-starts slowly — fine for a
+    # demo, poor for a live AR session. Switch to "starter" for always-on.
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      # --- Secrets / config (set these in the Render dashboard) ---------------
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ACTIVE_NOTEBOOK_ID
+        sync: false
+      - key: API_AUTH_TOKEN
+        sync: false
+      - key: AUTH_USERS_JSON
+        sync: false
+      # The exact Vercel origin(s), comma-separated, e.g.
+      # https://ar-technician.vercel.app  (lock this down — do NOT leave it "*").
+      - key: ALLOWED_ORIGINS
+        sync: false
+      # --- TURN relay (managed TURN: Metered / Twilio / Cloudflare) -----------
+      - key: TURN_URL
+        sync: false
+      - key: TURN_USERNAME
+        sync: false
+      - key: TURN_CREDENTIAL
+        sync: false
+      # --- Behind Render's proxy: trust X-Forwarded-For for real client IPs ---
+      - key: TRUST_FORWARDED_FOR
+        value: "true"

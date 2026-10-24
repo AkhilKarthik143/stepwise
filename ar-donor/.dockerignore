@@ -1,0 +1,26 @@
+# Keep the image lean and SECRET-FREE. The backend needs main.py, config.py,
+# services/, and static/ (so the Render URL can also serve the app as a
+# fallback). Everything below is local-only, secret, or frontend build cruft.
+
+# Secrets — must never enter the image (Render injects env vars at runtime).
+.env
+.env.*
+certs/
+
+# Local Python / git / backups.
+.venv/
+**/__pycache__/
+**/*.pyc
+.git/
+.gitignore
+backups/
+
+# Frontend source + node deps (the built app lives in static/; Vercel builds web/).
+web/node_modules/
+web/dist/
+node_modules/
+
+# Dev-only.
+*.bundle
+*.zip
+eval/results/eval-*.json

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>AR Technician Assistant</title>
+
+  <!-- A-Frame: WebXR scene graph framework -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <!--
+    WebXR scene.
+      requiredFeatures: hit-test       -> place anchors on real surfaces
+      optionalFeatures: dom-overlay    -> render the #overlay HUD inside AR
+      overlayElement: #overlay         -> which DOM node becomes the AR overlay
+    On a headset (e.g. Meta Quest 3) A-Frame injects an "ENTER AR" button.
+    On desktop the scene still renders; the Connect button works regardless of
+    XR state because media capture uses getUserMedia (see app.js).
+  -->
+  <!--
+    hit-test is OPTIONAL, not required: a *required* feature the device can't
+    grant makes requestSession('immersive-ar') reject outright, silently blocking
+    ENTER AR on phones/headsets that don't expose hit-test under dom-overlay.
+    As optional, AR entry degrades gracefully and the getUserMedia path is
+    unaffected either way.
+  -->
+  <a-scene
+    webxr="optionalFeatures: dom-overlay, local-floor, hit-test; overlayElement: #overlay"
+    renderer="colorManagement: true; alpha: true"
+    vr-mode-ui="enabled: true">
+
+    <a-camera position="0 1.6 0" wasd-controls-enabled="false"></a-camera>
+
+    <!-- Placeholder reticle for future hit-test anchoring (not yet wired to an
+         ar-hit-test component; kept hidden). -->
+    <a-entity id="reticle"
+      geometry="primitive: ring; radiusInner: 0.05; radiusOuter: 0.07"
+      material="color: #19c37d; shader: flat"
+      rotation="-90 0 0"
+      visible="false"></a-entity>
+
+    <!-- Floating status label anchored in front of the user. -->
+    <a-entity id="status-label"
+      text="value: Tap Connect to begin; align: center; color: #FFFFFF; width: 1.4"
+      position="0 1.55 -1.2"></a-entity>
+  </a-scene>
+
+  <!--
+    DOM-overlay HUD. This is the element handed to the AR session's domOverlay,
+    so these controls remain visible and tappable while immersed in AR.
+  -->
+  <div id="overlay">
+    <header class="hud-top">
+      <span class="brand">AR&nbsp;Technician&nbsp;Assistant</span>
+      <span id="conn-status" class="status idle">Idle</span>
+    </header>
+
+    <div class="hud-center">
+      <button id="connect-btn" class="connect-btn">Connect to AI Assistant</button>
+      <button id="hangup-btn" class="hangup-btn" hidden>Disconnect</button>
+      <p id="hint" class="hint">
+        Grant camera &amp; microphone access when prompted. The assistant sees
+        what you see and answers out loud.
+      </p>
+    </div>
+
+    <footer class="hud-bottom">
+      <!-- Local camera preview (muted; what the assistant is seeing). -->
+      <video id="local-video" autoplay muted playsinline></video>
+      <!-- AI voice output. autoplay is permitted because Connect is a user gesture. -->
+      <audio id="remote-audio" autoplay></audio>
+      <div id="log" class="log" aria-live="polite"></div>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

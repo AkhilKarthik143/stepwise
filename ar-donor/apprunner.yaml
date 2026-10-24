@@ -1,0 +1,25 @@
+# AWS App Runner — source-code deploy (managed Python runtime, no Docker/ECR).
+#
+# Why this works without a container: the backend only serves HTTP (/login,
+# /offer, /ice-config, /health). All real-time media is WebRTC over the TURN
+# relay, and the Gemini link is an OUTBOUND WebSocket — none of it needs inbound
+# UDP or inbound WebSockets from App Runner. And opencv-python-headless needs no
+# system GUI libs, so the managed Python runtime has everything required.
+#
+# Secrets are NOT here — set them in the App Runner console (Configure service ->
+# Environment variables): GEMINI_API_KEY, API_AUTH_TOKEN, AUTH_USERS_JSON,
+# ALLOWED_ORIGINS (your Vercel origin), TURN_URL, TURN_USERNAME, TURN_CREDENTIAL.
+version: 1.0
+runtime: python311
+build:
+  commands:
+    build:
+      - pip install -r requirements.txt
+run:
+  runtime-version: 3.11
+  command: uvicorn main:app --host 0.0.0.0 --port 8080
+  network:
+    port: 8080
+  env:
+    - name: TRUST_FORWARDED_FOR
+      value: "true"

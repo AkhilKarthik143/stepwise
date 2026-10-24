@@ -1,0 +1,44 @@
+# Always-on deploy for a single VM (AWS Lightsail / EC2 / any Ubuntu box).
+#
+#   app   — the FastAPI backend (our Dockerfile), plain HTTP on 8443, NOT exposed
+#           to the internet directly.
+#   caddy — terminates HTTPS and reverse-proxies to the app. Caddy fetches a real
+#           Let's Encrypt certificate automatically for $APP_DOMAIN, so the Vercel
+#           (HTTPS) frontend can call this backend with no mixed-content errors.
+#
+# Run from this `deploy/` dir:  sudo docker compose up -d --build
+# Requires a deploy/.env (copy .env.example). $APP_DOMAIN must be a DNS name that
+# already points to this box's public IP (e.g. a free DuckDNS subdomain).
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    expose:
+      - "8443"
+    volumes:
+      # Persistent per-company data (Solution Memory DBs + photos) — survives
+      # rebuilds/redeploys. Layout: /app/data/tenants/<company>/...
+      - app_data:/app/data
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - APP_DOMAIN=${APP_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
+  app_data:

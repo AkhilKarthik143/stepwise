@@ -1,0 +1,41 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AR Technician Assistant — Python backend dependencies
+#
+# Python 3.10–3.12 recommended (tested on 3.11). aiortc + av ship prebuilt
+# wheels for CPython 3.11/3.12 on Windows/macOS/Linux, so no native toolchain
+# is normally required.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# --- Web server / static hosting + WebRTC signaling -------------------------
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0          # ASGI server (includes websockets, httptools)
+
+# --- WebRTC transport (browser <-> backend media) ---------------------------
+aiortc>=1.9.0                       # pulls in `av` (PyAV) and `pylibsrtp`
+
+# --- Realtime video frame processing ----------------------------------------
+# HEADLESS build: identical cv2 API for what we use (imencode/imdecode/resize —
+# no GUI funcs), but needs NO system libGL/glib, so the app runs on a bare Python
+# runtime (AWS App Runner's managed runtime, etc.), not only inside our Docker
+# image. Works fine in Docker too (the Dockerfile's libgl1 just becomes optional).
+opencv-python-headless>=4.9.0      # JPEG encode + frame resize (pulls numpy)
+
+# --- Gemini Multimodal Live API ---------------------------------------------
+websockets>=12.0                   # raw BidiGenerateContent WebSocket transport
+google-genai>=1.0.0                # official SDK (utilities / alternative transport)
+
+# --- NotebookLM RAG knowledge base ------------------------------------------
+# The [cookies] extra installs `rookiepy`, required by the brief's auth path:
+#   notebooklm login --browser-cookies chrome   (per the bundled SKILL.md/CODEX.md)
+# NOTE (from SKILL.md): rookiepy is known to FAIL TO BUILD on Python 3.13+.
+#   - On Python <= 3.12 (this project is tested on 3.11): install as below.
+#   - On Python 3.13+: install plain `notebooklm-py[browser]` instead and use
+#     interactive `notebooklm login` (Playwright OAuth) rather than cookies.
+notebooklm-py[cookies]>=0.7.0
+
+# --- Configuration -----------------------------------------------------------
+python-dotenv>=1.0.0               # loads .env into the process environment
+
+# --- Tests (pytest tests/) ---------------------------------------------------
+pytest>=8.0.0
+pytest-asyncio>=0.23.0             # async test support (asyncio_mode=auto)

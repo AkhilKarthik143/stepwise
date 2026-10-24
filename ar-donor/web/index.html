@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <title>AR Technician Assistant</title>
+    <!-- PWA: installable, fullscreen-without-chrome phone workflow. Note: on a
+         self-signed LAN cert browsers skip the AUTOMATIC install prompt; manual
+         'Add to Home screen' still honors this manifest. -->
+    <meta name="theme-color" content="#0b0f14" />
+    <link rel="manifest" href="/static/manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="/static/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/static/icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="AR Tech" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- AI voice output. autoplay is permitted because Connect is a user gesture. -->
+    <audio id="remote-audio" autoplay></audio>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
