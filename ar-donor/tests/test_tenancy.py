@@ -38,7 +38,7 @@ def test_token_round_trip(signed_auth):
 def test_tampered_token_rejected(signed_auth):
     t = tenant_auth.issue_token("a@b.com", "acme")
     body, sig = t.rsplit(".", 1)
-    # Forge the payload (claim another company) but keep the old signature.
+    # Tamper with the payload (claim another company) but keep the old signature.
     forged = base64.urlsafe_b64encode(
         b'{"email":"a@b.com","company":"rival","exp":9999999999}'
     ).rstrip(b"=").decode()

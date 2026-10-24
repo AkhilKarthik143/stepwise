@@ -1,11 +1,11 @@
-# FORGE AR architecture
+# STEPWISE AR architecture
 
 ## Design read
 
 - Artifact: mobile field copilot with an expandable desktop evidence console.
 - Audience: industrial maintenance technicians who need glanceable, source-backed guidance while looking at a machine.
 - Visual language: dark instrument panel, safety amber, electric cyan, and green confirmation states.
-- Mode: extension/preserve of the FORGE console; the camera becomes the primary mobile surface.
+- Mode: extension/preserve of the STEPWISE console; the camera becomes the primary mobile surface.
 - Dials: visual variance 5/10, motion 3/10, information density 7/10, asset dependence 8/10, brand fidelity 9/10.
 
 ## Decisions
@@ -21,7 +21,7 @@
 ```text
 phone browser
   ├─ one getUserMedia camera stream ──> local overlay + selected JPEG frames
-  ├─ mic PCM / text fallback ─────────> one FORGE WebSocket
+  ├─ mic PCM / text fallback ─────────> one STEPWISE WebSocket
   └─ structured UI events <──────────── FastAPI gateway
                                           ├─ ClaudeAgent (primary, optional key)
                                           ├─ MockAgent (deterministic fallback)
@@ -32,7 +32,7 @@ phone browser
 
 ## Provider strategy
 
-`AgentRuntime` owns conversation history, image inputs, streaming boundaries, and tool-loop policy. `ClaudeAgent` maps FORGE's existing OpenAI-shaped tool definitions to Anthropic Messages API tools and sends every call through `Orchestrator.process_tool_call`. `MockAgent` uses the same orchestrator and is the tested demo path when credentials are absent.
+`AgentRuntime` owns conversation history, image inputs, streaming boundaries, and tool-loop policy. `ClaudeAgent` maps STEPWISE's existing OpenAI-shaped tool definitions to Anthropic Messages API tools and sends every call through `Orchestrator.process_tool_call`. `MockAgent` uses the same orchestrator and is the tested demo path when credentials are absent.
 
 Cartesia is a separate audio transport concern. The browser/WebSocket contract stays unchanged so current PCM playback, interruption, captions, and reconnect behavior remain intact. When Cartesia credentials are absent, the text fallback remains fully usable and the status explicitly says `mock/local`.
 
@@ -45,8 +45,8 @@ Cartesia is a separate audio transport concern. The browser/WebSocket contract s
 
 ## Safety
 
-FORGE remains inspection/advisory-only. The orchestrator validates all tool arguments. LOTO and safety checklist advancement remain sequential and confirmation-gated. Untrusted retrieval text is context only and cannot override the existing safety policy. Machine identity and source labels remain visible in the UI.
+STEPWISE remains inspection/advisory-only. The orchestrator validates all tool arguments. LOTO and safety checklist advancement remain sequential and confirmation-gated. Untrusted retrieval text is context only and cannot override the existing safety policy. Machine identity and source labels remain visible in the UI.
 
 ## Why no second live-media stack
 
-The supplied FORGE app already has a working WebSocket audio/control path and reconnect/resync logic. Adding donor WebRTC alongside it would create competing camera/audio lifecycles. The integrated core uses one camera stream and one WebSocket; WebRTC remains documented donor material for a future phone-to-laptop pairing phase.
+The supplied STEPWISE app already has a working WebSocket audio/control path and reconnect/resync logic. Adding donor WebRTC alongside it would create competing camera/audio lifecycles. The integrated core uses one camera stream and one WebSocket; WebRTC remains documented donor material for a future phone-to-laptop pairing phase.

@@ -1,18 +1,18 @@
-# FORGE AR implementation status
+# STEPWISE AR implementation status
 
 Updated: 2026-10-23
 
 ## Works in this workspace
 
-- FORGE catalogs, grounded tool handlers, grounding validation, LOTO/procedure state, reports, schematics, CNC model, and existing desktop panels are retained.
+- STEPWISE catalogs, grounded tool handlers, grounding validation, LOTO/procedure state, reports, schematics, CNC model, and existing desktop panels are retained.
 - Mobile-first field shell with camera centerpiece, text fallback, captions/transcript, status labels, expandable evidence panels, and safe pending/confirmed annotations.
 - Tap-confirm anchor flow using `normalized_1000` boxes and object-fit cover mapping.
-- Deterministic mock agent uses the same FORGE orchestrator and tool handlers for the five-step demo.
+- Deterministic mock agent uses the same STEPWISE orchestrator and tool handlers for the five-step demo.
 - Claude and Moss adapters are isolated and optional; missing credentials degrade to local/mock behavior.
 
 ## Mocked/local
 
-- MockAgent is used when `FORGE_PROVIDER=mock` or the Claude key is missing.
+- MockAgent is used when `STEPWISE_PROVIDER=mock` or the Claude key is missing.
 - Local knowledge fallback is used when Moss credentials/index are unavailable.
 - Cartesia audio is capability-labeled and falls back to the existing text/PCM path; no live Cartesia credentials were supplied for this run.
 
@@ -27,6 +27,6 @@ Updated: 2026-10-23
 
 ## Original vs new
 
-- Original: FORGE data, safety, tools, WebSocket, desktop panels, schematics, model, and tests.
+- Original: STEPWISE data, safety, tools, WebSocket, desktop panels, schematics, model, and tests.
 - Ported: donor coordinate mapping/camera/annotation patterns, adapted to React 18.
 - New: provider adapters, mock demo runtime, structured annotation events, mobile shell, knowledge-provider interface, and integration docs/tests.
